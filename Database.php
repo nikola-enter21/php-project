@@ -4,9 +4,10 @@ class Database
 {
     private PDO $pdo;
 
-    public function __construct(string $dsn, string $user, string $password)
+    public function __construct(string $host, string $dbname, string $user, string $password)
     {
         try {
+            $dsn = "pgsql:host={$host};dbname={$dbname}";
             $this->pdo = new PDO($dsn, $user, $password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
