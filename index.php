@@ -3,7 +3,8 @@ require 'Router.php';
 require 'Request.php';
 require 'Response.php';
 
-$router = new Router(new Request(), new Response());
+$db = new Database('localhost', 'your_database', 'your_user', 'your_password');
+$router = new Router(new Request($db), new Response());
 
 $router->use(function (Request $req, Response $res, callable $next): void {
     if (str_starts_with($req->path(), '/admin') && !$req->session()->has('user')) {
