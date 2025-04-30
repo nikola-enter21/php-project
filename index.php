@@ -1,40 +1,62 @@
 <?php
-require 'Router.php';
-require 'Request.php';
-require 'Response.php';
 
-$db = new Database('localhost', 'your_database', 'your_user', 'your_password');
-$router = new Router(new Request($db), new Response());
+use App\Controllers\AdminController;
+use App\Controllers\HomeController;
+use App\Middlewares\AuthMiddleware;
+use App\Models\UserModel;
+use Core\Container;
+use Core\Router;
+use Core\Request;
+use Core\Response;
+use App\Controllers\UserController;
+use Core\Database;
 
-$router->use(function (Request $req, Response $res, callable $next): void {
-    if (str_starts_with($req->path(), '/admin') && !$req->session()->has('user')) {
-        $res->status(401)->json(['error' => 'Unauthorized']);
-        return;
-    }
-    $next();
+require './vendor/autoload.php';
+
+// Dependency Injection Container
+$container = new Container();
+$container->set(Database::class, function () {
+    $config = require 'config/database.php';
+    return new Database(
+        $config['host'],
+        $config['database'],
+        $config['username'],
+        $config['password']
+    );
 });
+$container->set(
+    UserModel::class,
+    fn() => new UserModel($container->get(Database::class))
+);
+$container->set(
+    HomeController::class,
+    fn($c) => new HomeController()
+);
+$container->set(
+    UserController::class,
+    fn($c) => new UserController($c->get(UserModel::class))
+);
+$container->set(
+    AdminController::class,
+    fn($c) => new AdminController($c->get(UserModel::class))
+);
 
-$router->get('/', function (Request $req, Response $res): void {
-    $req->session()->set('user', ['id' => 1, 'name' => 'John']);
-    $res->view('home', ['name' => 'John']);
-});
+// Routes
+try {
+    $router = new Router(new Request(), new Response());
 
-$router->get('/admin', function (Request $req, Response $res): void {
-    $res->send('Hello, Admin!');
-});
+    $router->get('/', [$container->get(HomeController::class), 'index']);
+    $router->get('/users', [$container->get(UserController::class), 'index']);
+    $router->get('/users/:id', [$container->get(UserController::class), 'getUserById']);
+    $router->post('/users', [$container->get(UserController::class), 'createUser']);
 
-$router->get('/json', function (Request $req, Response $res): void {
-    $res->json($req->session()->get('user'));
-});
+    $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AuthMiddleware::class]);
+    $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AuthMiddleware::class]);
+    $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AuthMiddleware::class]);
 
-$router->get('/user/:id', function (Request $req, Response $res): void {
-    $id = $req->param('id');
-    $res->json(['user_id' => $id]);
-});
+    $router->run();
+} catch (Exception $e) {
+    error_log($e->getMessage());
+    die($e->getMessage());
+}
 
-$router->post('/submit', function (Request $req, Response $res): void {
-    $data = $req->body();
-    $res->json(['received' => $data]);
-});
-
-$router->run();

@@ -1,28 +1,20 @@
 <?php
 
-require 'Session.php';
-require 'Database.php';
+namespace Core;
 
 class Request
 {
     private array $params = [];
     private Session $session;
-    private Database $db;
 
-    public function __construct(Database $db)
+    public function __construct()
     {
         $this->session = new Session();
-        $this->db = $db;
     }
 
     public function session(): Session
     {
         return $this->session;
-    }
-
-    public function db(): Database
-    {
-        return $this->db;
     }
 
     public function method(): string
