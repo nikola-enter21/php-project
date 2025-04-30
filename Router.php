@@ -14,13 +14,15 @@ class Router
     }
 
     // Register global middleware
-    public function use(callable|array $middleware): void
+    public function use(array $middlewares): void
     {
-        if (is_array($middleware) && is_string($middleware[0])) {
-            $middleware[0] = new $middleware[0]();
-        }
+        foreach ($middlewares as $middleware) {
+            if (is_string($middleware)) {
+                $middleware = new $middleware();
+            }
 
-        $this->middlewares[] = $middleware;
+            $this->middlewares[] = $middleware;
+        }
     }
 
     // Add route for GET method with optional middlewares
@@ -45,6 +47,10 @@ class Router
     }
 
     // Main method to run the router
+
+    /**
+     * @throws Exception
+     */
     public function run(): void
     {
         $req = $this->request;

@@ -15,7 +15,7 @@ $db = new Database('localhost', 'your_database', 'your_user', 'your_password');
 $router = new Router(new Request($db), new Response());
 
 // Global middlewares
-//$router->use([AdminAuthMiddleware::class, 'handle']);
+//$router->use([AdminAuthMiddleware::class]);
 
 // Admin routes
 $router->get(
