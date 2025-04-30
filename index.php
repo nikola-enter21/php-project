@@ -15,10 +15,14 @@ $db = new Database('localhost', 'your_database', 'your_user', 'your_password');
 $router = new Router(new Request($db), new Response());
 
 // Global middlewares
-$router->use([AdminAuthMiddleware::class, 'handle']);
+//$router->use([AdminAuthMiddleware::class, 'handle']);
 
 // Admin routes
-$router->get('/admin', [AdminController::class, 'dashboard']);
+$router->get(
+    '/admin',
+    [AdminController::class, 'dashboard'],
+    [AdminAuthMiddleware::class] // Per-route middlewares
+);
 
 // User routes
 $router->get('/', [UserController::class, 'index']);

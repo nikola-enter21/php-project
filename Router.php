@@ -13,35 +13,35 @@ class Router
         $this->response = $res;
     }
 
-    // Register middleware
+    // Register global middleware
     public function use(callable|array $middleware): void
     {
-        // If middleware is passed as [ClassName::class, 'handle'], instantiate the class
         if (is_array($middleware) && is_string($middleware[0])) {
             $middleware[0] = new $middleware[0]();
         }
 
-        // Add the middleware to the queue
         $this->middlewares[] = $middleware;
     }
 
-
-    // Add route for GET method
-    public function get(string $path, $handler): void
+    // Add route for GET method with optional middlewares
+    public function get(string $path, $handler, array $middlewares = []): void
     {
-        $this->addRoute('GET', $path, $handler);
+        $this->addRoute('GET', $path, $handler, $middlewares);
     }
 
-    // Add route for POST method
-    public function post(string $path, $handler): void
+    // Add route for POST method with optional middlewares
+    public function post(string $path, $handler, array $middlewares = []): void
     {
-        $this->addRoute('POST', $path, $handler);
+        $this->addRoute('POST', $path, $handler, $middlewares);
     }
 
-    // Add a route to the router
-    public function addRoute(string $method, string $path, $handler): void
+    // Add a route to the router with optional middlewares
+    public function addRoute(string $method, string $path, $handler, array $middlewares = []): void
     {
-        $this->routes[$method][$this->formatPath($path)] = $handler;
+        $this->routes[$method][$this->formatPath($path)] = [
+            'handler' => $handler,
+            'middlewares' => $middlewares
+        ];
     }
 
     // Main method to run the router
@@ -53,15 +53,18 @@ class Router
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         // Find a matching route
-        foreach ($this->routes[$method] ?? [] as $route => $handler) {
+        foreach ($this->routes[$method] ?? [] as $route => $routeData) {
             $pattern = preg_replace('/:\w+/', '([^/]+)', $route);
             if (preg_match("#^$pattern$#", $path, $matches)) {
                 array_shift($matches); // Remove the full path match
                 $req->setParams($route, $matches);
 
+                // Combine global middlewares with route-specific middlewares
+                $allMiddlewares = array_merge($this->middlewares, $routeData['middlewares']);
+
                 // Process middleware and the handler
-                $this->handleMiddlewares(function () use ($handler, $req, $res) {
-                    $this->resolveHandler($handler, $req, $res);
+                $this->handleMiddlewares($allMiddlewares, function () use ($routeData, $req, $res) {
+                    $this->resolveHandler($routeData['handler'], $req, $res);
                 });
                 return;
             }
@@ -73,41 +76,51 @@ class Router
     }
 
     // Middleware handling
-    private function handleMiddlewares(callable $handler): void
+
+    /**
+     * @throws Exception
+     */
+    private function handleMiddlewares(array $middlewares, callable $handler): void
     {
         $req = $this->request;
         $res = $this->response;
 
-        // Start with the last middleware and wrap them
         $next = function () use ($handler, $req, $res) {
             $handler($req, $res);
         };
 
-        foreach (array_reverse($this->middlewares) as $middleware) {
-            $next = fn() => $middleware($req, $res, $next);
+        foreach (array_reverse($middlewares) as $middleware) {
+            // If middleware is a class name, instantiate the class
+            if (is_string($middleware)) {
+                $middleware = new $middleware();
+            }
+
+            // Ensure middleware is callable (e.g., it must have a handle method)
+            if (is_callable($middleware)) {
+                $next = fn() => $middleware($req, $res, $next);
+            } elseif (method_exists($middleware, 'handle')) {
+                $next = fn() => $middleware->handle($req, $res, $next);
+            } else {
+                throw new Exception('Invalid middleware provided');
+            }
         }
 
         $next(); // Execute the chain
     }
-
-    // Resolve and execute the route handler (closure, function, or class method)
 
     /**
      * @throws Exception
      */
     private function resolveHandler($handler, Request $req, Response $res): void
     {
-        // If the handler is a callable function or closure
         if (is_callable($handler)) {
             $handler($req, $res);
             return;
         }
 
-        // If the handler is an array [ControllerClass, 'method']
         if (is_array($handler) && count($handler) === 2) {
             [$className, $methodName] = $handler;
 
-            // Check if the class and method exist
             if (!class_exists($className)) {
                 throw new Exception("Controller class $className does not exist");
             }
@@ -118,18 +131,15 @@ class Router
                 throw new Exception("Method $methodName does not exist in controller $className");
             }
 
-            // Call the controller method
             $controller->$methodName($req, $res);
             return;
         }
 
-        // If the handler is invalid, throw an error
         throw new Exception('Invalid route handler');
     }
 
-    // Format the path to avoid trailing slashes for consistency
     private function formatPath(string $path): string
     {
-        return $path === '/' ? '/' : rtrim($path, '/');
+        return rtrim($path, '/') ?: '/';
     }
 }
