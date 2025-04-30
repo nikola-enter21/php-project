@@ -30,4 +30,8 @@ $router->get('/user/:id', [UserController::class, 'getUserById']);
 $router->post('/submit', [UserController::class, 'submitForm']);
 
 // Run the router
-$router->run();
+try {
+    $router->run();
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
