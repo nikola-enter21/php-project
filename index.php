@@ -1,37 +1,62 @@
 <?php
-// Include core
-require 'Router.php';
-require 'Request.php';
-require 'Response.php';
 
-// Include Middlewares
-require 'middlewares/AdminAuthMiddleware.php';
+use App\Controllers\AdminController;
+use App\Controllers\HomeController;
+use App\Middlewares\AuthMiddleware;
+use App\Models\UserModel;
+use Core\Container;
+use Core\Router;
+use Core\Request;
+use Core\Response;
+use App\Controllers\UserController;
+use Core\Database;
 
-// Include controllers
-require 'controllers/AdminController.php';
-require 'controllers/UserController.php';
+require './vendor/autoload.php';
 
-$db = new Database('localhost', 'your_database', 'your_user', 'your_password');
-$router = new Router(new Request($db), new Response());
-
-// Global middlewares
-//$router->use([AdminAuthMiddleware::class]);
-
-// Admin routes
-$router->get(
-    '/admin',
-    [AdminController::class, 'dashboard'],
-    [AdminAuthMiddleware::class] // Per-route middlewares
+// Dependency Injection Container
+$container = new Container();
+$container->set(Database::class, function () {
+    $config = require 'config/database.php';
+    return new Database(
+        $config['host'],
+        $config['database'],
+        $config['username'],
+        $config['password']
+    );
+});
+$container->set(
+    UserModel::class,
+    fn() => new UserModel($container->get(Database::class))
+);
+$container->set(
+    HomeController::class,
+    fn($c) => new HomeController()
+);
+$container->set(
+    UserController::class,
+    fn($c) => new UserController($c->get(UserModel::class))
+);
+$container->set(
+    AdminController::class,
+    fn($c) => new AdminController($c->get(UserModel::class))
 );
 
-// User routes
-$router->get('/', [UserController::class, 'index']);
-$router->get('/user/:id', [UserController::class, 'getUserById']);
-$router->post('/submit', [UserController::class, 'submitForm']);
-
-// Run the router
+// Routes
 try {
+    $router = new Router(new Request(), new Response());
+
+    $router->get('/', [$container->get(HomeController::class), 'index']);
+    $router->get('/users', [$container->get(UserController::class), 'index']);
+    $router->get('/users/:id', [$container->get(UserController::class), 'getUserById']);
+    $router->post('/users', [$container->get(UserController::class), 'createUser']);
+
+    $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AuthMiddleware::class]);
+    $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AuthMiddleware::class]);
+    $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AuthMiddleware::class]);
+
     $router->run();
 } catch (Exception $e) {
-    echo $e->getMessage();
+    error_log($e->getMessage());
+    die($e->getMessage());
 }
+

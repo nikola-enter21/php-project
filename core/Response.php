@@ -1,5 +1,7 @@
 <?php
 
+namespace Core;
+
 class Response
 {
     public function send(string $text): void
@@ -22,6 +24,13 @@ class Response
     public function view(string $file, array $data = []): void
     {
         extract($data);
-        include "views/$file.php";
+        $viewPath = __DIR__ . "/../app/Views/$file.php";
+
+        if (!file_exists($viewPath)) {
+            http_response_code(500);
+            die("View file not found: $viewPath");
+        }
+
+        include $viewPath;
     }
 }

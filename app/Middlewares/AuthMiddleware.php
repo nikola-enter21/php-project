@@ -1,13 +1,17 @@
 <?php
 
-require_once 'BaseMiddleware.php';
+namespace App\Middlewares;
 
-class AdminAuthMiddleware extends Middleware
+use Core\Middleware;
+use Core\Request;
+use Core\Response;
+
+class AuthMiddleware extends Middleware
 {
     public function handle(Request $req, Response $res, callable $next): void
     {
-        // Check if the user is authorized for admin routes
-        if (str_starts_with($req->path(), '/admin') && !$req->session()->has('user')) {
+        // Check if the user is authenticated
+        if (!$req->session()->has('user')) {
             $res->status(401)->json(['error' => 'Unauthorized']);
             return;
         }

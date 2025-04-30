@@ -1,5 +1,9 @@
 <?php
 
+namespace Core;
+
+use Exception;
+
 class Router
 {
     private array $routes = [];
@@ -25,24 +29,24 @@ class Router
         }
     }
 
-    // Add route for GET method with optional middlewares
+    // Add route for GET method with optional Middlewares
     public function get(string $path, $handler, array $middlewares = []): void
     {
         $this->addRoute('GET', $path, $handler, $middlewares);
     }
 
-    // Add route for POST method with optional middlewares
+    // Add route for POST method with optional Middlewares
     public function post(string $path, $handler, array $middlewares = []): void
     {
         $this->addRoute('POST', $path, $handler, $middlewares);
     }
 
-    // Add a route to the router with optional middlewares
+    // Add a route to the router with optional Middlewares
     public function addRoute(string $method, string $path, $handler, array $middlewares = []): void
     {
         $this->routes[$method][$this->formatPath($path)] = [
             'handler' => $handler,
-            'middlewares' => $middlewares
+            'Middlewares' => $middlewares
         ];
     }
 
@@ -65,8 +69,8 @@ class Router
                 array_shift($matches); // Remove the full path match
                 $req->setParams($route, $matches);
 
-                // Combine global middlewares with route-specific middlewares
-                $allMiddlewares = array_merge($this->middlewares, $routeData['middlewares']);
+                // Combine global Middlewares with route-specific Middlewares
+                $allMiddlewares = array_merge($this->middlewares, $routeData['Middlewares']);
 
                 // Process middleware and the handler
                 $this->handleMiddlewares($allMiddlewares, function () use ($routeData, $req, $res) {

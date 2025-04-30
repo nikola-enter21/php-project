@@ -1,0 +1,11 @@
+{
+  "name": "nikolailiev/php-project",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Core\\": "core/"
+    }
+  },
+  "require": {}
+}
