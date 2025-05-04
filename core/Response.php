@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use JetBrains\PhpStorm\NoReturn;
+
 class Response
 {
     public function send(string $text): void
@@ -32,5 +34,18 @@ class Response
         }
 
         include $viewPath;
+    }
+
+    /**
+     * Redirect to a given URL.
+     *
+     * @param string $url The target URL for redirection.
+     * @param int $statusCode Optional HTTP status code for the redirection (default: 302).
+     */
+    #[NoReturn] public function redirect(string $url, int $statusCode = 302): void
+    {
+        http_response_code($statusCode);
+        header("Location: $url");
+        exit();
     }
 }

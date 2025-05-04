@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Core\Request;
 use Core\Response;
 use App\Models\UserModel;
+use JetBrains\PhpStorm\NoReturn;
 
 class UserController
 {
@@ -12,68 +13,96 @@ class UserController
 
     public function __construct(UserModel $userModel)
     {
-        $this->userModel = $userModel; // Accept the UserModel but don’t use it in mock functions
+        $this->userModel = $userModel;
     }
 
-    /**
-     * Mock function: Return a list of users.
-     */
-    public function index(Request $req, Response $res): void
+    public function loginView(Request $req, Response $res): void
     {
-        // Mock response (instead of querying the database)
-        $mockUsers = [
-            ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'],
-            ['id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com']
+        if ($req->session()->has('user')) {
+            $res->redirect('/');
+        }
+
+        $res->view('login');
+    }
+
+    public function registerView(Request $req, Response $res): void
+    {
+        if ($req->session()->has('user')) {
+            $res->redirect('/');
+        }
+
+        $res->view('register');
+    }
+
+    public function login(Request $req, Response $res): void
+    {
+        $email = $req->body('email');
+        $password = $req->body('password');
+
+        // Fetch user from DB by email
+        $user = [
+            'id' => 1,
+            'name' => 'John Doe',
+            'email' => 'test@abv.bg',
+            'password' => password_hash('12345', PASSWORD_BCRYPT)
         ];
 
-        $res->json($mockUsers);
-    }
-
-    /**
-     * Mock function: Return the details of a single user.
-     */
-    public function getUserById(Request $req, Response $res): void
-    {
-        // Extract the ID from request parameters
-        $id = (int)$req->param('id');
-
-        // Mock response based on ID
-        $mockUser = ($id === 1)
-            ? ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com']
-            : null;
-
-        if ($mockUser) {
-            $res->json($mockUser);
-        } else {
-            $res->status(404)->json(['error' => 'User not found']);
+        if (!$user || !password_verify($password, $user['password'])) {
+            $res->json(['success' => false, 'message' => 'Invalid email or password'], 401);
+            return;
         }
+
+        // Login successful
+        $req->session()->set('user', $user);
+        $res->json(['success' => true, 'message' => 'Login successful', 'user' => $user['name']]);
     }
 
-    /**
-     * Mock function: Create a new user.
-     */
-    public function createUser(Request $req, Response $res): void
+    // Handle user registration
+    public function register(Request $req, Response $res): void
     {
-        // Mock creating a user and returning success
-        $mockData = $req->body(); // Assume the user data is passed in request body
+        $name = $req->body('name');
+        $email = $req->body('email');
+        $password = $req->body('password');
+        $confirmPassword = $req->body('confirm_password');
 
-        // Return a success message with mock ID
-        $res->json(['success' => true, 'id' => 3, 'data' => $mockData]);
-    }
-
-    /**
-     * Mock function: Delete a user.
-     */
-    public function deleteUser(Request $req, Response $res): void
-    {
-        // Extract the ID from request parameters
-        $id = (int)$req->param('id');
-
-        // Mock deleting a user
-        if ($id > 0) {
-            $res->json(['success' => true, 'message' => "User with ID {$id} deleted"]);
-        } else {
-            $res->status(400)->json(['error' => 'Invalid user ID']);
+        // Validate input
+        if ($password !== $confirmPassword) {
+            $res->json(['success' => false, 'message' => 'Passwords do not match'], 400);
+            return;
         }
+
+        // Check if the email is already in use
+        if ($this->isEmailTaken($email)) {
+            $res->json(['success' => false, 'message' => 'Email already registered'], 400);
+            return;
+        }
+
+        $newUser = [
+            'id' => random_int(1, 10000000),
+            'name' => $name,
+            'email' => $email,
+            'password' => password_hash($password, PASSWORD_BCRYPT)
+        ];
+        $req->session()->set('user', $newUser);
+        $res->json(['success' => true, 'message' => 'Registration successful']);
     }
+
+    #[NoReturn] public function logout(Request $req, Response $res): void
+    {
+        $req->session()->destroy();
+        $res->redirect('/login');
+    }
+
+    // Helper to get a user by email
+    private function getUserByEmail(string $email): ?array
+    {
+        return null;
+    }
+
+    // Helper to check if an email is already taken
+    private function isEmailTaken(string $email): bool
+    {
+        return $this->getUserByEmail($email) !== null;
+    }
+
 }

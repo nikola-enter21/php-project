@@ -46,9 +46,13 @@ try {
     $router = new Router(new Request(), new Response());
 
     $router->get('/', [$container->get(HomeController::class), 'index']);
-    $router->get('/users', [$container->get(UserController::class), 'index']);
-    $router->get('/users/:id', [$container->get(UserController::class), 'getUserById']);
-    $router->post('/users', [$container->get(UserController::class), 'createUser']);
+
+    $router->get('/login', [$container->get(UserController::class), 'loginView']);
+    $router->get('/register', [$container->get(UserController::class), 'registerView']);
+    $router->post('/login', [$container->get(UserController::class), 'login']);
+    $router->post('/register', [$container->get(UserController::class), 'register']);
+    $router->post('/logout', [$container->get(UserController::class), 'logout']);
+
 
     $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AuthMiddleware::class]);
     $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AuthMiddleware::class]);
