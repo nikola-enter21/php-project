@@ -49,6 +49,10 @@ try {
 
     $router->get('/login', [$container->get(UserController::class), 'loginView']);
     $router->get('/register', [$container->get(UserController::class), 'registerView']);
+    $router->post('/login', [$container->get(UserController::class), 'login']);
+    $router->post('/register', [$container->get(UserController::class), 'register']);
+    $router->post('/logout', [$container->get(UserController::class), 'logout']);
+
 
     $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AuthMiddleware::class]);
     $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AuthMiddleware::class]);
