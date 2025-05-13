@@ -36,7 +36,7 @@ a:visited {
     background: #fff;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .auth-form {
@@ -156,23 +156,59 @@ a:visited {
         gap: 1rem;
     }
 }
+
 /* CUSTOM SCROLL */
 body::-webkit-scrollbar {
     width: 9px;
 }
+
 body::-webkit-scrollbar-track {
     background: transparent;
 }
+
 body::-webkit-scrollbar-thumb {
-    background-color: #a4714a;  /* Warm orange */
+    background-color: #a4714a; /* Warm orange */
     border-radius: 10px;
     border: 4px solid transparent; /* Padding around thumb */
 }
+
 body::-webkit-scrollbar-thumb:hover {
     background-color: #ff8c42; /* Darker warm on hover */
 }
+
 /* Firefox */
 body {
     scrollbar-width: thin;
     scrollbar-color: #a4714a transparent;
+}
+
+.message {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
 }

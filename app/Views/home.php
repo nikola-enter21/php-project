@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | QuoteShare</title>
+    <link rel="stylesheet" href="/public/assets/reset.css">
     <link rel="stylesheet" href="/public/assets/styles.css">
     <link rel="stylesheet" href="/public/assets/nav.css">
     <link rel="stylesheet" href="/public/assets/home.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="layout-container">
@@ -15,44 +16,122 @@
 
     <main class="main-content home-page">
         <section class="welcome-section">
-            <?php if (isset($_SESSION['user'])): ?>
-                <h1 class="welcome-title">
-                    Welcome back, <?= htmlspecialchars($_SESSION['user']['name'], ENT_QUOTES, 'UTF-8') ?>!
-                </h1>
-                <p class="welcome-message">
-                    Leave a mark. Read the thoughts that others left behind, or share your own.
-                </p>
+            <?php if (isset($user)): ?>
+                <div class="welcome-banner">
+                    <h1>Welcome back, <?= htmlspecialchars($user['full_name']) ?>!</h1>
+                    <p>Discover new quotes or share your inspiration with the world.</p>
+                </div>
             <?php else: ?>
-                <h1 class="welcome-title">Browse Quotes</h1>
-                <p class="welcome-message">Add, Share, Like, Comment</p>
+                <div class="call-to-action">
+                    <h1>Discover Inspiring Quotes</h1>
+                    <p>Join our community to share and collect your favorite quotes.</p>
+                    <div class="login-prompt">
+                        <a href="/login" class="btn btn-secondary">Log in</a>
+                        <a href="/register" class="btn btn-highlight">Sign up</a>
+                    </div>
+                </div>
             <?php endif; ?>
         </section>
 
         <section class="quotes-section">
-            <h2 class="section-title">💬 Recent Quotes</h2>
+            <h2>💫 Featured Quotes</h2>
             <div class="quotes-grid">
-                <?php
-                // Mocked quotes
-                $mockQuotes = [
-                    ['text' => "If you're reading this, know I loved you even when I couldn't say it.", 'author' => 'Anonymous'],
-                    ['text' => "I'm sorry for all the times I was silent when I should've spoken.", 'author' => 'Maya L.'],
-                    ['text' => "You meant more to me than I could ever admit while I was here.", 'author' => 'J.T.'],
-                    ['text' => "Don't cry because I'm gone. Smile because I finally found peace.", 'author' => 'Unknown'],
-                    ['text' => "Thank you for being my light in the dark, even when I didn’t say it enough.", 'author' => 'A Friend'],
-                    ['text' => "We never said goodbye, but maybe that was our way of staying forever.", 'author' => 'Eli B.']
-                ];
+                <?php if (!empty($quotes)): ?>
+                    <?php foreach ($quotes as $quote): ?>
+                        <div class="quote-card">
+                            <div class="quote-actions-top">
+                                <button class="action-icon love <?= isset($quote['is_liked']) && $quote['is_liked'] ? 'active' : '' ?>"
+                                        data-quote-id="<?= $quote['id'] ?>"
+                                        title="Love this quote">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="count"><?= $quote['likes_count'] ?></span>
+                                </button>
+                                <button class="action-icon save <?= isset($quote['is_saved']) && $quote['is_saved'] ? 'active' : '' ?>"
+                                        data-quote-id="<?= $quote['id'] ?>"
+                                        title="Save quote">
+                                    <i class="fas fa-bookmark"></i>
+                                    <span class="count"><?= $quote['saves_count'] ?></span>
+                                </button>
+                                <button class="action-icon report <?= isset($quote['is_reported']) && $quote['is_reported'] ? 'active' : '' ?>"
+                                        data-quote-id="<?= $quote['id'] ?>"
+                                        title="Report quote">
+                                    <i class="fas fa-flag"></i>
+                                    <span class="count"><?= $quote['reports_count'] ?></span>
+                                </button>
+                            </div>
 
-                foreach ($mockQuotes as $quote): ?>
-                    <div class="quote-card">
-                        <p class="quote-text">“<?= htmlspecialchars($quote['text']) ?>”</p>
-                        <p class="quote-author">— <?= htmlspecialchars($quote['author']) ?></p>
-                    </div>
-                <?php endforeach; ?>
+                            <div class="quote-title">
+                                <?= htmlspecialchars($quote['title']) ?>
+                            </div>
+
+                            <div class="quote-content">
+                                <?= htmlspecialchars($quote['content']) ?>
+                            </div>
+
+                            <div class="author-section">
+                                <div class="author-info">
+                                    <div class="author-name">
+                                        Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="no-quotes">No quotes found. Be the first to share one!</p>
+                <?php endif; ?>
             </div>
         </section>
     </main>
-
-    <?php include __DIR__ . '/partials/footer.php'; ?>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const actionButtons = document.querySelectorAll('.action-icon');
+
+        actionButtons.forEach(button => {
+            button.addEventListener('click', async function (e) {
+                e.preventDefault();
+
+                const quoteId = this.dataset.quoteId;
+                const action = this.classList.contains('love') ? 'like' :
+                    this.classList.contains('save') ? 'save' : 'report';
+
+                try {
+                    const response = await fetch(`/quotes/${quoteId}/${action}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = '/login';
+                        return;
+                    }
+
+                    if (data.success) {
+                        // Update the count
+                        const countSpan = this.querySelector('.count');
+                        if (action === 'like') {
+                            countSpan.textContent = data.likes_count;
+                            this.classList.toggle('active', data.is_liked);
+                        } else if (action === 'save') {
+                            countSpan.textContent = data.saves_count;
+                            this.classList.toggle('active', data.is_saved);
+                        } else if (action === 'report') {
+                            countSpan.textContent = data.reports_count;
+                            this.classList.toggle('active', data.is_reported);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

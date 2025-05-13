@@ -23,9 +23,11 @@ abstract class BaseModel
     /**
      * Find a record by ID.
      */
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
-        return $this->db->querySingle("SELECT * FROM {$this->table} WHERE id = :id", ['id' => $id]);
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id LIMIT 1";
+        $result = $this->db->query($sql, ['id' => $id]);
+        return $result[0] ?? null;
     }
 
     /**

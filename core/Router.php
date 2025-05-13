@@ -64,7 +64,7 @@ class Router
 
         // Find a matching route
         foreach ($this->routes[$method] ?? [] as $route => $routeData) {
-            $pattern = preg_replace('/:\w+/', '([^/]+)', $route);
+            $pattern = preg_replace('/:([^\/]+)/', '(?<$1>[^\/]+)', $route);
             if (preg_match("#^$pattern$#", $path, $matches)) {
                 array_shift($matches); // Remove the full path match
                 $req->setParams($route, $matches);

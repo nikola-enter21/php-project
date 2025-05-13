@@ -2,7 +2,7 @@
 
 return [
     'host' => 'localhost',
-    'database' => 'your_database',
+    'database' => 'postgres',
     'username' => 'your_user',
     'password' => 'your_password',
     'charset' => 'utf8mb4',
