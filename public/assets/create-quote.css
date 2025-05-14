@@ -1,0 +1,185 @@
+.quote-create-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+}
+
+.quote-create-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.quote-create-header h1 {
+    color: #2c3e50;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.quote-create-header p {
+    color: #7f8c8d;
+    font-size: 1.1em;
+}
+
+.quote-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-field {
+    position: relative;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.form-field input,
+.form-field textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+    border-color: #3498db;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+}
+
+.form-field textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-field .char-count {
+    position: absolute;
+    right: 10px;
+    bottom: 3px;
+    color: #95a5a6;
+    font-size: 0.9em;
+}
+
+.quote-submit-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.quote-submit-btn:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.quote-submit-btn:active {
+    transform: translateY(0);
+}
+
+.message {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.message.error {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
+
+.message.success {
+    background-color: #dcfce7;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+}
+
+.message-icon {
+    font-size: 1.2em;
+}
+
+.optional-label {
+    color: #95a5a6;
+    font-size: 0.9em;
+    font-weight: normal;
+    margin-left: 8px;
+}
+
+.form-field-info {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .quote-create-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .quote-create-header h1 {
+        font-size: 2em;
+    }
+
+    .form-field input,
+    .form-field textarea {
+        padding: 12px;
+    }
+
+    .quote-submit-btn {
+        padding: 12px 24px;
+    }
+}
+
+/* Loading state */
+.quote-submit-btn.loading {
+    background: #bdc3c7;
+    pointer-events: none;
+    position: relative;
+}
+
+.quote-submit-btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: button-loading 0.8s ease infinite;
+    right: 15px;
+    top: calc(50% - 10px);
+}
+
+@keyframes button-loading {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}

@@ -1,8 +1,13 @@
 <header class="main-header">
     <nav class="navbar">
-        <h1 class="logo">QuoteShare</h1>
+        <h1 class="logo"><a href="/">QuoteShare</a></h1>
         <ul class="nav-links">
             <?php if (isset($_SESSION['user'])): ?>
+                <li>
+                    <a href="/quotes/create" class="create-quote-btn">
+                        <i class="fas fa-plus"></i> Create Quote
+                    </a>
+                </li>
                 <li>
                     <form action="/logout" method="POST" class="logout-form">
                         <button type="submit" class="logout-button">Logout</button>

@@ -15,23 +15,10 @@ class UserModel extends BaseModel
     }
 
     /**
-     * Get all users.
-     */
-    public function getAllUsers(): array
-    {
-        return $this->findAll();
-    }
-
-    /**
-     * Get a user by ID.
-     */
-    public function getUserById(int $id): ?array
-    {
-        return $this->findById($id);
-    }
-
-    /**
-     * Create a new user record.
+     * Insert a new user into the database.
+     *
+     * @param array $data Contains full_name, email, password (hashed).
+     * @return bool True on success or false on failure.
      */
     public function createUser(array $data): bool
     {
@@ -39,18 +26,26 @@ class UserModel extends BaseModel
     }
 
     /**
-     * Update a user record.
+     * Get a user by their email address.
+     *
+     * @param string $email The email to search for.
+     * @return array|null The user's data (associative array) or null if not found.
      */
-    public function updateUser(int $id, array $data): bool
+    public function getUserByEmail(string $email): ?array
     {
-        return $this->update($id, $data);
+        $sql = "SELECT * FROM {$this->table} WHERE email = :email";
+        return $this->db->querySingle($sql, ['email' => $email]);
     }
 
     /**
-     * Delete a user record.
+     * Check if an email is already registered in the system.
+     *
+     * @param string $email The email address to check.
+     * @return bool True if the email exists, false otherwise.
      */
-    public function deleteUser(int $id): bool
+    public function isEmailTaken(string $email): bool
     {
-        return $this->delete($id);
+        $sql = "SELECT id FROM {$this->table} WHERE email = :email";
+        return $this->db->querySingle($sql, ['email' => $email]) !== null;
     }
 }
