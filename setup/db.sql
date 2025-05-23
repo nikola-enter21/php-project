@@ -22,6 +22,23 @@ CREATE TABLE Quotes
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Collections table
+CREATE TABLE Collections
+(
+    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name       VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Collection_Quotes table
+CREATE TABLE Collection_Quotes
+(
+    id            UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    collection_id UUID NOT NULL REFERENCES Collections (id) ON DELETE CASCADE,
+    quote_id      UUID NOT NULL REFERENCES Quotes (id) ON DELETE CASCADE,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Tags table
 CREATE TABLE Tags
 (

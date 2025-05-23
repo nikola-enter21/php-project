@@ -65,6 +65,11 @@ try {
     $router->post('/quotes/:id/save', [$container->get(QuoteController::class), 'saveQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/like', [$container->get(QuoteController::class), 'likeQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/report', [$container->get(QuoteController::class), 'reportQuote'], [AuthMiddleware::class]);
+    $router->post('/quotes/add-to-collection', [$container->get(QuoteController::class), 'addToCollection'], [AuthMiddleware::class]);
+
+    //Collection Routes
+    $router->post('/collections/store', [CollectionController::class, 'create'], [AuthMiddleware::class]);
+    $router->get('/collections', [CollectionController::class, 'getCollections'], [AuthMiddleware::class]);
 
     // User Routes
     $router->get('/login', [$container->get(UserController::class), 'loginView']);

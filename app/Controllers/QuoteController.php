@@ -48,6 +48,26 @@ class QuoteController
         }
     }
 
+    public function addToCollection(Request $req, Response $res)
+    {
+        $user = $req->session()->get('user');
+        if (!$user) {
+            $res->json(['success' => false, 'message' => 'You must be logged in to add quote to a collection.'], 401);
+            return;
+        }
+
+        $collectionId = $req->body('collection_id');
+        $quoteId = $req->body('quote_id');
+
+        $collectionModel = new CollectionModel($this->db);
+
+        if ($collectionModel->addQuoteToCollection($collectionId, $quoteId)) {
+            $res->json(['success' => true, 'message' => 'Quote added to collection']);
+        } else {
+            $res->json(['success' => false, 'message' => 'Failed to add quote to collection']);
+        }
+    }
+
 
 // Similar updates for saveQuote and reportQuote methods
     public function saveQuote(Request $req, Response $res): void
