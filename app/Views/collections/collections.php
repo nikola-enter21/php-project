@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="layout-container">
+    <?php include __DIR__ . '/../partials/nav.php'; ?>
     <header>
         <h1>Collections</h1>
         <button id="create-collection-btn">Create New Collection</button>
@@ -26,6 +28,9 @@
         <?php endforeach; ?>
         </ul>
     </main>
+
+    <?php include __DIR__ . '/../partials/footer.php'; ?>
+</div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const collectionsList = document.getElementById("collections-list");
