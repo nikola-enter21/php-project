@@ -9,11 +9,10 @@ use Core\BaseModel;
 class CollectionModel extends BaseModel
 {
     protected string $table = 'collections';
-    protected Database $db;
 
-    public function __construct()
+    public function __construct(Database $db)
     {
-        $this->db = new Database(); // Initialize the database connection
+        parent::__construct($db); 
     }
 
     /**
