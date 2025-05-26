@@ -53,6 +53,10 @@ $container->set(
     AdminController::class,
     fn($c) => new AdminController($c->get(UserModel::class))
 );
+$container->set(
+    CollectionController::class,
+    fn($c) => new CollectionController($c->get(CollectionModel::class))
+);
 
 // Routes
 try {
