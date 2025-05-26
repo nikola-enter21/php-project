@@ -38,6 +38,10 @@ $container->set(
     fn() => new QuoteModel($container->get(Database::class))
 );
 $container->set(
+    CollectionModel::class,
+    fn() => new CollectionModel($container->get(Database::class))
+);
+$container->set(
     HomeController::class,
     fn($c) => new HomeController($c->get(QuoteModel::class))
 );
