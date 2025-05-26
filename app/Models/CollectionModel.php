@@ -40,7 +40,7 @@ class CollectionModel extends BaseModel
      /**
      * Retrieve a collection by its ID.
      */
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $sql = "SELECT * FROM {$this->table} WHERE id = :id";
         return $this->db->fetch($sql, ['id' => $id]);
