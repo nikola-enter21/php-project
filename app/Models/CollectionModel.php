@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Core\Database;
 use Dompdf\Dompdf;
+use Core\BaseModel;
 
 class CollectionModel extends BaseModel
 {
