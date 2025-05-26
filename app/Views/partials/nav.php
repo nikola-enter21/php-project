@@ -9,6 +9,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/collections" class="collections-btn">
+                        <i class="fas fa-folder"></i> Collections
+                    </a>
+                </li>
+                <li>
                     <form action="/logout" method="POST" class="logout-form">
                         <button type="submit" class="logout-button">Logout</button>
                     </form>
