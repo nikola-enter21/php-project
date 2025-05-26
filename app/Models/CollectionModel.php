@@ -10,11 +10,6 @@ class CollectionModel extends BaseModel
 {
     protected string $table = 'collections';
 
-    public function __construct(Database $db)
-    {
-        parent::__construct($db); 
-    }
-
     /**
      * Add a quote to a collection.
      */
