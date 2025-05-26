@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Controllers;
+use Core\Flash;
 use App\Models\CollectionModel;
-use Request;
-use Response;
+use Core\Request;
+use Core\Response;
 
 class CollectionController
 {
@@ -41,3 +42,5 @@ class CollectionController
         $dompdf->stream('collection.pdf');
     }
 }
+
+?>

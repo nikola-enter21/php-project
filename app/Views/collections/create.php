@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Create a New Collection</h1>
-    <form action="/collections/store" method="POST">
+    <form action="/collections" method="POST">
         <div>
             <label for="name">Collection Name:</label>
             <input type="text" id="name" name="name" required>
