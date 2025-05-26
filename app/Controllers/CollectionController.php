@@ -1,7 +1,3 @@
-use App\Models\Quote;
-use App\Models\Collection;
-use Dompdf\Dompdf;
-
 <?php
 
 namespace App\Controllers;
