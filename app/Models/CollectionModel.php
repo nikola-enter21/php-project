@@ -60,7 +60,7 @@ class CollectionModel extends BaseModel
     /**
      * Update an existing collection by its ID.
      */
-    public function update(string $id, array $data): bool
+    public function update(int $id, array $data): bool
     {
         $sql = "UPDATE {$this->table} SET name = :name WHERE id = :id";
         return $this->db->execute($sql, [
