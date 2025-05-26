@@ -31,6 +31,13 @@ class CollectionModel extends BaseModel
         return $this->db->fetchAll($sql);
     }
 
+    public function getAllCollections(): array
+    {
+        $sql = "SELECT * FROM {$this->table}";
+        return $this->db->fetchAll($sql);
+    }
+
+
      /**
      * Retrieve a collection by its ID.
      */
