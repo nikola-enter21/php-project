@@ -50,4 +50,25 @@ class Database
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($params);
     }
+
+    /**
+     * Execute a query and fetch all rows.
+     */
+    public function fetchAll(string $sql, array $params = []): array
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Fetch a single row.
+     */
+    public function fetch(string $sql, array $params = []): ?array
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
+    }
 }
