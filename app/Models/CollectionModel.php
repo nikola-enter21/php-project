@@ -19,7 +19,7 @@ class CollectionModel extends BaseModel
     /**
      * Add a quote to a collection.
      */
-    public function addQuoteToCollection(string $collectionId, string $quote): bool
+    public function addQuoteToCollection(int $collectionId, string $quote): bool
     {
         $sql = "INSERT INTO {$this->table} (collection_id, quote) VALUES (:collection_id, :quote)";
         return $this->db->execute($sql, [
@@ -40,7 +40,7 @@ class CollectionModel extends BaseModel
      /**
      * Retrieve a collection by its ID.
      */
-    public function findById(string $id): ?array
+    public function findById(int $id): ?array
     {
         $sql = "SELECT * FROM {$this->table} WHERE id = :id";
         return $this->db->fetch($sql, ['id' => $id]);
@@ -72,7 +72,7 @@ class CollectionModel extends BaseModel
         /**
      * Delete a collection by its ID.
      */
-    public function delete(string $id): bool
+    public function delete(int $id): bool
     {
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         return $this->db->execute($sql, ['id' => $id]);
@@ -81,7 +81,7 @@ class CollectionModel extends BaseModel
     /**
      * Delete a quote from a collection.
      */
-    public function deleteQuoteFromCollection(string $collectionId, string $quoteId): bool
+    public function deleteQuoteFromCollection(int $collectionId, int $quoteId): bool
     {
         $sql = "DELETE FROM {$this->table} WHERE collection_id = :collection_id AND id = :quote_id";
         return $this->db->execute($sql, [
