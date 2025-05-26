@@ -5,17 +5,28 @@ use Dompdf\Dompdf;
 <?php
 
 namespace App\Controllers;
-
+use App\Models\CollectionModel;
+use Request;
+use Response;
 
 class CollectionController
 {
-    protected $collection;
+    protected $collectionModel;
 
     public function __construct()
     {
-        $this->collection = new Collection();
+        $this->collectionModel = new CollectionModel();
     }
 
+    public function create(Request $req, Response $res)
+    {
+    $name = $req->body('name');
+    if ($this->collection->createCollection($name)) {
+        $res->redirect('/collections');
+    } else {
+        $res->json(['success' => false, 'message' => 'Failed to create collection']);
+    }
+    }
 
     // Export the collection as a PDF
     public function exportAsPdf()
