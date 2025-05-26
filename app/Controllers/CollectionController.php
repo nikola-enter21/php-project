@@ -41,6 +41,13 @@ class CollectionController
         $dompdf->render();
         $dompdf->stream('collection.pdf');
     }
-}
 
+    public function getCollections(Response $res)
+    {
+        $collections = $this->collectionModel->getAllCollections();
+        return $res->json([
+            'collections' => $collections
+        ]);
+    }
+}
 ?>
