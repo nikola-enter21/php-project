@@ -45,9 +45,7 @@ class CollectionController
     public function getCollections(Request $req, Response $res)
     {
         $collections = $this->collectionModel->getAllCollections();
-        return $res->json([
-            'collections' => $collections
-        ]);
+        require_once __DIR__ . '/../Views/collections/collections.php';
     }
 }
 ?>
