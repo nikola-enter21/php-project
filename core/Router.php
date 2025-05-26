@@ -131,9 +131,9 @@ class Router
         if (is_array($handler) && count($handler) === 2) {
             [$className, $methodName] = $handler;
 
-            if (!class_exists($className)) {
-                throw new Exception("Controller class $className does not exist");
-            }
+           // if (!class_exists($className)) {
+          //      throw new Exception("Controller class $className does not exist");
+          // }
 
             $controller = new $className();
 
