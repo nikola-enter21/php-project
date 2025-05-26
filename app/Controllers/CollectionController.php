@@ -17,12 +17,12 @@ class CollectionController
 
     public function create(Request $req, Response $res)
     {
-    $name = $req->body('name');
-    if ($this->collection->createCollection($name)) {
-        $res->redirect('/collections');
-    } else {
-        $res->json(['success' => false, 'message' => 'Failed to create collection']);
-    }
+        $name = $req->body('name');
+        if ($this->collection->createCollection($name)) {
+            $res->redirect('/collections');
+        } else {
+            $res->json(['success' => false, 'message' => 'Failed to create collection']);
+        }
     }
 
     // Export the collection as a PDF
