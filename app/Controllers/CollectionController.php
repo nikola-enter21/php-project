@@ -8,11 +8,11 @@ use Core\Response;
 
 class CollectionController
 {
-    protected $collectionModel;
+    protected CollectionModel $collectionModel;
 
-    public function __construct()
+    public function __construct(CollectionModel $collectionModel)
     {
-        $this->collectionModel = new CollectionModel();
+        $this->collectionModel = $collectionModel;
     }
 
     public function create(Request $req, Response $res)
