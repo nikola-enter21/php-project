@@ -31,21 +31,10 @@ class QuoteModel extends BaseModel
     public function getAllQuotes(?string $userId = null): array
     {
         $quotes = $this->findAll();
+        error_log('Fetched quotes: ' . json_encode($quotes)); 
 
         foreach ($quotes as &$quote) {
-            // Add counts
-            $counts = $this->getQuoteCounts($quote['id']);
-            $quote['likes_count'] = (int)$counts['likes_count'];
-            $quote['saves_count'] = (int)$counts['saves_count'];
-            $quote['reports_count'] = (int)$counts['reports_count'];
-
-            // Add user interactions if user is logged in
-            if ($userId) {
-                $interactions = $this->getUserInteractions($userId, $quote['id']);
-                $quote['is_liked'] = (bool)$interactions['is_liked'];
-                $quote['is_saved'] = (bool)$interactions['is_saved'];
-                $quote['is_reported'] = (bool)$interactions['is_reported'];
-            }
+            // ...existing code...
         }
 
         return $quotes;
@@ -56,7 +45,9 @@ class QuoteModel extends BaseModel
      */
     public function getQuoteById(string $quoteId): ?array
     {
-        return $this->findById($quoteId);
+        $quote = $this->findById($quoteId);
+        error_log('Fetched quote: ' . json_encode($quote)); 
+        return $quote;
     }
 
     /**
@@ -176,5 +167,19 @@ class QuoteModel extends BaseModel
         ])[0];
 
         return (bool)$result['saved'];
+    }
+
+    public function addQuoteToCollection(string $collectionId, string $quoteId): bool
+    {
+        try {
+            $sql = "INSERT INTO Collection_Quotes (collection_id, quote_id) VALUES (:collection_id, :quote_id)";
+            return $this->db->execute($sql, [
+                'collection_id' => $collectionId,
+                'quote_id' => $quoteId,
+            ]);
+        } catch (\Exception $e) {
+            error_log('Error adding quote to collection: ' . $e->getMessage());
+            return false;
+        }
     }
 }

@@ -3,84 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collections</title>
+    <title>Create New Quote | QuoteShare</title>
     <link rel="stylesheet" href="/public/assets/reset.css">
     <link rel="stylesheet" href="/public/assets/styles.css">
     <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/create-quote.css">
+    <link rel="stylesheet" href="/public/assets/collection.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="layout-container">
+<div class="collection-create-container">
     <?php include __DIR__ . '/../partials/nav.php'; ?>
-    <header>
-        <h1>Collections</h1>
-        <button id="create-collection-btn">Create New Collection</button>
-    </header>
-    <main>
-        <ul id="collections-list">
-        <?php foreach ($collections as $collection): ?>
-            <li>
-                <h2><?php echo htmlspecialchars($collection['name'], ENT_QUOTES, 'UTF-8'); ?></h2>
-                <p><?php echo htmlspecialchars($collection['description'], ENT_QUOTES, 'UTF-8'); ?></p>
-                <a href="/collection/<?php echo urlencode($collection['id']); ?>">View Collection</a>
-            </li>
-        <?php endforeach; ?>
-        </ul>
-    </main>
 
-    <?php include __DIR__ . '/../partials/footer.php'; ?>
+    <?php if ($flash = $req->session()->get('flash')): ?>
+        <div class="message <?= htmlspecialchars($flash['type']) ?>">
+            <?= htmlspecialchars($flash['message']) ?>
+        </div>
+        <?php $req->session()->remove('flash'); ?>
+    <?php endif; ?>
+
+    <a href="/collections/create" class="create-collection-btn">
+        <h1>Create New Collection</h1>
+    </a>
 </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const collectionsList = document.getElementById("collections-list");
-            const createCollectionBtn = document.getElementById("create-collection-btn");
-            async function fetchCollections() {
+
+<section class="collections-section">
+    <h2>📚 Featured Collections</h2>
+    <div class="collections-grid">
+        <?php if (!empty($collections)): ?>
+            <?php foreach ($collections as $collection): ?>
+                <div class="collection-card">
+                    <div class="collection-title">
+                        <?= htmlspecialchars($collection['name']) ?>
+                    </div>
+
+                    <div class="collection-description">
+                        <?= htmlspecialchars($collection['description'] ?? 'No description available') ?>
+                    </div>
+
+                    <div class="collection-meta">
+                        <span>Quotes:</span>
+                        <ul>
+                            <?php foreach ($collection['quotes'] as $quote): ?>
+                                <li class="quote-title" data-quote-id="<?= htmlspecialchars($quote['id'] ?? '') ?>">
+                                    <strong><?= htmlspecialchars($quote['title'] ?? 'Untitled') ?></strong><br>
+                                    <?= htmlspecialchars($quote['content'] ?? 'No content available') ?><br>
+                                    <em>Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?></em>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="no-collections">No collections found. Create your first collection!</p>
+        <?php endif; ?>
+    </div>
+</section>
+
+<div id="quote-modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div id="quote-details"></div>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../partials/footer.php'; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quoteTitles = document.querySelectorAll('.quote-title');
+        const modal = document.getElementById('quote-modal');
+        const modalContent = document.getElementById('quote-details');
+        const closeModal = document.querySelector('.close-modal');
+
+        quoteTitles.forEach(title => {
+            title.addEventListener('click', async function () {
+                const quoteId = this.dataset.quoteId; // Използваме dataset.quoteId
                 try {
-                    const response = await fetch("/collections");
+                    const response = await fetch('/quotes/' + quoteId);
                     const data = await response.json();
-                    if (data.collections) {
-                        renderCollections(data.collections);
+                    if (data.success) {
+                        modalContent.innerHTML = `
+                            <h2>${data.quote.title}</h2>
+                            <p>${data.quote.content}</p>
+                            <p><strong>Author:</strong> ${data.quote.author}</p>
+                        `;
+                        modal.style.display = 'block';
                     }
                 } catch (error) {
-                    console.error("Failed to fetch collections:", error);
-                }
-            }
-
-            function renderCollections(collections) {
-                collectionsList.innerHTML = ""; 
-                collections.forEach((collection) => {
-                    const li = document.createElement("li");
-                    li.textContent = collection.name; 
-                    collectionsList.appendChild(li);
-                });
-            }
-
-            createCollectionBtn.addEventListener("click", async () => {
-                const collectionName = prompt("Enter the name of the new collection:");
-                if (collectionName) {
-                    try {
-                        const response = await fetch("/collections/create", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({ name: collectionName }),
-                        });
-                        if (response.ok) {
-                            alert("Collection created successfully!");
-                            fetchCollections(); 
-                        } else {
-                            alert("Failed to create collection.");
-                        }
-                    } catch (error) {
-                        console.error("Failed to create collection:", error);
-                    }
+                    console.error('Error fetching quote details:', error);
                 }
             });
-
-            fetchCollections();
         });
-    </script>
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    });
+</script>
 </body>
 </html>

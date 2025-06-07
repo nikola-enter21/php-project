@@ -3,7 +3,7 @@
 return [
     'host' => 'localhost',
     'database' => 'postgres',
-    'username' => 'your_user',
-    'password' => 'your_password',
+    'username' => 'postgres',
+    'password' => 'postgres',
     'charset' => 'utf8mb4',
 ];

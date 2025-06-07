@@ -1,0 +1,109 @@
+
+.collection-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.collection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.collection-header {
+    margin-bottom: 10px;
+}
+
+.collection-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.collection-body {
+    margin-bottom: 15px;
+}
+
+.collection-description {
+    font-size: 1em;
+    color: #7f8c8d;
+    line-height: 1.5;
+    margin: 0;
+}
+
+
+.collection-meta {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.collection-meta span {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.collection-meta ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.collection-meta li {
+    background-color: #f9fafb;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.collection-meta li:hover {
+    background-color: #f1f5f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.collection-meta li strong {
+    font-size: 1.1em;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.collection-meta li em {
+    font-size: 0.9em;
+    color: #64748b;
+    margin-top: 5px;
+}
+
+.view-collection-btn {
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.view-collection-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}

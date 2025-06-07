@@ -27,6 +27,8 @@ CREATE TABLE Collections
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name       VARCHAR(255) NOT NULL,
+    description     TEXT         NOT NULL,
+    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -83,3 +85,5 @@ CREATE TABLE Booked
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE Collection_Quotes ADD CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id);
