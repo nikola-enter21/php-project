@@ -2,67 +2,67 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Users table
-CREATE TABLE Users
+CREATE TABLE IF NOT EXISTS Users
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     full_name  VARCHAR(255) NOT NULL,
     password   VARCHAR(255) NOT NULL,
     email      VARCHAR(255) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Quotes table
-CREATE TABLE Quotes
+CREATE TABLE IF NOT EXISTS Quotes
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title      VARCHAR(255) NOT NULL,
     content    TEXT         NOT NULL,
     author     VARCHAR(255),
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tags table
-CREATE TABLE Tags
+CREATE TABLE IF NOT EXISTS Tags
 (
     id   UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Annotations table
-CREATE TABLE Annotations
+CREATE TABLE IF NOT EXISTS Annotations
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
     note       TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Likes table
-CREATE TABLE Likes
+CREATE TABLE IF NOT EXISTS Likes
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Reports table
-CREATE TABLE Reports
+CREATE TABLE IF NOT EXISTS Reports
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
     reason     TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Booked (saved quotes) table
-CREATE TABLE Booked
+CREATE TABLE IF NOT EXISTS Booked
 (
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
