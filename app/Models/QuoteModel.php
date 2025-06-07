@@ -34,7 +34,19 @@ class QuoteModel extends BaseModel
         error_log('Fetched quotes: ' . json_encode($quotes)); 
 
         foreach ($quotes as &$quote) {
-            // ...existing code...
+            // Add counts
+            $counts = $this->getQuoteCounts($quote['id']);
+            $quote['likes_count'] = (int)$counts['likes_count'];
+            $quote['saves_count'] = (int)$counts['saves_count'];
+            $quote['reports_count'] = (int)$counts['reports_count'];
+
+            // Add user interactions if user is logged in
+            if ($userId) {
+                $interactions = $this->getUserInteractions($userId, $quote['id']);
+                $quote['is_liked'] = (bool)$interactions['is_liked'];
+                $quote['is_saved'] = (bool)$interactions['is_saved'];
+                $quote['is_reported'] = (bool)$interactions['is_reported'];
+            }
         }
 
         return $quotes;
