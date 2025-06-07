@@ -96,8 +96,18 @@
 
                 const quoteId = this.dataset.quoteId;
 
-                const action = this.classList.contains('love') ? 'like' :
-                this.classList.contains('save') ? 'save' : 'report';
+        
+                let action;
+                if (this.classList.contains('love')) {
+                    action = 'like';
+                } else if (this.classList.contains('save')) {
+                    action = 'save';
+                } else if (this.classList.contains('report')) {
+                    action = 'report';
+                } else if (this.classList.contains('add-to-collection')) {
+                    // Skip processing here for "Add to Collection" button
+                    return;
+                }
 
                 try {
                     const response = await fetch(`/quotes/${quoteId}/${action}`, {
@@ -143,20 +153,24 @@
             button.addEventListener('click', async function () {
                 const quoteId = this.dataset.quoteId;
 
+                // Показване на поп-ъп менюто
                 popup.style.display = 'block';
-                collectionList.innerHTML = ''; 
+                collectionList.innerHTML = ''; // Изчистване на предишното съдържание
 
                 try {
+                    // Извличане на наличните колекции на текущия потребител
                     const response = await fetch('/collections/json');
                     const data = await response.json();
 
                     if (data.success && data.collections.length > 0) {
+                        // Добавяне на колекциите в поп-ъп менюто
                         data.collections.forEach(collection => {
                             const li = document.createElement('li');
                             li.textContent = collection.name;
                             li.dataset.collectionId = collection.id;
                             li.addEventListener('click', async () => {
                                 try {
+                                    // Добавяне на цитата към избраната колекция
                                     const addResponse = await fetch(`/quotes/${quoteId}/add-to-collection`, {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
@@ -166,16 +180,22 @@
                                         })
                                     });
                                     const addData = await addResponse.json();
-                                    alert(addData.message); 
-                                    popup.style.display = 'none'; 
+
+                                    if (addData.success) {
+                                        alert(addData.message); // Показване на съобщение за успех
+                                        popup.style.display = 'none'; // Затваряне на поп-ъп менюто
+                                    } else {
+                                        alert(addData.message); // Показване на съобщение за грешка
+                                    }
                                 } catch (error) {
                                     console.error('Error adding to collection:', error);
-                                    alert('An error occurred. Please try again.');
+                                    alert('An error occurred while adding the quote to the collection. Please try again.');
                                 }
                             });
                             collectionList.appendChild(li);
                         });
                     } else {
+                        // Показване на съобщение, ако няма налични колекции
                         const noCollectionsMessage = document.createElement('p');
                         noCollectionsMessage.textContent = 'No collections available.';
                         noCollectionsMessage.style.color = '#64748b';
@@ -188,10 +208,12 @@
             });
         });
 
+        // Затваряне на поп-ъп менюто при клик върху "X"
         closePopup.addEventListener('click', () => {
             popup.style.display = 'none';
         });
 
+        // Затваряне на поп-ъп менюто при клик извън него
         window.addEventListener('click', (event) => {
             if (event.target === popup) {
                 popup.style.display = 'none';

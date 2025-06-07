@@ -62,8 +62,6 @@ class QuoteController
         $collectionId = $req->body('collection_id');
         $quoteId = $req->body('quote_id');
 
-        error_log("Received collection_id: $collectionId, quote_id: $quoteId");
-
         if (empty($collectionId) || empty($quoteId)) {
             $res->json(['success' => false, 'message' => 'Invalid collection or quote ID.'], 400);
             return;
