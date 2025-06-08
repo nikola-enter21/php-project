@@ -67,4 +67,11 @@ class AdminController
         // Mock deleting logs
         $res->json(['success' => true, 'message' => 'Logs cleared']);
     }
+
+    public function mostLikedQuotes(Request $req, Response $res)
+    {
+        $quotes = $this->quoteModel->getMostLikedQuotes();
+        $res->view('most-liked-quotes', ['quotes' => $quotes]);
+    }
+
 }

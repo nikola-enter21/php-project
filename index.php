@@ -78,6 +78,7 @@ try {
     $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AdminMiddleware::class]);
     $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AdminMiddleware::class]);
     $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AdminMiddleware::class]);
+    $router->get('/admin/quotes/most-liked', [$container->get(AdminController::class), 'mostLikedQuotes'], [AdminMiddleware::class]);
 
     $router->run();
 } catch (Exception $e) {

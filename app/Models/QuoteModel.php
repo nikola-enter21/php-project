@@ -177,4 +177,17 @@ class QuoteModel extends BaseModel
 
         return (bool)$result['saved'];
     }
+
+    public function getMostLikedQuotes(int $limit = 10): array
+    {
+        $sql = "SELECT q.*, COUNT(l.id) as likes_count 
+                FROM Quotes q 
+                LEFT JOIN Likes l ON q.id = l.quote_id 
+                GROUP BY q.id 
+                ORDER BY likes_count DESC 
+                LIMIT :limit";
+
+        return $this->db->query($sql, ['limit' => $limit]);
+    }
+
 }

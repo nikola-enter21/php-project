@@ -1,0 +1,36 @@
+.quotes-section {
+  padding: 2rem;
+}
+
+.quotes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.quote-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.quote-content {
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: 1rem;
+  color: #4b2e2e;
+}
+
+.quote-author {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #6b4f4f;
+}
+
+.quote-likes {
+  font-size: 0.9rem;
+  color: #ff8c42;
+}
