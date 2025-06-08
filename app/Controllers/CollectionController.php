@@ -5,6 +5,7 @@ use Core\Flash;
 use App\Models\CollectionModel;
 use Core\Request;
 use Core\Response;
+use Dompdf\Dompdf;
 
 class CollectionController
 {
@@ -62,12 +63,31 @@ class CollectionController
     }
 
     // Export the collection as a PDF
-    public function exportAsPdf()
+    public function exportAsPdf(Request $req, Response $res)
     {
-        $quotes = $this->collection->getQuotes();
-        $html = '<h1>Quote Collection</h1><ul>';
+        $collectionId = $req->param('id');
+
+        if (!$collectionId) {
+            $res->json(['success' => false, 'message' => 'Collection ID is missing.'], 400);
+            return;
+        }
+
+        $collection = $this->collectionModel->findById($collectionId);
+
+        if (!$collection) {
+            $res->json(['success' => false, 'message' => 'Collection not found.'], 404);
+            return;
+        }
+
+        $quotes = $this->collectionModel->getQuotesByCollectionId($collectionId);
+
+        $html = '<h1>' . htmlspecialchars($collection['name']) . '</h1>';
+        $html .= '<p>' . htmlspecialchars($collection['description']) . '</p>';
+        $html .= '<h2>Quotes:</h2><ul>';
         foreach ($quotes as $quote) {
-            $html .= '<li>' . htmlspecialchars($quote->text) . ' - ' . htmlspecialchars($quote->author) . '</li>';
+            $html .= '<li><strong>' . htmlspecialchars($quote['title']) . '</strong><br>' .
+                     htmlspecialchars($quote['content']) . '<br>' .
+                     '<em>Author: ' . htmlspecialchars($quote['author']) . '</em></li>';
         }
         $html .= '</ul>';
 
@@ -75,7 +95,9 @@ class CollectionController
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        $dompdf->stream('collection.pdf');
+
+        $pdfFileName = htmlspecialchars($collection['name']) . '.pdf';
+        $dompdf->stream($pdfFileName, ['Attachment' => true]);
     }
 
     public function getCollections(Request $req, Response $res)

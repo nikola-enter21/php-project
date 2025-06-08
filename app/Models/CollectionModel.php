@@ -148,4 +148,16 @@ class CollectionModel extends BaseModel
             'quote_id' => $quoteId,
         ]);
     }
+
+    /**
+     * Retrieve quotes by collection ID.
+     */
+    public function getQuotesByCollectionId(string $collectionId): array
+    {
+        $sql = "SELECT q.title, q.content, q.author 
+                FROM Collection_Quotes cq
+                JOIN Quotes q ON cq.quote_id = q.id
+                WHERE cq.collection_id = :collection_id";
+        return $this->db->fetchAll($sql, ['collection_id' => $collectionId]);
+    }
 }

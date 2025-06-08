@@ -55,6 +55,9 @@
                                         <?php endforeach; ?>
                                     </ul>
                                 </div>
+                                <a href="/collections/<?= htmlspecialchars($collection['id']) ?>/export-pdf" class="export-pdf-btn">
+                                    Export as PDF
+                                </a>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -82,7 +85,7 @@
 
         quoteTitles.forEach(title => {
             title.addEventListener('click', async function () {
-                const quoteId = this.dataset.quoteId; // Използваме dataset.quoteId
+                const quoteId = this.dataset.quoteId; 
                 try {
                     const response = await fetch('/quotes/' + quoteId);
                     const data = await response.json();
