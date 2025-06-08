@@ -18,6 +18,15 @@
 
         <main class="main-content">
             <section class="quotes-section">
+                <div id="custom-prompt-container" class="custom-prompt-container hidden">
+                    <div class="custom-prompt">
+                        <p id="custom-prompt-message">Are you sure you want to delete this quote?</p>
+                        <div class="prompt-actions">
+                            <button id="custom-prompt-yes" class="btn btn-primary">Yes</button>
+                            <button id="custom-prompt-no" class="btn btn-secondary">No</button>
+                        </div>
+                    </div>
+                </div>
                 <h1>Top 10 Most Liked Quotes</h1>
                 <div class="quotes-list">
                     <?php foreach ($quotes as $quote): ?>
@@ -41,6 +50,13 @@
                                     <i class="fas fa-flag"></i>
                                     <span class="count"><?= $quote['reports_count'] ?></span>
                                 </button>
+                                <?php if ($user['role'] === 'admin' || $user['id'] === $quote['user_id']): ?>
+                                    <button class="action-icon delete"
+                                            data-quote-id="<?= $quote['id'] ?>"
+                                            title="Delete quote">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                <?php endif; ?>
                             </div>
                             <p class="quote-content">"<?= htmlspecialchars($quote['content']) ?>"</p>
                             <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>

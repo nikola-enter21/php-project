@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
 
+      if (this.classList.contains("delete")) {
+        return;
+      }
+
       const quoteId = this.dataset.quoteId;
       const action = this.classList.contains("love")
         ? "like"
@@ -45,5 +49,53 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("An error occurred. Please try again.");
       }
     });
+  });
+
+  const promptContainer = document.getElementById("custom-prompt-container");
+  const promptYesButton = document.getElementById("custom-prompt-yes");
+  const promptNoButton = document.getElementById("custom-prompt-no");
+  const deleteButtons = document.querySelectorAll(".action-icon.delete");
+  let currentQuoteId = null;
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      console.log("Delete button clicked");
+      promptContainer.classList.remove("hidden");
+      currentQuoteId = button.dataset.quoteId;
+    });
+  });
+
+  promptYesButton.addEventListener("click", async () => {
+    if (!currentQuoteId) return;
+
+    try {
+      const response = await fetch(`/quotes/${currentQuoteId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        document
+          .querySelector(`[data-quote-id="${currentQuoteId}"]`)
+          .closest(".quote-card")
+          .remove();
+        promptContainer.classList.add("hidden");
+      } else {
+        const result = await response.json();
+        console.error(result.message || "Failed to delete quote.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      currentQuoteId = null;
+    }
+  });
+
+  promptNoButton.addEventListener("click", () => {
+    // Hide the prompt without deleting
+    promptContainer.classList.add("hidden");
+    currentQuoteId = null;
   });
 });

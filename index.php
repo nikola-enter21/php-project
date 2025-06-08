@@ -66,7 +66,7 @@ try {
     $router->post('/quotes/:id/save', [$container->get(QuoteController::class), 'saveQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/like', [$container->get(QuoteController::class), 'likeQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/report', [$container->get(QuoteController::class), 'reportQuote'], [AuthMiddleware::class]);
-
+    $router->delete('/quotes/:id', [$container->get(QuoteController::class), 'deleteQuote'], [AuthMiddleware::class]);
     // User Routes
     $router->get('/login', [$container->get(UserController::class), 'loginView']);
     $router->get('/register', [$container->get(UserController::class), 'registerView']);

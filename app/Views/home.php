@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/public/assets/styles.css">
     <link rel="stylesheet" href="/public/assets/nav.css">
     <link rel="stylesheet" href="/public/assets/home.css">
+    <link rel="stylesheet" href="/public/assets/quotes.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -34,6 +35,15 @@
             </section>
 
             <section class="quotes-section">
+                <div id="custom-prompt-container" class="custom-prompt-container hidden">
+                    <div class="custom-prompt">
+                        <p id="custom-prompt-message">Are you sure you want to delete this quote?</p>
+                        <div class="prompt-actions">
+                            <button id="custom-prompt-yes" class="btn btn-primary">Yes</button>
+                            <button id="custom-prompt-no" class="btn btn-secondary">No</button>
+                        </div>
+                    </div>
+                </div>
                 <h2>💫 Featured Quotes</h2>
                 <div class="quotes-grid">
                     <?php if (!empty($quotes)): ?>
@@ -58,23 +68,17 @@
                                         <i class="fas fa-flag"></i>
                                         <span class="count"><?= $quote['reports_count'] ?></span>
                                     </button>
+                                    <?php if ($user['role'] === 'admin' || $user['id'] === $quote['user_id']): ?>
+                                        <button class="action-icon delete"
+                                                data-quote-id="<?= $quote['id'] ?>"
+                                                title="Delete quote">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
-
-                                <div class="quote-title">
-                                    <?= htmlspecialchars($quote['title']) ?>
-                                </div>
-
-                                <div class="quote-content">
-                                    <?= htmlspecialchars($quote['content']) ?>
-                                </div>
-
-                                <div class="author-section">
-                                    <div class="author-info">
-                                        <div class="author-name">
-                                            Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?>
-                                        </div>
-                                    </div>
-                                </div>
+                                <p class="quote-content">"<?= htmlspecialchars($quote['content']) ?>"</p>
+                                <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>
+                                <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -84,6 +88,6 @@
             </section>
         </main>
     </div>
-    <script src="/public/js/quote-ations.js"></script>
+    <script src="/public/js/quote-actions.js"></script>
 </body>
 </html>
