@@ -72,7 +72,14 @@ class AdminController
     {
         $user = $req->session()->get('user');
         $quotes = $this->quoteModel->getMostLikedQuotes(10, $user['id']);
-        $res->view('most-liked-quotes', ['quotes' => $quotes]);
+        $res->view('quotes', ['quotes' => $quotes, 'title' => 'Most Liked Quotes', 'user' => $user]);
+    }
+
+    public function reportedQuotes(Request $req, Response $res)
+    {
+        $user = $req->session()->get('user');
+        $quotes = $this->quoteModel->getReportedQuotes($user['id']);
+        $res->view('quotes', ['quotes' => $quotes, 'title' => 'Reported Quotes', 'user' => $user]);
     }
 
 }

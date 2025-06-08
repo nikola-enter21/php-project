@@ -190,13 +190,43 @@ class QuoteModel extends BaseModel
         $quotes = $this->db->query($sql, ['limit' => $limit]);
 
         foreach ($quotes as &$quote) {
-            // Add counts
             $counts = $this->getQuoteCounts($quote['id']);
             $quote['likes_count'] = (int)$counts['likes_count'];
             $quote['saves_count'] = (int)$counts['saves_count'];
             $quote['reports_count'] = (int)$counts['reports_count'];
 
-            // Add user interactions if user is logged in
+            if ($userId) {
+                $interactions = $this->getUserInteractions($userId, $quote['id']);
+                $quote['is_liked'] = (bool)$interactions['is_liked'];
+                $quote['is_saved'] = (bool)$interactions['is_saved'];
+                $quote['is_reported'] = (bool)$interactions['is_reported'];
+            }
+        }
+
+        return $quotes;
+    }
+
+    public function getReportedQuotes(?string $userId = null): array
+    {
+        $sql = "SELECT q.*, COUNT(r.id) as reports_count 
+                FROM Quotes q 
+                LEFT JOIN Reports r ON q.id = r.quote_id 
+                GROUP BY q.id 
+                HAVING COUNT(r.id) > 0
+                ORDER BY reports_count DESC";
+
+        $quotes = $this->db->query($sql);
+
+        if (empty($quotes)) {
+            return [];
+        }
+
+        foreach ($quotes as &$quote) {
+            $counts = $this->getQuoteCounts($quote['id']);
+            $quote['likes_count'] = (int)$counts['likes_count'];
+            $quote['saves_count'] = (int)$counts['saves_count'];
+            $quote['reports_count'] = (int)$counts['reports_count'];
+
             if ($userId) {
                 $interactions = $this->getUserInteractions($userId, $quote['id']);
                 $quote['is_liked'] = (bool)$interactions['is_liked'];
