@@ -1,61 +1,78 @@
 .main-header {
-    background: #ffae70;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #ffae70;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #4b2e2e;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #4b2e2e;
 }
 
 .nav-links {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .nav-links a {
-    text-decoration: none;
-    color: #4b2e2e;
-    font-weight: bold;
-    transition: color 0.3s ease;
+  text-decoration: none;
+  color: #4b2e2e;
+  font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #7a3e3e;
+  color: #7a3e3e;
 }
 
 .logout-form {
-    display: inline-block;
-    margin: 0;
+  display: inline-block;
+  margin: 0;
 }
 
 .logout-button {
-    background: #000000;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    font-size: 0.95rem;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .logout-button:hover {
-    background: #e63946;
-    transform: scale(1.05);
+  background: #e63946;
+  transform: scale(1.05);
 }
 
 .logout-button:active {
-    transform: scale(0.97);
+  transform: scale(0.97);
+}
+
+a.admin-dashboard-link {
+  background: #7a3e3e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+a.admin-dashboard-link:hover {
+  background-color: salmon;
+  color: white;
 }
