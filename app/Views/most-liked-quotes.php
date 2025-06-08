@@ -22,6 +22,26 @@
                 <div class="quotes-list">
                     <?php foreach ($quotes as $quote): ?>
                         <div class="quote-card">
+                            <div class="quote-actions-top">
+                                <button class="action-icon love <?= isset($quote['is_liked']) && $quote['is_liked'] ? 'active' : '' ?>"
+                                        data-quote-id="<?= $quote['id'] ?>"
+                                        title="Love this quote">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="count"><?= $quote['likes_count'] ?></span>
+                                </button>
+                                <button class="action-icon save <?= isset($quote['is_saved']) && $quote['is_saved'] ? 'active' : '' ?>"
+                                        data-quote-id="<?= $quote['id'] ?>"
+                                        title="Save quote">
+                                    <i class="fas fa-bookmark"></i>
+                                    <span class="count"><?= $quote['saves_count'] ?></span>
+                                </button>
+                                <button class="action-icon report <?= isset($quote['is_reported']) && $quote['is_reported'] ? 'active' : '' ?>"
+                                        data-quote-id="<?= $quote['id'] ?>"
+                                        title="Report quote">
+                                    <i class="fas fa-flag"></i>
+                                    <span class="count"><?= $quote['reports_count'] ?></span>
+                                </button>
+                            </div>
                             <p class="quote-content">"<?= htmlspecialchars($quote['content']) ?>"</p>
                             <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>
                             <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
@@ -33,5 +53,6 @@
 
         <?php include __DIR__ . '/partials/footer.php'; ?>
     </div>
+    <script src="/public/js/quote-actions.js"></script>
 </body>
 </html>

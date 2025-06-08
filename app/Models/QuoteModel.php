@@ -178,7 +178,7 @@ class QuoteModel extends BaseModel
         return (bool)$result['saved'];
     }
 
-    public function getMostLikedQuotes(int $limit = 10): array
+    public function getMostLikedQuotes(int $limit = 10, ?string $userId = null): array
     {
         $sql = "SELECT q.*, COUNT(l.id) as likes_count 
                 FROM Quotes q 
@@ -187,7 +187,25 @@ class QuoteModel extends BaseModel
                 ORDER BY likes_count DESC 
                 LIMIT :limit";
 
-        return $this->db->query($sql, ['limit' => $limit]);
+        $quotes = $this->db->query($sql, ['limit' => $limit]);
+
+        foreach ($quotes as &$quote) {
+            // Add counts
+            $counts = $this->getQuoteCounts($quote['id']);
+            $quote['likes_count'] = (int)$counts['likes_count'];
+            $quote['saves_count'] = (int)$counts['saves_count'];
+            $quote['reports_count'] = (int)$counts['reports_count'];
+
+            // Add user interactions if user is logged in
+            if ($userId) {
+                $interactions = $this->getUserInteractions($userId, $quote['id']);
+                $quote['is_liked'] = (bool)$interactions['is_liked'];
+                $quote['is_saved'] = (bool)$interactions['is_saved'];
+                $quote['is_reported'] = (bool)$interactions['is_reported'];
+            }
+        }
+
+        return $quotes;
     }
 
 }

@@ -70,7 +70,8 @@ class AdminController
 
     public function mostLikedQuotes(Request $req, Response $res)
     {
-        $quotes = $this->quoteModel->getMostLikedQuotes();
+        $user = $req->session()->get('user');
+        $quotes = $this->quoteModel->getMostLikedQuotes(10, $user['id']);
         $res->view('most-liked-quotes', ['quotes' => $quotes]);
     }
 
