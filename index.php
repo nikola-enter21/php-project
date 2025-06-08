@@ -4,6 +4,7 @@ use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 use App\Controllers\QuoteController;
 use App\Middlewares\AuthMiddleware;
+use App\Middlewares\AdminMiddleware;
 use App\Models\QuoteModel;
 use App\Models\UserModel;
 use Core\Container;
@@ -49,7 +50,7 @@ $container->set(
 );
 $container->set(
     AdminController::class,
-    fn($c) => new AdminController($c->get(UserModel::class))
+    fn($c) => new AdminController($c->get(UserModel::class), $c->get(QuoteModel::class))
 );
 
 // Routes
@@ -74,9 +75,9 @@ try {
     $router->post('/logout', [$container->get(UserController::class), 'logout']);
 
     // Admin Routes
-    $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AuthMiddleware::class]);
-    $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AuthMiddleware::class]);
-    $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AuthMiddleware::class]);
+    $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AdminMiddleware::class]);
+    $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AdminMiddleware::class]);
+    $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AdminMiddleware::class]);
 
     $router->run();
 } catch (Exception $e) {
