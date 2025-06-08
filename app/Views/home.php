@@ -82,6 +82,7 @@
                 <?php else: ?>
                     <p>No quotes available at the moment. Check back later!</p>
                 <?php endif; ?>
+            
             </div>
         </section>
     </main>

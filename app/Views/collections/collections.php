@@ -11,64 +11,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="collection-create-container">
-    <?php include __DIR__ . '/../partials/nav.php'; ?>
+    <div class="page-wrapper">
+        <?php include __DIR__ . '/../partials/nav.php'; ?>
+        <main>
+            <div class="collection-create-container">
 
-    <?php if ($flash = $req->session()->get('flash')): ?>
-        <div class="message <?= htmlspecialchars($flash['type']) ?>">
-            <?= htmlspecialchars($flash['message']) ?>
-        </div>
-        <?php $req->session()->remove('flash'); ?>
-    <?php endif; ?>
-    <div class="collection-create-container">
-        <a href="/collections/create" class="create-collection-btn">
-            <h1>Create New Collection</h1>
-        </a>
-    </div>
-</div>
-
-<section class="collections-section">
-    <h2>📚 Featured Collections</h2>
-    <div class="collections-grid">
-        <?php if (!empty($collections)): ?>
-            <?php foreach ($collections as $collection): ?>
-                <div class="collection-card">
-                    <div class="collection-title">
-                        <?= htmlspecialchars($collection['name']) ?>
+                <?php if ($flash = $req->session()->get('flash')): ?>
+                    <div class="message <?= htmlspecialchars($flash['type']) ?>">
+                        <?= htmlspecialchars($flash['message']) ?>
                     </div>
-
-                    <div class="collection-description">
-                        <?= htmlspecialchars($collection['description'] ?? 'No description available') ?>
-                    </div>
-
-                    <div class="collection-meta">
-                        <span>Quotes:</span>
-                        <ul>
-                            <?php foreach ($collection['quotes'] as $quote): ?>
-                                <li class="quote-title" data-quote-id="<?= htmlspecialchars($quote['id'] ?? '') ?>">
-                                    <strong><?= htmlspecialchars($quote['title'] ?? 'Untitled') ?></strong><br>
-                                    <?= htmlspecialchars($quote['content'] ?? 'No content available') ?><br>
-                                    <em>Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?></em>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
+                    <?php $req->session()->remove('flash'); ?>
+                <?php endif; ?>
+                <div class="collection-create-container">
+                    <a href="/collections/create" class="create-collection-btn">
+                        <h1>Create New Collection</h1>
+                    </a>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="no-collections">No collections found. Create your first collection!</p>
-        <?php endif; ?>
-    </div>
-</section>
+            </div>
 
-<div id="quote-modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <div id="quote-details"></div>
-    </div>
-</div>
+            <section class="collections-section">
+                <h2>📚 Featured Collections</h2>
+                <div class="collections-grid">
+                    <?php if (!empty($collections)): ?>
+                        <?php foreach ($collections as $collection): ?>
+                            <div class="collection-card">
+                                <div class="collection-title">
+                                    <?= htmlspecialchars($collection['name']) ?>
+                                </div>
 
-<?php include __DIR__ . '/../partials/footer.php'; ?>
+                                <div class="collection-description">
+                                    <?= htmlspecialchars($collection['description'] ?? 'No description available') ?>
+                                </div>
+
+                                <div class="collection-meta">
+                                    <span>Quotes:</span>
+                                    <ul>
+                                        <?php foreach ($collection['quotes'] as $quote): ?>
+                                            <li class="quote-title" data-quote-id="<?= htmlspecialchars($quote['id'] ?? '') ?>">
+                                                <strong><?= htmlspecialchars($quote['title'] ?? 'Untitled') ?></strong><br>
+                                                <?= htmlspecialchars($quote['content'] ?? 'No content available') ?><br>
+                                                <em>Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?></em>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="no-collections">No collections found. Create your first collection!</p>
+                    <?php endif; ?>
+                </div>
+            </section>   
+
+            <div id="quote-modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <div id="quote-details"></div>
+                </div>
+            </div>  
+        </main>
+        <?php include __DIR__ . '/../partials/footer.php'; ?>
+    </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
