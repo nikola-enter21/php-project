@@ -51,6 +51,9 @@
                                                 <strong><?= htmlspecialchars($quote['title'] ?? 'Untitled') ?></strong><br>
                                                 <?= htmlspecialchars($quote['content'] ?? 'No content available') ?><br>
                                                 <em>Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?></em>
+                                                <button class="delete-quote-btn" data-quote-id="<?= htmlspecialchars($quote['id'] ?? '') ?>" data-collection-id="<?= htmlspecialchars($collection['id']) ?>">
+                                                    Delete Quote
+                                                </button>
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>
@@ -105,6 +108,40 @@
 
         closeModal.addEventListener('click', () => {
             modal.style.display = 'none';
+        });
+
+        const deleteButtons = document.querySelectorAll('.delete-quote-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async function () {
+                const quoteId = this.dataset.quoteId;
+                const collectionId = this.dataset.collectionId;
+
+                if (!confirm('Are you sure you want to delete this quote?')) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/collections/${collectionId}/quotes/${quoteId}/delete`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        alert('Quote deleted successfully.');
+                        this.closest('.quote-title').remove();
+                    } else {
+                        alert(data.message || 'Failed to delete the quote.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting quote:', error);
+                    alert('An error occurred while deleting the quote.');
+                }
+            });
         });
     });
 </script>

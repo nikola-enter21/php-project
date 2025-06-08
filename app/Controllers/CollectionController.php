@@ -62,7 +62,6 @@ class CollectionController
         $res->view('collections/create');
     }
 
-    // Export the collection as a PDF
     public function exportAsPdf(Request $req, Response $res)
     {
         $collectionId = $req->param('id');
@@ -120,6 +119,25 @@ class CollectionController
         } catch (\Exception $e) {
             error_log('Error fetching collections: ' . $e->getMessage());
             $res->json(['success' => false, 'message' => 'Failed to fetch collections.'], 500);
+        }
+    }
+
+    public function deleteQuoteFromCollection(Request $req, Response $res)
+    {
+        $collectionId = $req->param('collectionId');
+        $quoteId = $req->param('quoteId');
+
+        if (!$collectionId || !$quoteId) {
+            $res->json(['success' => false, 'message' => 'Collection ID or Quote ID is missing.'], 400);
+            return;
+        }
+
+        $deleted = $this->collectionModel->deleteQuoteFromCollection($collectionId, $quoteId);
+
+        if ($deleted) {
+            $res->json(['success' => true, 'message' => 'Quote deleted successfully.']);
+        } else {
+            $res->json(['success' => false, 'message' => 'Failed to delete the quote.']);
         }
     }
 }

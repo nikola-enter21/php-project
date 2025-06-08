@@ -41,6 +41,12 @@ class Router
         $this->addRoute('POST', $path, $handler, $middlewares);
     }
 
+    // Add route for DELETE method with optional Middlewares
+    public function delete(string $path, $handler, array $middlewares = []): void
+    {
+        $this->addRoute('DELETE', $path, $handler, $middlewares);
+    }
+
     // Add a route to the router with optional Middlewares
     public function addRoute(string $method, string $path, $handler, array $middlewares = []): void
     {

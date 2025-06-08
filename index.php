@@ -87,6 +87,7 @@ try {
     $router->get('/collections', [$container->get(CollectionController::class), 'getCollections'], [AuthMiddleware::class]);
     $router->get('/collections/json', [$container->get(CollectionController::class), 'getCollectionsJson'], [AuthMiddleware::class]);
     $router->get('/collections/:id/export-pdf', [$container->get(CollectionController::class), 'exportAsPdf'], [AuthMiddleware::class]);
+    $router->delete('/collections/:collectionId/quotes/:quoteId/delete', [$container->get(CollectionController::class), 'deleteQuoteFromCollection'], [AuthMiddleware::class]);
 
     // User Routes
     $router->get('/login', [$container->get(UserController::class), 'loginView']);

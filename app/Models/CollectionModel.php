@@ -139,12 +139,11 @@ class CollectionModel extends BaseModel
     /**
      * Delete a quote from a collection.
      */
-    public function deleteQuoteFromCollection(int $collectionId, int $quoteId): bool
+    public function deleteQuoteFromCollection(string $collectionId, string $quoteId): bool
     {
-        $sql = "DELETE FROM {$this->table} WHERE collection_id = :collection_id AND id = :quote_id";
+        $sql = "DELETE FROM Collection_Quotes WHERE collection_id = :collection_id AND quote_id = :quote_id";
         return $this->db->execute($sql, [
             'collection_id' => $collectionId,
-            'description' => $description,
             'quote_id' => $quoteId,
         ]);
     }
