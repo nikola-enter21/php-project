@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS Users
     full_name  VARCHAR(255) NOT NULL,
     password   VARCHAR(255) NOT NULL,
     email      VARCHAR(255) NOT NULL UNIQUE,
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+    role       VARCHAR(50) NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_user_role CHECK (role IN ('user', 'admin'))
 );
 
 -- Quotes table
