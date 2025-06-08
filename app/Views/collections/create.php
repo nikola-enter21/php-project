@@ -56,7 +56,7 @@
 
         function updateCharCount() {
             const count = nameInput.value.length;
-            titleInput.parentElement.querySelector('.char-count').textContent =
+            nameInput.parentElement.querySelector('.char-count').textContent =
                 `${count}/255`;
         }
 
@@ -84,7 +84,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        title: nameInput.value.trim(),
+                        name: nameInput.value.trim(),
                         description: document.getElementById('description').value.trim()
                     })
                 });

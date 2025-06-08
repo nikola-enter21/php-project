@@ -62,10 +62,20 @@
                                     <i class="fas fa-folder-plus"></i>
                                 </div>
                             </div>
+                            <div class="quote-title">
+                                <?= htmlspecialchars($quote['title']) ?>
+                            </div>
+
                             <div class="quote-content">
-                                <h3><?= htmlspecialchars($quote['title']) ?></h3>
-                                <p><?= htmlspecialchars($quote['content']) ?></p>
-                                <p><strong>Author:</strong> <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?></p>
+                                <?= htmlspecialchars($quote['content']) ?>
+                            </div>
+
+                            <div class="author-section">
+                                <div class="author-info">
+                                    <div class="author-name">
+                                        Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -86,7 +96,26 @@
     </div>
 </div>
 
+<div id="message-container" class="message-container" style="display: none;">
+    <p id="message-text"></p>
+</div>
+
 <script>
+    const messageContainer = document.getElementById('message-container');
+        const messageText = document.getElementById('message-text');
+
+        function showMessage(message, isSuccess = true) {
+            messageText.textContent = message;
+            messageContainer.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
+            messageContainer.style.color = isSuccess ? '#155724' : '#721c24';
+            messageContainer.style.border = isSuccess ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+            messageContainer.style.display = 'block';
+
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 3000); 
+        }
+
     document.addEventListener('DOMContentLoaded', function () {
         const actionButtons = document.querySelectorAll('.action-icon');
 
@@ -139,10 +168,12 @@
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
+                    //alert('An error occurred. Please try again.');
+                    showMessage('An error occurred. Please try again.', false);
                 }
             });
         });
+
 
         const addToCollectionButtons = document.querySelectorAll('.add-to-collection');
         const popup = document.getElementById('collection-popup');
@@ -182,14 +213,16 @@
                                     const addData = await addResponse.json();
 
                                     if (addData.success) {
-                                        alert(addData.message); // Показване на съобщение за успех
+                                        //alert(addData.message); // Показване на съобщение за успех
+                                        showMessage(addData.message, true);
                                         popup.style.display = 'none'; // Затваряне на поп-ъп менюто
                                     } else {
                                         alert(addData.message); // Показване на съобщение за грешка
                                     }
                                 } catch (error) {
                                     console.error('Error adding to collection:', error);
-                                    alert('An error occurred while adding the quote to the collection. Please try again.');
+                                    //alert('An error occurred while adding the quote to the collection. Please try again.');
+                                    showMessage('An error occurred while adding the quote to the collection. Please try again.', false);
                                 }
                             });
                             collectionList.appendChild(li);
@@ -203,7 +236,8 @@
                     }
                 } catch (error) {
                     console.error('Error fetching collections:', error);
-                    alert('Failed to fetch collections. Please try again.');
+                   // alert('Failed to fetch collections. Please try again.');
+                   showMessage('Failed to fetch collections. Please try again.', false);
                 }
             });
         });
