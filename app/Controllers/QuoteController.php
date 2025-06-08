@@ -11,12 +11,12 @@ use App\Models\CollectionModel;
 class QuoteController
 {
     private QuoteModel $quoteModel;
-    private CollectionModel $collectionModel; // Добавяме свойството
+    private CollectionModel $collectionModel; 
 
     public function __construct(QuoteModel $quoteModel, CollectionModel $collectionModel)
     {
         $this->quoteModel = $quoteModel;
-        $this->collectionModel = $collectionModel; // Инициализираме го
+        $this->collectionModel = $collectionModel; 
     }
 
     public function likeQuote(Request $req, Response $res): void

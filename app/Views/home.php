@@ -101,21 +101,6 @@
 </div>
 
 <script>
-    const messageContainer = document.getElementById('message-container');
-        const messageText = document.getElementById('message-text');
-
-        function showMessage(message, isSuccess = true) {
-            messageText.textContent = message;
-            messageContainer.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
-            messageContainer.style.color = isSuccess ? '#155724' : '#721c24';
-            messageContainer.style.border = isSuccess ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
-            messageContainer.style.display = 'block';
-
-            setTimeout(() => {
-                messageContainer.style.display = 'none';
-            }, 3000); 
-        }
-
     document.addEventListener('DOMContentLoaded', function () {
         const actionButtons = document.querySelectorAll('.action-icon');
 
@@ -125,7 +110,6 @@
 
                 const quoteId = this.dataset.quoteId;
 
-        
                 let action;
                 if (this.classList.contains('love')) {
                     action = 'like';
@@ -168,8 +152,7 @@
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    //alert('An error occurred. Please try again.');
-                    showMessage('An error occurred. Please try again.', false);
+                    alert('An error occurred. Please try again.');
                 }
             });
         });
@@ -184,24 +167,20 @@
             button.addEventListener('click', async function () {
                 const quoteId = this.dataset.quoteId;
 
-                // Показване на поп-ъп менюто
                 popup.style.display = 'block';
-                collectionList.innerHTML = ''; // Изчистване на предишното съдържание
+                collectionList.innerHTML = ''; 
 
                 try {
-                    // Извличане на наличните колекции на текущия потребител
                     const response = await fetch('/collections/json');
                     const data = await response.json();
 
                     if (data.success && data.collections.length > 0) {
-                        // Добавяне на колекциите в поп-ъп менюто
                         data.collections.forEach(collection => {
                             const li = document.createElement('li');
                             li.textContent = collection.name;
                             li.dataset.collectionId = collection.id;
                             li.addEventListener('click', async () => {
                                 try {
-                                    // Добавяне на цитата към избраната колекция
                                     const addResponse = await fetch(`/quotes/${quoteId}/add-to-collection`, {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
@@ -213,22 +192,20 @@
                                     const addData = await addResponse.json();
 
                                     if (addData.success) {
-                                        //alert(addData.message); // Показване на съобщение за успех
-                                        showMessage(addData.message, true);
-                                        popup.style.display = 'none'; // Затваряне на поп-ъп менюто
+                                        alert(addData.message); 
+                                        popup.style.display = 'none'; 
                                     } else {
-                                        alert(addData.message); // Показване на съобщение за грешка
+                                        alert(addData.message); 
                                     }
                                 } catch (error) {
                                     console.error('Error adding to collection:', error);
-                                    //alert('An error occurred while adding the quote to the collection. Please try again.');
-                                    showMessage('An error occurred while adding the quote to the collection. Please try again.', false);
+                                    alert('An error occurred while adding the quote to the collection. Please try again.');
+    
                                 }
                             });
                             collectionList.appendChild(li);
                         });
                     } else {
-                        // Показване на съобщение, ако няма налични колекции
                         const noCollectionsMessage = document.createElement('p');
                         noCollectionsMessage.textContent = 'No collections available.';
                         noCollectionsMessage.style.color = '#64748b';
@@ -236,18 +213,15 @@
                     }
                 } catch (error) {
                     console.error('Error fetching collections:', error);
-                   // alert('Failed to fetch collections. Please try again.');
-                   showMessage('Failed to fetch collections. Please try again.', false);
+                    alert('Failed to fetch collections. Please try again.');
                 }
             });
         });
 
-        // Затваряне на поп-ъп менюто при клик върху "X"
         closePopup.addEventListener('click', () => {
             popup.style.display = 'none';
         });
 
-        // Затваряне на поп-ъп менюто при клик извън него
         window.addEventListener('click', (event) => {
             if (event.target === popup) {
                 popup.style.display = 'none';

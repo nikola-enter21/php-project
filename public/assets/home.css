@@ -60,7 +60,6 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Quote Actions */
 .quote-actions-top {
     position: absolute;
     top: -0.5rem;
@@ -159,12 +158,10 @@
     text-align: center;
 }
 
-/* Adjust position relative to the button */
 .action-icon.add-to-collection {
-    position: relative; /* Ensure the dropdown is positioned relative to this button */
+    position: relative; 
 }
 
-/* Quote Content */
 .quote-title {
     margin-top: 20px;
     word-break: break-word;
@@ -247,7 +244,6 @@
     background-color: #4f46e5;
 }
 
-/* Popup */
 .popup {
     position: fixed; 
     top: 50%; 

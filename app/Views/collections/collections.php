@@ -20,10 +20,11 @@
         </div>
         <?php $req->session()->remove('flash'); ?>
     <?php endif; ?>
-
-    <a href="/collections/create" class="create-collection-btn">
-        <h1>Create New Collection</h1>
-    </a>
+    <div class="collection-create-container">
+        <a href="/collections/create" class="create-collection-btn">
+            <h1>Create New Collection</h1>
+        </a>
+    </div>
 </div>
 
 <section class="collections-section">
