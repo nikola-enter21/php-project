@@ -62,4 +62,11 @@ abstract class BaseModel
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         return $this->db->execute($sql, ['id' => $id]);
     }
+
+    public function getTotalCount(): int 
+    {
+        $sql = "SELECT COUNT(*) as count FROM {$this->table}";
+        $result = $this->db->querySingle($sql);
+        return (int) $result['count'];
+    }
 }

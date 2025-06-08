@@ -1,0 +1,47 @@
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures the button is always at the bottom */
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 250px; /* Set a consistent height for all cards */
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #4b2e2e;
+}
+
+.card p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #6b4f4f;
+  flex-grow: 1; /* Ensures the text takes up available space */
+}
+
+.card .btn {
+  background: #ff8c42;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  align-self: center; /* Centers the button horizontally */
+}
+
+.card .btn:hover {
+  background: #e07a35;
+}

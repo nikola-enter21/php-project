@@ -5,29 +5,33 @@ namespace App\Controllers;
 use Core\Request;
 use Core\Response;
 use App\Models\UserModel;
+use App\Models\QuoteModel;
 
 class AdminController
 {
     private UserModel $userModel;
+    private QuoteModel $quoteModel;
 
-    public function __construct(UserModel $userModel)
+    public function __construct(UserModel $userModel, QuoteModel $quoteModel)
     {
-        $this->userModel = $userModel; // Accept the UserModel but don’t use it in mock functions
+        $this->userModel = $userModel;
+        $this->quoteModel = $quoteModel;
     }
 
-    /**
-     * Mock function: Display the admin dashboard.
-     */
     public function dashboard(Request $req, Response $res)
     {
+        $user = $req->session()->get('user');
+
         // Mock response for admin dashboard
-        $mockData = [
-            'totalUsers' => 100,
-            'activeUsers' => 80,
-            'pendingTasks' => 5
+        $data = [
+            'totalUsers' => $this->userModel->getTotalCount(),
+            'totalQuotes' => $this->quoteModel->getTotalCount(),
         ];
 
-        $res->json($mockData);
+        $res->view('dashboard', [
+            'user' => $user,
+            'data' => $data
+        ]);
     }
 
     /**
