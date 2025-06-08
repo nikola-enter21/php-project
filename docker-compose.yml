@@ -1,5 +1,7 @@
+version: '3.8'
+
 services:
-  FMI_DB:
+  fmi_db:
     image: postgres:latest
     container_name: fmi_db
     environment:
@@ -11,12 +13,23 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - postgres_network
-    restart: always
+      - app_network
+
+  php_app:
+    build: .
+    container_name: fmi_php
+    ports:
+      - "8000:8000"
+    depends_on:
+      - fmi_db
+    networks:
+      - app_network
+    volumes:
+      - .:/var/www/html
 
 volumes:
   postgres_data:
 
 networks:
-  postgres_network:
+  app_network:
     driver: bridge
