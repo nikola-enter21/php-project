@@ -115,6 +115,8 @@ try {
     $router->get('/admin/users', [$container->get(AdminController::class), 'manageUsers'], [AdminMiddleware::class]);
     $router->patch('/admin/users/:id/role', [$container->get(AdminController::class), 'updateUserRole'], [AdminMiddleware::class]);
     $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AdminMiddleware::class]);
+    $router->delete('/admin/logs/:id', [$container->get(AdminController::class), 'deleteLogById'], [AdminMiddleware::class]);
+    $router->delete('/admin/logs', [$container->get(AdminController::class), 'deleteLogs'], [AdminMiddleware::class]);
     $router->get('/admin/quotes/most-liked', [$container->get(AdminController::class), 'mostLikedQuotes'], [AdminMiddleware::class]);
     $router->get('/admin/quotes/reported', [$container->get(AdminController::class), 'reportedQuotes'], [AdminMiddleware::class]);
 
