@@ -1,6 +1,5 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
-/* Welcome Section */
 .welcome-section {
     text-align: center;
     margin-bottom: 3rem;
@@ -25,7 +24,6 @@
     margin: 0 auto;
 }
 
-/* Quotes Section */
 .quotes-section {
     margin-top: 4rem;
 }
@@ -44,7 +42,6 @@
     gap: 2rem;
 }
 
-/* Quote Card */
 .quote-card {
     background: #ffffff;
     border-radius: 16px;
@@ -63,7 +60,6 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Quote Actions */
 .quote-actions-top {
     position: absolute;
     top: -0.5rem;
@@ -137,7 +133,35 @@
     background: #e2e8f0;
 }
 
-/* Quote Content */
+.collection-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.collection-dropdown li {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: #1e293b;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.collection-dropdown li:hover {
+    background-color: #f1f5f9;
+}
+
+.collection-dropdown .no-collections {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: #64748b;
+    text-align: center;
+}
+
+.action-icon.add-to-collection {
+    position: relative; 
+}
+
 .quote-title {
     margin-top: 20px;
     word-break: break-word;
@@ -167,7 +191,7 @@
     z-index: 0;
 }
 
-/* Author Info */
+
 .author-section {
     display: flex;
     align-items: center;
@@ -187,12 +211,12 @@
     margin-bottom: 0.25rem;
 }
 
-/* Login Prompt */
+
 .login-prompt {
     margin-top: 2rem;
 }
 
-/* Buttons */
+
 .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
@@ -212,15 +236,32 @@
 }
 
 .btn-highlight {
-    background-color: #6366f1;
+    background-color: #f3a873;
     color: white;
 }
 
 .btn-highlight:hover {
-    background-color: #4f46e5;
+    background-color: #e5924f;
 }
 
-/* Responsive Breakpoints */
+.popup {
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 1);
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+
 @media (max-width: 1200px) {
     .quotes-grid {
         gap: 1.5rem;

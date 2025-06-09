@@ -58,8 +58,10 @@
                                     <i class="fas fa-flag"></i>
                                     <span class="count"><?= $quote['reports_count'] ?></span>
                                 </button>
+                                <div class="action-icon add-to-collection" data-quote-id="<?= htmlspecialchars($quote['id']) ?>" title="Add to Collection">
+                                    <i class="fas fa-folder-plus"></i>
+                                </div>
                             </div>
-
                             <div class="quote-title">
                                 <?= htmlspecialchars($quote['title']) ?>
                             </div>
@@ -78,11 +80,25 @@
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p class="no-quotes">No quotes found. Be the first to share one!</p>
+                    <p>No quotes available at the moment. Check back later!</p>
                 <?php endif; ?>
+            
             </div>
         </section>
     </main>
+</div>
+
+<div id="collection-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close-popup">&times;</span>
+        <h3>Select a Collection</h3>
+        <ul class="collection-list"></ul>
+        <p class="no-collections" style="display: none;">No collections available</p>
+    </div>
+</div>
+
+<div id="message-container" class="message-container" style="display: none;">
+    <p id="message-text"></p>
 </div>
 
 <script>
@@ -94,8 +110,18 @@
                 e.preventDefault();
 
                 const quoteId = this.dataset.quoteId;
-                const action = this.classList.contains('love') ? 'like' :
-                    this.classList.contains('save') ? 'save' : 'report';
+
+                let action;
+                if (this.classList.contains('love')) {
+                    action = 'like';
+                } else if (this.classList.contains('save')) {
+                    action = 'save';
+                } else if (this.classList.contains('report')) {
+                    action = 'report';
+                } else if (this.classList.contains('add-to-collection')) {
+                    // Skip processing here for "Add to Collection" button
+                    return;
+                }
 
                 try {
                     const response = await fetch(`/quotes/${quoteId}/${action}`, {
@@ -130,6 +156,77 @@
                     alert('An error occurred. Please try again.');
                 }
             });
+        });
+
+
+        const addToCollectionButtons = document.querySelectorAll('.add-to-collection');
+        const popup = document.getElementById('collection-popup');
+        const collectionList = popup.querySelector('.collection-list');
+        const closePopup = popup.querySelector('.close-popup');
+
+        addToCollectionButtons.forEach(button => {
+            button.addEventListener('click', async function () {
+                const quoteId = this.dataset.quoteId;
+
+                popup.style.display = 'block';
+                collectionList.innerHTML = ''; 
+
+                try {
+                    const response = await fetch('/collections/json');
+                    const data = await response.json();
+
+                    if (data.success && data.collections.length > 0) {
+                        data.collections.forEach(collection => {
+                            const li = document.createElement('li');
+                            li.textContent = collection.name;
+                            li.dataset.collectionId = collection.id;
+                            li.addEventListener('click', async () => {
+                                try {
+                                    const addResponse = await fetch(`/quotes/${quoteId}/add-to-collection`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            collection_id: collection.id,
+                                            quote_id: quoteId
+                                        })
+                                    });
+                                    const addData = await addResponse.json();
+
+                                    if (addData.success) {
+                                        alert(addData.message); 
+                                        popup.style.display = 'none'; 
+                                    } else {
+                                        alert(addData.message); 
+                                    }
+                                } catch (error) {
+                                    console.error('Error adding to collection:', error);
+                                    alert('An error occurred while adding the quote to the collection. Please try again.');
+    
+                                }
+                            });
+                            collectionList.appendChild(li);
+                        });
+                    } else {
+                        const noCollectionsMessage = document.createElement('p');
+                        noCollectionsMessage.textContent = 'No collections available.';
+                        noCollectionsMessage.style.color = '#64748b';
+                        collectionList.appendChild(noCollectionsMessage);
+                    }
+                } catch (error) {
+                    console.error('Error fetching collections:', error);
+                    alert('Failed to fetch collections. Please try again.');
+                }
+            });
+        });
+
+        closePopup.addEventListener('click', () => {
+            popup.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === popup) {
+                popup.style.display = 'none';
+            }
         });
     });
 </script>

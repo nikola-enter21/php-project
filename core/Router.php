@@ -41,6 +41,12 @@ class Router
         $this->addRoute('POST', $path, $handler, $middlewares);
     }
 
+    // Add route for DELETE method with optional Middlewares
+    public function delete(string $path, $handler, array $middlewares = []): void
+    {
+        $this->addRoute('DELETE', $path, $handler, $middlewares);
+    }
+
     // Add a route to the router with optional Middlewares
     public function addRoute(string $method, string $path, $handler, array $middlewares = []): void
     {
@@ -124,27 +130,36 @@ class Router
     private function resolveHandler($handler, Request $req, Response $res): void
     {
         if (is_callable($handler)) {
+            // Directly call the handler if it's callable (e.g., a closure)
             $handler($req, $res);
             return;
         }
 
         if (is_array($handler) && count($handler) === 2) {
-            [$className, $methodName] = $handler;
+            [$controller, $methodName] = $handler;
 
-            if (!class_exists($className)) {
-                throw new Exception("Controller class $className does not exist");
+            // Check if the first element is a class name (string) or a controller instance (object)
+            if (is_string($controller)) {
+                // If it's a string, check if the class exists
+                if (!class_exists($controller)) {
+                    throw new Exception("Controller class $controller does not exist");
+                }
+
+                // Instantiate the controller
+                $controller = new $controller();
             }
 
-            $controller = new $className();
-
+            // Ensure the method exists in the controller
             if (!method_exists($controller, $methodName)) {
-                throw new Exception("Method $methodName does not exist in controller $className");
+                throw new Exception("Method $methodName does not exist in controller " . get_class($controller));
             }
 
+            // Call the method on the controller instance
             $controller->$methodName($req, $res);
             return;
         }
 
+        // Invalid handler, throw an exception
         throw new Exception('Invalid route handler');
     }
 
