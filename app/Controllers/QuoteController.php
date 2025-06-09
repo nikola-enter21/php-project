@@ -8,6 +8,7 @@ use Core\Response;
 use App\Models\QuoteModel;
 use App\Models\LogModel;
 use App\Models\CollectionModel;
+use Exception;
 
 class QuoteController
 {
@@ -256,4 +257,60 @@ class QuoteController
         }
     }
 
+    public function addAnnotation(Request $req, Response $res): void
+    {
+        $user = $req->session()->get('user');
+
+        if (!$user) {
+            $res->redirect('/login');
+            return;
+        }
+
+        $quoteId = $req->param('id');
+        if (!$quoteId) {
+            $res->json(['success' => false, 'message' => 'Invalid quote ID.'], 400);
+            return;
+        }
+
+        $note = trim($req->body('note') ?? '');
+
+        if (empty($note)) {
+            $res->json(['success' => false, 'message' => 'Annotation cannot be empty.'], 400);
+            return;
+        }
+
+        try {
+            $added = $this->quoteModel->addAnnotation($quoteId, $user['id'], $note);
+
+            if ($added) {
+                $res->json(['success' => true, 'message' => 'Annotation added successfully!']);
+            } else {
+                $res->json(['success' => false, 'message' => 'Failed to add annotation. Please try again.'], 500);
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $res->json(['success' => false, 'message' => 'Internal server error.'], 500);
+        }
+    }
+
+    public function viewAnnotations(Request $req, Response $res): void
+    {
+        $user = $req->session()->get('user');
+
+        if (!$user) {
+            $res->redirect('/login');
+            return;
+        }
+
+        $quoteId = $req->param('id');
+        $annotations = $this->quoteModel->getAnnotationsByQuoteId($quoteId);
+
+        $res->view('annotations/annotations', ['annotations' => $annotations]);
+    }
+
+    public function addAnnotationView(Request $req, Response $res): void
+    {
+        $quoteId = $req->param('id');
+        $res->view('annotations/create', ['quoteId' => $quoteId]);
+    }
 }

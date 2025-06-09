@@ -82,6 +82,15 @@
                                 <p class="quote-content">"<?= htmlspecialchars($quote['content']) ?>"</p>
                                 <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>
                                 <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
+                                <div class="quote-annotation-actions">
+                                <?php if (isset($user)): ?>
+                                        <a href="/quotes/<?= $quote['id'] ?>/annotations/create" class="btn btn-annotation">➕ Add Annotation</a>
+                                        <a href="/quotes/<?= $quote['id'] ?>/annotations" class="btn btn-annotation-secondary">📖 View Annotations</a>
+                                    <?php else: ?>
+                                        <a href="/login" class="btn btn-annotation">➕ Add Annotation</a>
+                                        <a href="/login" class="btn btn-annotation-secondary">📖 View Annotations</a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>

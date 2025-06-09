@@ -73,6 +73,33 @@
   padding: 1.5rem;
 }
 
+.annotation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.annotation-buttons button,
+.annotation-buttons a {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.annotation-buttons button:hover,
+.annotation-buttons a:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
 @media (max-width: 1200px) {
   .quotes-grid {
     gap: 1.5rem;
