@@ -13,20 +13,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="popup-container" class="popup-container hidden">
+        <div class="popup-message">
+            <p id="popup-text">Log deletion was successfull!</p>
+            <button id="popup-close" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+    <div id="custom-prompt-container" class="custom-prompt-container hidden">
+        <div class="custom-prompt">
+            <p id="custom-prompt-message">Are you sure you want to proceed?</p>
+            <div class="prompt-actions">
+                <button id="custom-prompt-yes" class="btn btn-primary">Yes</button>
+                <button id="custom-prompt-no" class="btn btn-secondary">No</button>
+            </div>
+        </div>
+    </div>
     <div class="layout-container">
         <?php include __DIR__ . '/../partials/nav.php'; ?>
 
         <main class="main-content">
             <h1>Activity Logs</h1>
             <form method="GET" action="/admin/logs" class="search-form">
-                <input type="text" name="search" value="<?= htmlspecialchars($search ?? '') ?>" placeholder="Search logs by action, details, or user">
+                <div class="search-bar-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" name="search" value="<?= htmlspecialchars($search ?? '') ?>" placeholder="Search logs by action, details, or user" class="search-input">
+                </div>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
-            <p class="search-results-heading">
-                <?= !empty($search) 
-                    ? "Search results for '" . htmlspecialchars($search) . "'" 
-                    : "Showing all logs" ?>
-            </p>
+            <div class="logs-header">
+                <p class="search-results-heading">
+                    <?= !empty($search) 
+                        ? "Search results for '" . htmlspecialchars($search) . "'" 
+                        : "Showing all logs" ?>
+                </p>
+                <button id="clear-logs-btn" class="btn btn-danger">Clear All Logs</button>
+            </div>
             <table class="logs-table">
                 <thead>
                     <tr>
@@ -45,7 +66,7 @@
                     <?php else: ?>
                         <?php foreach ($logs as $log): ?>
                             <tr>
-                                <td><?= htmlspecialchars($log['user_name'] ?? 'System') ?></td>
+                                <td><?= htmlspecialchars($log['user_name'] ?? 'SYSTEM') ?></td>
                                 <td><?= htmlspecialchars($log['action']) ?></td>
                                 <td><?= htmlspecialchars($log['details']) ?></td>
                                 <td><?= htmlspecialchars($log['created_at']) ?></td>
