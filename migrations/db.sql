@@ -89,3 +89,13 @@ CREATE TABLE IF NOT EXISTS Booked
 );
 
 ALTER TABLE Collection_Quotes ADD CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id);
+
+-- Logs table
+CREATE TABLE IF NOT EXISTS Logs
+(
+    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id    UUID REFERENCES Users (id) ON DELETE SET NULL, -- User performing the action
+    action     VARCHAR(255) NOT NULL, -- Type of action (e.g., "delete_quote", "update_role")
+    details    TEXT, -- Additional details about the action
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp of the action
+);

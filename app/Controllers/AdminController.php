@@ -6,16 +6,19 @@ use Core\Request;
 use Core\Response;
 use App\Models\UserModel;
 use App\Models\QuoteModel;
+use App\Models\LogModel;
 
 class AdminController
 {
     private UserModel $userModel;
     private QuoteModel $quoteModel;
+    private LogModel $logModel;
 
-    public function __construct(UserModel $userModel, QuoteModel $quoteModel)
+    public function __construct(UserModel $userModel, QuoteModel $quoteModel, LogModel $logModel)
     {
         $this->userModel = $userModel;
         $this->quoteModel = $quoteModel;
+        $this->logModel = $logModel;
     }
 
     public function dashboard(Request $req, Response $res)
@@ -48,28 +51,39 @@ class AdminController
         ]);
     }
 
-    /**
-     * Mock function: View logs.
-     */
     public function viewLogs(Request $req, Response $res)
     {
-        // Mock response for logs
-        $mockLogs = [
-            ['id' => 1, 'action' => 'User Login', 'timestamp' => '2023-10-01 10:00:00'],
-            ['id' => 2, 'action' => 'User Logout', 'timestamp' => '2023-10-01 12:00:00'],
-            ['id' => 3, 'action' => 'User Created', 'timestamp' => '2023-10-01 14:00:00'],
-        ];
-
-        $res->json($mockLogs);
+        $search = $req->query('search') ?? '';
+        $logs = $this->logModel->getFilteredLogs($search);
+        $res->view('admin/logs', [
+            'logs' => $logs,
+            'search' => $search,
+        ]);
     }
 
-    /**
-     * Mock function: Delete system logs.
-     */
+    public function deleteLogById(Request $req, Response $res)
+    {
+        $user = $req->session()->get('user');
+        $logId = $req->param('id');
+        if (!$logId) {
+            return $res->json(['success' => false, 'message' => 'Log ID is required'], 400);
+        }
+
+        if ($this->logModel->delete($logId)) {
+            return $res->json(['success' => true, 'message' => 'Log deleted successfully']);
+        } else {
+            return $res->json(['success' => false, 'message' => 'Failed to delete log'], 500);
+        }
+    }
+
     public function deleteLogs(Request $req, Response $res)
     {
-        // Mock deleting logs
-        $res->json(['success' => true, 'message' => 'Logs cleared']);
+        $user = $req->session()->get('user');
+        if ($this->logModel->deleteAllLogs()) {
+            $res->json(['success' => true, 'message' => 'All logs deleted successfully']);
+        } else {
+            $res->json(['success' => false, 'message' => 'Failed to delete logs'], 500);
+        }
     }
 
     public function mostLikedQuotes(Request $req, Response $res)
@@ -90,14 +104,18 @@ class AdminController
     {
         $userId = $req->param('id');
         $role = $req->body('role');
+        $loggedUser = $req->session()->get('user');
 
         if (!$userId || !$role) {
+            $this->logModel->createLog($loggedUser['id'], 'update_user_role', "Failed to update user role: Invalid parameters");
             return $res->json(['success' => false, 'message' => 'Invalid parameters'], 400);
         }
 
         if ($this->userModel->updateUserRole($userId, $role)) {
+            $this->logModel->createLog($loggedUser['id'], 'update_user_role', "User role updated successfully: User ID $userId, New Role $role");
             return $res->json(['success' => true, 'message' => 'User role updated successfully']);
         } else {
+            $this->logModel->createLog($loggedUser['id'], 'update_user_role', "Failed to update user role: User ID $userId, New Role $role");
             return $res->json(['success' => false, 'message' => 'Failed to update user role'], 500);
         }
     }

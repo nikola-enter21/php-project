@@ -8,6 +8,7 @@ use App\Controllers\CollectionController;
 use App\Middlewares\AdminMiddleware;
 use App\Models\QuoteModel;
 use App\Models\UserModel;
+use App\Models\LogModel;
 use App\Models\CollectionModel;
 use Core\Container;
 use Core\Router;
@@ -39,6 +40,10 @@ $container->set(
     fn() => new QuoteModel($container->get(Database::class))
 );
 $container->set(
+    LogModel::class,
+    fn() => new LogModel($container->get(Database::class))
+);
+$container->set(
     CollectionModel::class,
     fn() => new CollectionModel($container->get(Database::class))
 );
@@ -48,22 +53,27 @@ $container->set(
 );
 $container->set(
     UserController::class,
-    fn($c) => new UserController($c->get(UserModel::class))
+    fn($c) => new UserController($c->get(UserModel::class), $c->get(LogModel::class))
 );
 $container->set(
     QuoteController::class,
     fn($c) => new QuoteController(
         $c->get(QuoteModel::class),      
-        $c->get(CollectionModel::class) 
+        $c->get(CollectionModel::class),
+        $c->get(LogModel::class)
     )
 );
 $container->set(
     AdminController::class,
-    fn($c) => new AdminController($c->get(UserModel::class), $c->get(QuoteModel::class))
+    fn($c) => new AdminController(
+        $c->get(UserModel::class),
+        $c->get(QuoteModel::class),
+        $c->get(LogModel::class)
+    )
 );
 $container->set(
     CollectionController::class,
-    fn($c) => new CollectionController($c->get(CollectionModel::class))
+    fn($c) => new CollectionController($c->get(CollectionModel::class), $c->get(LogModel::class))
 );
 
 // Routes
@@ -108,6 +118,8 @@ try {
     $router->get('/admin/users', [$container->get(AdminController::class), 'manageUsers'], [AdminMiddleware::class]);
     $router->patch('/admin/users/:id/role', [$container->get(AdminController::class), 'updateUserRole'], [AdminMiddleware::class]);
     $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AdminMiddleware::class]);
+    $router->delete('/admin/logs/:id', [$container->get(AdminController::class), 'deleteLogById'], [AdminMiddleware::class]);
+    $router->delete('/admin/logs', [$container->get(AdminController::class), 'deleteLogs'], [AdminMiddleware::class]);
     $router->get('/admin/quotes/most-liked', [$container->get(AdminController::class), 'mostLikedQuotes'], [AdminMiddleware::class]);
     $router->get('/admin/quotes/reported', [$container->get(AdminController::class), 'reportedQuotes'], [AdminMiddleware::class]);
 

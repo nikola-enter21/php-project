@@ -35,7 +35,10 @@
                 </div>
                 <h1>Manage Users</h1>
                 <form method="GET" action="/admin/users" class="search-form">
-                    <input type="text" name="search" value="<?= htmlspecialchars($search ?? '') ?>" placeholder="Search users by name or email">
+                    <div class="search-bar-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="search" value="<?= htmlspecialchars($search ?? '') ?>" placeholder="Search users by name or email" class="search-input">
+                    </div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
                 <p class="search-results-heading">

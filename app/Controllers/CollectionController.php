@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use Core\Flash;
 use App\Models\CollectionModel;
+use App\Models\LogModel;
 use Core\Request;
 use Core\Response;
 use Dompdf\Dompdf;
@@ -9,10 +10,12 @@ use Dompdf\Dompdf;
 class CollectionController
 {
     protected CollectionModel $collectionModel;
+    private LogModel $logModel;
 
-    public function __construct(CollectionModel $collectionModel)
+    public function __construct(CollectionModel $collectionModel, LogModel $logModel)
     {
         $this->collectionModel = $collectionModel;
+        $this->logModel = $logModel;
     }
 
     public function create(Request $req, Response $res)
@@ -22,16 +25,19 @@ class CollectionController
         $description = trim($req->body('description') ?? '');
 
         if (empty($name)) {
+            $this->logModel->createLog($user['id'], 'create_collection', 'Failed to create collection: Name is empty');
             $res->json(['success' => false, 'message' => 'Collection name is required.']);
             return;
         }
 
         if (strlen($name) > 255) {
+            $this->logModel->createLog($user['id'], 'create_collection', 'Failed to create collection: Name exceeds 255 characters');
             $res->json(['success' => false, 'message' => 'Collection name must be less than 255 characters.']);
             return;
         }
 
         if (empty($description)) {
+            $this->logModel->createLog($user['id'], 'create_collection', 'Failed to create collection: Description is empty');
             $res->json(['success' => false, 'message' => 'Description is required.']);
             return;
         }
@@ -43,12 +49,14 @@ class CollectionController
         ]);
 
         if ($created) {
+            $this->logModel->createLog($user['id'], 'create_collection', "Collection '$name' created successfully.");
             $res->json([
                 'success' => true,
                 'message' => 'Collection created successfully!',
                 'redirect' => '/collections'
             ]);
         } else {
+            $this->logModel->createLog($user['id'], 'create_collection', "Failed to create collection '$name'.");
             $res->json([
                 'success' => false,
                 'message' => 'Failed to create collection. Please try again.'
@@ -64,8 +72,10 @@ class CollectionController
     public function exportAsPdf(Request $req, Response $res)
     {
         $collectionId = $req->param('id');
+        $user = $req->session()->get('user');
 
         if (!$collectionId) {
+            $this->logModel->createLog($user['id'], 'export_pdf', 'Failed to export PDF: Collection ID is missing');
             $res->json(['success' => false, 'message' => 'Collection ID is missing.'], 400);
             return;
         }
@@ -73,6 +83,7 @@ class CollectionController
         $collection = $this->collectionModel->findById($collectionId);
 
         if (!$collection) {
+            $this->logModel->createLog($user['id'], 'export_pdf', "Failed to export PDF: Collection with ID $collectionId not found");
             $res->json(['success' => false, 'message' => 'Collection not found.'], 404);
             return;
         }
@@ -96,6 +107,7 @@ class CollectionController
 
         $pdfFileName = htmlspecialchars($collection['name']) . '.pdf';
         $dompdf->stream($pdfFileName, ['Attachment' => true]);
+        $this->logModel->createLog($user['id'], 'export_pdf', "PDF exported successfully for collection ID $collectionId");
     }
 
     public function getCollections(Request $req, Response $res)
@@ -126,8 +138,10 @@ class CollectionController
     {
         $collectionId = $req->param('collectionId');
         $quoteId = $req->param('quoteId');
+        $user = $req->session()->get('user');
 
         if (!$collectionId || !$quoteId) {
+            $this->logModel->createLog($user['id'], 'delete_quote', 'Failed to delete quote: Collection ID or Quote ID is missing');
             $res->json(['success' => false, 'message' => 'Collection ID or Quote ID is missing.'], 400);
             return;
         }
@@ -135,8 +149,10 @@ class CollectionController
         $deleted = $this->collectionModel->deleteQuoteFromCollection($collectionId, $quoteId);
 
         if ($deleted) {
+            $this->logModel->createLog($user['id'], 'delete_quote', "Quote with ID $quoteId deleted from collection ID $collectionId successfully.");
             $res->json(['success' => true, 'message' => 'Quote deleted successfully.']);
         } else {
+            $this->logModel->createLog($user['id'], 'delete_quote', "Failed to delete quote with ID $quoteId from collection ID $collectionId.");
             $res->json(['success' => false, 'message' => 'Failed to delete the quote.']);
         }
     }
