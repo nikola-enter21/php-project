@@ -1,0 +1,119 @@
+.manage-users-section {
+  padding: 2rem;
+}
+
+.search-form {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.search-form input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.search-form button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background-color: #0056b3;
+}
+
+.users-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Ensure 3 cards per row */
+  gap: 1.5rem; /* Space between cards */
+  justify-content: center; /* Center the grid */
+}
+
+.user-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Ensure cards fill their grid cell */
+}
+
+.user-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between; /* Space out the elements */
+  align-items: center; /* Align items vertically */
+}
+
+.user-actions .btn {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.user-actions .btn-secondary {
+  margin-left: 0.5rem; /* Add spacing between select and button */
+  background-color: #6c757d;
+  color: white;
+}
+
+.user-actions .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.user-actions .btn-danger {
+  margin-left: auto; /* Push the delete button to the rightmost side */
+  background-color: #dc3545;
+  color: white;
+}
+
+.user-actions .btn-danger:hover {
+  background-color: #c82333;
+}
+
+.styled-select {
+  flex-grow: 1; /* Ensure the select stays on the left */
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.styled-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+.styled-select option {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.search-results-heading {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+@media (max-width: 1200px) {
+  .users-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .users-list {
+    grid-template-columns: repeat(1, 1fr); /* 1 card per row for very small screens */
+  }
+}

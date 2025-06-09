@@ -67,6 +67,7 @@ try {
     $router->post('/quotes/:id/like', [$container->get(QuoteController::class), 'likeQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/report', [$container->get(QuoteController::class), 'reportQuote'], [AuthMiddleware::class]);
     $router->delete('/quotes/:id', [$container->get(QuoteController::class), 'deleteQuote'], [AuthMiddleware::class]);
+    
     // User Routes
     $router->get('/login', [$container->get(UserController::class), 'loginView']);
     $router->get('/register', [$container->get(UserController::class), 'registerView']);
@@ -75,8 +76,11 @@ try {
     $router->post('/logout', [$container->get(UserController::class), 'logout']);
 
     // Admin Routes
+    $router->delete('/users/:id', [$container->get(UserController::class), 'deleteUser'], [AdminMiddleware::class]);
     $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AdminMiddleware::class]);
     $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AdminMiddleware::class]);
+    $router->get('/admin/users', [$container->get(AdminController::class), 'manageUsers'], [AdminMiddleware::class]);
+    $router->patch('/admin/users/:id/role', [$container->get(AdminController::class), 'updateUserRole'], [AdminMiddleware::class]);
     $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AdminMiddleware::class]);
     $router->get('/admin/quotes/most-liked', [$container->get(AdminController::class), 'mostLikedQuotes'], [AdminMiddleware::class]);
     $router->get('/admin/quotes/reported', [$container->get(AdminController::class), 'reportedQuotes'], [AdminMiddleware::class]);

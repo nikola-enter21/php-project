@@ -34,14 +34,18 @@ class AdminController
         ]);
     }
 
-    /**
-     * Mock function: Manage user roles.
-     */
-    public function manageRoles(Request $req, Response $res)
+    public function manageUsers(Request $req, Response $res)
     {
-        // Mock managing user roles (based on request body)
-        $mockData = $req->body(); // Assume role data is posted
-        $res->json(['success' => true, 'message' => 'Roles updated', 'data' => $mockData]);
+        $search = $req->query('search') ?? '';
+        $user = $req->session()->get('user');
+        $users = $this->userModel->searchUsersExcluding($search, $user['id']);
+
+        $res->view('users', [
+            'users' => $users,
+            'search' => $search,
+            'title' => 'Manage Users',
+            'user' => $user
+        ]);
     }
 
     /**
@@ -80,6 +84,22 @@ class AdminController
         $user = $req->session()->get('user');
         $quotes = $this->quoteModel->getReportedQuotes($user['id']);
         $res->view('quotes', ['quotes' => $quotes, 'title' => 'Reported Quotes', 'user' => $user]);
+    }
+
+    public function updateUserRole(Request $req, Response $res)
+    {
+        $userId = $req->param('id');
+        $role = $req->body('role');
+
+        if (!$userId || !$role) {
+            return $res->json(['success' => false, 'message' => 'Invalid parameters'], 400);
+        }
+
+        if ($this->userModel->updateUserRole($userId, $role)) {
+            return $res->json(['success' => true, 'message' => 'User role updated successfully']);
+        } else {
+            return $res->json(['success' => false, 'message' => 'Failed to update user role'], 500);
+        }
     }
 
 }

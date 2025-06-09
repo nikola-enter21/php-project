@@ -39,7 +39,7 @@
                             <div class="card">
                                 <h3>User Management</h3>
                                 <p>Manage user roles and permissions.</p>
-                                <a href="/admin/manage-roles" class="btn btn-primary">Manage users</a>
+                                <a href="/admin/users" class="btn btn-primary">Manage users</a>
                             </div>
                             <div class="card">
                                 <h3>Logs</h3>

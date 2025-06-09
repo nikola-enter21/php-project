@@ -278,3 +278,48 @@ body {
 .hidden {
   display: none;
 }
+
+/* Blur the background when the popup is active */
+.layout-container.popup-active {
+  filter: blur(5px); /* Apply blur only to the layout container */
+}
+
+/* Popup container styling */
+.popup-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  z-index: 2000; /* Ensure popup is above the blurred background */
+  width: 300px;
+  text-align: center;
+}
+
+.popup-container.hidden {
+  display: none;
+}
+
+.popup-message p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.popup-message .btn {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.popup-message .btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.popup-message .btn-primary:hover {
+  background-color: #0056b3;
+}
