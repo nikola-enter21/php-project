@@ -59,16 +59,21 @@ $container->set(
     QuoteController::class,
     fn($c) => new QuoteController(
         $c->get(QuoteModel::class),      
-        $c->get(CollectionModel::class) 
+        $c->get(CollectionModel::class),
+        $c->get(LogModel::class)
     )
 );
 $container->set(
     AdminController::class,
-    fn($c) => new AdminController($c->get(UserModel::class), $c->get(QuoteModel::class), $c->get(LogModel::class))
+    fn($c) => new AdminController(
+        $c->get(UserModel::class),
+        $c->get(QuoteModel::class),
+        $c->get(LogModel::class)
+    )
 );
 $container->set(
     CollectionController::class,
-    fn($c) => new CollectionController($c->get(CollectionModel::class))
+    fn($c) => new CollectionController($c->get(CollectionModel::class), $c->get(LogModel::class))
 );
 
 // Routes
