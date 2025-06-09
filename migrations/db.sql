@@ -87,3 +87,5 @@ CREATE TABLE IF NOT EXISTS Booked
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE Collection_Quotes ADD CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id);
