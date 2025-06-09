@@ -63,23 +63,30 @@ class AdminController
 
     public function deleteLogById(Request $req, Response $res)
     {
+        $user = $req->session()->get('user');
         $logId = $req->param('id');
         if (!$logId) {
+            $this->logModel->createLog($user['id'], 'delete_log', "Failed to delete log: Log ID is missing");
             return $res->json(['success' => false, 'message' => 'Log ID is required'], 400);
         }
 
         if ($this->logModel->delete($logId)) {
+            $this->logModel->createLog($user['id'], 'delete_log', "Log with ID $logId deleted successfully");
             return $res->json(['success' => true, 'message' => 'Log deleted successfully']);
         } else {
+            $this->logModel->createLog($user['id'], 'delete_log', "Failed to delete log with ID $logId");
             return $res->json(['success' => false, 'message' => 'Failed to delete log'], 500);
         }
     }
 
     public function deleteLogs(Request $req, Response $res)
     {
+        $user = $req->session()->get('user');
         if (this->logModel->deleteAllLogs()) {
+            $this->logModel->createLog($user['id'], 'clear_logs', "All logs deleted successfully");
             $res->json(['success' => true, 'message' => 'All logs deleted successfully']);
         } else {
+            $this->logModel->createLog($user['id'], 'clear_logs', "Failed to delete all logs");
             $res->json(['success' => false, 'message' => 'Failed to delete logs'], 500);
         }
     }
@@ -102,14 +109,18 @@ class AdminController
     {
         $userId = $req->param('id');
         $role = $req->body('role');
+        $loggedUser = $req->session()->get('user');
 
         if (!$userId || !$role) {
+            $this->logModel->createLog($loggedUser['id'], 'update_user_role', "Failed to update user role: Invalid parameters");
             return $res->json(['success' => false, 'message' => 'Invalid parameters'], 400);
         }
 
         if ($this->userModel->updateUserRole($userId, $role)) {
+            $this->logModel->createLog($loggedUser['id'], 'update_user_role', "User role updated successfully: User ID $userId, New Role $role");
             return $res->json(['success' => true, 'message' => 'User role updated successfully']);
         } else {
+            $this->logModel->createLog($loggedUser['id'], 'update_user_role', "Failed to update user role: User ID $userId, New Role $role");
             return $res->json(['success' => false, 'message' => 'Failed to update user role'], 500);
         }
     }
