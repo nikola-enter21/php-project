@@ -13,11 +13,11 @@ class Database
     /**
      * @throws Exception
      */
-    public function __construct(string $host, string $dbname, string $user, string $password, int $port = 5432)
+    public function __construct(string $host, string $dbname, string $user, string $password, int $port = 3306)
     {
         try {
             $this->pdo = new PDO(
-                "pgsql:host={$host};port={$port};dbname={$dbname}",
+                "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4",
                 $user,
                 $password,
                 [

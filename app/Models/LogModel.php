@@ -6,7 +6,7 @@ use Core\BaseModel;
 
 class LogModel extends BaseModel
 {
-    protected string $table = 'Logs';
+    protected string $table = 'logs';
 
     public function createLog(?string $userId, string $action, string $details): bool
     {
@@ -24,7 +24,7 @@ class LogModel extends BaseModel
     {
         $sql = "SELECT l.*, u.full_name AS user_name 
         FROM {$this->table} l
-        LEFT JOIN Users u ON l.user_id = u.id
+        LEFT JOIN users u ON l.user_id = u.id
         WHERE l.action LIKE :search OR l.details LIKE :search OR u.full_name LIKE :search
         ORDER BY l.created_at DESC";
         return $this->db->fetchAll($sql, ['search' => "%{$search}%"]);

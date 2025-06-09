@@ -2,8 +2,8 @@
 
 return [
     'host' => 'fmi_db',
-    'database' => 'postgres',
-    'username' => 'postgres',
-    'password' => 'postgres',
+    'database' => 'app_db',
+    'username' => 'root',
+    'password' => 'root',
     'charset' => 'utf8mb4',
 ];

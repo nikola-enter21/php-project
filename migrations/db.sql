@@ -1,101 +1,101 @@
--- Enable the UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
--- Users table
-CREATE TABLE IF NOT EXISTS Users
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+-- users table
+CREATE TABLE IF NOT EXISTS users (
+    id         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     full_name  VARCHAR(255) NOT NULL,
     password   VARCHAR(255) NOT NULL,
     email      VARCHAR(255) NOT NULL UNIQUE,
     role       VARCHAR(50) NOT NULL DEFAULT 'user',
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT chk_user_role CHECK (role IN ('user', 'admin'))
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (role IN ('user', 'admin'))
 );
 
--- Quotes table
-CREATE TABLE IF NOT EXISTS Quotes
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+-- quotes table
+CREATE TABLE IF NOT EXISTS quotes (
+    id         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     title      VARCHAR(255) NOT NULL,
-    content    TEXT         NOT NULL,
+    content    TEXT NOT NULL,
     author     VARCHAR(255),
-    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+    user_id    CHAR(36),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Collections table
-CREATE TABLE IF NOT EXISTS Collections 
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name       VARCHAR(255) NOT NULL,
-    description     TEXT         NOT NULL,
-    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+-- collections table
+CREATE TABLE IF NOT EXISTS collections (
+    id          CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    name        VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    user_id     CHAR(36),
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Collection_Quotes table
-CREATE TABLE IF NOT EXISTS Collection_Quotes
-(
-    id            UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    collection_id UUID NOT NULL REFERENCES Collections (id) ON DELETE CASCADE,
-    quote_id      UUID NOT NULL REFERENCES Quotes (id) ON DELETE CASCADE,
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- collection_quotes table
+CREATE TABLE IF NOT EXISTS collection_quotes (
+    id            CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    collection_id CHAR(36) NOT NULL,
+    quote_id      CHAR(36) NOT NULL,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE,
+    FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE,
+    CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id)
 );
 
--- Tags table
-CREATE TABLE IF NOT EXISTS Tags
-(
-    id   UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+-- tags table
+CREATE TABLE IF NOT EXISTS tags (
+    id   CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     name VARCHAR(255) NOT NULL UNIQUE
 );
 
--- Annotations table
-CREATE TABLE IF NOT EXISTS Annotations
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
-    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
+-- annotations table
+CREATE TABLE IF NOT EXISTS annotations (
+    id         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    quote_id   CHAR(36),
+    user_id    CHAR(36),
     note       TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Likes table
-CREATE TABLE IF NOT EXISTS Likes
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
-    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+-- likes table
+CREATE TABLE IF NOT EXISTS likes (
+    id         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    quote_id   CHAR(36),
+    user_id    CHAR(36),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Reports table
-CREATE TABLE IF NOT EXISTS Reports
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
-    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
+-- reports table
+CREATE TABLE IF NOT EXISTS reports (
+    id         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    quote_id   CHAR(36),
+    user_id    CHAR(36),
     reason     TEXT,
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Booked (saved quotes) table
-CREATE TABLE IF NOT EXISTS Booked
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
-    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- booked table
+CREATE TABLE IF NOT EXISTS booked (
+    id         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    quote_id   CHAR(36),
+    user_id    CHAR(36),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-ALTER TABLE Collection_Quotes ADD CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id);
-
--- Logs table
-CREATE TABLE IF NOT EXISTS Logs
-(
-    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id    UUID REFERENCES Users (id) ON DELETE SET NULL, -- User performing the action
-    action     VARCHAR(255) NOT NULL, -- Type of action (e.g., "delete_quote", "update_role")
-    details    TEXT, -- Additional details about the action
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp of the action
+-- logs table
+CREATE TABLE IF NOT EXISTS logs (
+    id         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id    CHAR(36),
+    action     VARCHAR(255) NOT NULL,
+    details    TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );

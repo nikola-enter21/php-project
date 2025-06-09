@@ -6,7 +6,7 @@ use Core\BaseModel;
 
 class QuoteModel extends BaseModel
 {
-    protected string $table = 'Quotes';
+    protected string $table = 'quotes';
 
     /**
      * Get counts of likes, saves and reports for a quote
@@ -14,9 +14,9 @@ class QuoteModel extends BaseModel
     public function getQuoteCounts(string $quoteId): array
     {
         $sql = "SELECT 
-            (SELECT COUNT(*) FROM Likes WHERE quote_id = :quote_id) as likes_count,
-            (SELECT COUNT(*) FROM Booked WHERE quote_id = :quote_id) as saves_count,
-            (SELECT COUNT(*) FROM Reports WHERE quote_id = :quote_id) as reports_count";
+            (SELECT COUNT(*) FROM likes WHERE quote_id = :quote_id) as likes_count,
+            (SELECT COUNT(*) FROM booked WHERE quote_id = :quote_id) as saves_count,
+            (SELECT COUNT(*) FROM reports WHERE quote_id = :quote_id) as reports_count";
 
         return $this->db->query($sql, ['quote_id' => $quoteId])[0] ?? [
             'likes_count' => 0,
@@ -78,10 +78,10 @@ class QuoteModel extends BaseModel
         // First check if already saved
         if ($this->isQuoteSaved($userId, $quoteId)) {
             // Remove save if already saved
-            $sql = "DELETE FROM Booked WHERE user_id = :user_id AND quote_id = :quote_id";
+            $sql = "DELETE FROM booked WHERE user_id = :user_id AND quote_id = :quote_id";
         } else {
             // Add save if not saved
-            $sql = "INSERT INTO Booked (user_id, quote_id) VALUES (:user_id, :quote_id)";
+            $sql = "INSERT INTO booked (user_id, quote_id) VALUES (:user_id, :quote_id)";
         }
 
         $success = $this->db->execute($sql, [
@@ -102,7 +102,7 @@ class QuoteModel extends BaseModel
     public function likeQuote(string $userId, string $quoteId): bool
     {
         // First check if already liked
-        $sql = "SELECT EXISTS(SELECT 1 FROM Likes WHERE user_id = :user_id AND quote_id = :quote_id) as liked";
+        $sql = "SELECT EXISTS(SELECT 1 FROM likes WHERE user_id = :user_id AND quote_id = :quote_id) as liked";
         $result = $this->db->query($sql, [
             'user_id' => $userId,
             'quote_id' => $quoteId
@@ -110,10 +110,10 @@ class QuoteModel extends BaseModel
 
         if ($result['liked']) {
             // Remove like if already liked
-            $sql = "DELETE FROM Likes WHERE user_id = :user_id AND quote_id = :quote_id";
+            $sql = "DELETE FROM likes WHERE user_id = :user_id AND quote_id = :quote_id";
         } else {
             // Add like if not liked
-            $sql = "INSERT INTO Likes (user_id, quote_id) VALUES (:user_id, :quote_id)";
+            $sql = "INSERT INTO likes (user_id, quote_id) VALUES (:user_id, :quote_id)";
         }
 
         return $this->db->execute($sql, [
@@ -126,7 +126,7 @@ class QuoteModel extends BaseModel
     public function reportQuote(string $userId, string $quoteId, ?string $reason = null): bool
     {
         // First check if already reported
-        $sql = "SELECT EXISTS(SELECT 1 FROM Reports WHERE user_id = :user_id AND quote_id = :quote_id) as reported";
+        $sql = "SELECT EXISTS(SELECT 1 FROM reports WHERE user_id = :user_id AND quote_id = :quote_id) as reported";
         $result = $this->db->query($sql, [
             'user_id' => $userId,
             'quote_id' => $quoteId
@@ -134,10 +134,10 @@ class QuoteModel extends BaseModel
 
         if ($result['reported']) {
             // Remove report if already reported
-            $sql = "DELETE FROM Reports WHERE user_id = :user_id AND quote_id = :quote_id";
+            $sql = "DELETE FROM reports WHERE user_id = :user_id AND quote_id = :quote_id";
         } else {
             // Add report if not reported
-            $sql = "INSERT INTO Reports (user_id, quote_id" . ($reason ? ", reason" : "") . ") 
+            $sql = "INSERT INTO reports (user_id, quote_id" . ($reason ? ", reason" : "") . ") 
                 VALUES (:user_id, :quote_id" . ($reason ? ", :reason" : "") . ")";
         }
 
@@ -156,9 +156,9 @@ class QuoteModel extends BaseModel
     public function getUserInteractions(string $userId, string $quoteId): array
     {
         $sql = "SELECT 
-        EXISTS(SELECT 1 FROM Likes WHERE user_id = :user_id AND quote_id = :quote_id) as is_liked,
-        EXISTS(SELECT 1 FROM Booked WHERE user_id = :user_id AND quote_id = :quote_id) as is_saved,
-        EXISTS(SELECT 1 FROM Reports WHERE user_id = :user_id AND quote_id = :quote_id) as is_reported";
+        EXISTS(SELECT 1 FROM likes WHERE user_id = :user_id AND quote_id = :quote_id) as is_liked,
+        EXISTS(SELECT 1 FROM booked WHERE user_id = :user_id AND quote_id = :quote_id) as is_saved,
+        EXISTS(SELECT 1 FROM reports WHERE user_id = :user_id AND quote_id = :quote_id) as is_reported";
 
         return $this->db->query($sql, [
             'user_id' => $userId,
@@ -172,7 +172,7 @@ class QuoteModel extends BaseModel
 
     public function isQuoteSaved(string $userId, string $quoteId): bool
     {
-        $sql = "SELECT EXISTS(SELECT 1 FROM Booked WHERE user_id = :user_id AND quote_id = :quote_id) as saved";
+        $sql = "SELECT EXISTS(SELECT 1 FROM booked WHERE user_id = :user_id AND quote_id = :quote_id) as saved";
         $result = $this->db->query($sql, [
             'user_id' => $userId,
             'quote_id' => $quoteId
@@ -184,13 +184,13 @@ class QuoteModel extends BaseModel
     public function getMostLikedQuotes(int $limit = 10, ?string $userId = null): array
     {
         $sql = "SELECT q.*, COUNT(l.id) as likes_count 
-                FROM Quotes q 
-                LEFT JOIN Likes l ON q.id = l.quote_id 
-                GROUP BY q.id 
-                ORDER BY likes_count DESC 
-                LIMIT :limit";
+            FROM quotes q 
+            LEFT JOIN likes l ON q.id = l.quote_id 
+            GROUP BY q.id 
+            ORDER BY likes_count DESC 
+            LIMIT $limit";
 
-        $quotes = $this->db->query($sql, ['limit' => $limit]);
+        $quotes = $this->db->query($sql);
 
         foreach ($quotes as &$quote) {
             $counts = $this->getQuoteCounts($quote['id']);
@@ -212,8 +212,8 @@ class QuoteModel extends BaseModel
     public function getReportedQuotes(?string $userId = null): array
     {
         $sql = "SELECT q.*, COUNT(r.id) as reports_count 
-                FROM Quotes q 
-                LEFT JOIN Reports r ON q.id = r.quote_id 
+                FROM quotes q 
+                LEFT JOIN reports r ON q.id = r.quote_id 
                 GROUP BY q.id 
                 HAVING COUNT(r.id) > 0
                 ORDER BY reports_count DESC";
@@ -244,7 +244,7 @@ class QuoteModel extends BaseModel
     public function addQuoteToCollection(string $collectionId, string $quoteId): bool
     {
         try {
-            $sql = "INSERT INTO Collection_Quotes (collection_id, quote_id) VALUES (:collection_id, :quote_id)";
+            $sql = "INSERT INTO collection_quotes (collection_id, quote_id) VALUES (:collection_id, :quote_id)";
             return $this->db->execute($sql, [
                 'collection_id' => $collectionId,
                 'quote_id' => $quoteId,
