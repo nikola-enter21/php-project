@@ -8,7 +8,7 @@ use Core\BaseModel;
 
 class CollectionModel extends BaseModel
 {
-    protected string $table = 'Collections';
+    protected string $table = 'collections';
 
     /**
      * Add a quote to a collection.
@@ -16,7 +16,7 @@ class CollectionModel extends BaseModel
     public function addQuoteToCollection(string $collectionId, string $quoteId): bool
     {
         try {
-            $sqlCheck = "SELECT 1 FROM Collection_Quotes WHERE collection_id = :collection_id AND quote_id = :quote_id";
+            $sqlCheck = "SELECT 1 FROM collection_quotes WHERE collection_id = :collection_id AND quote_id = :quote_id";
             $exists = $this->db->fetch($sqlCheck, [
                 'collection_id' => $collectionId,
                 'quote_id' => $quoteId,
@@ -27,7 +27,7 @@ class CollectionModel extends BaseModel
                 return false;
             }
 
-            $sqlInsert = "INSERT INTO Collection_Quotes (collection_id, quote_id) VALUES (:collection_id, :quote_id)";
+            $sqlInsert = "INSERT INTO collection_quotes (collection_id, quote_id) VALUES (:collection_id, :quote_id)";
             $result = $this->db->execute($sqlInsert, [
                 'collection_id' => $collectionId,
                 'quote_id' => $quoteId,
@@ -69,9 +69,9 @@ class CollectionModel extends BaseModel
     public function getAllCollectionsWithQuotes(string $userId): array
     {
         $sql = "SELECT c.*, q.title AS quote_title, q.content AS quote_content, q.author AS quote_author
-                FROM Collections c
-                LEFT JOIN Collection_Quotes cq ON c.id = cq.collection_id
-                LEFT JOIN Quotes q ON cq.quote_id = q.id
+                FROM collections c
+                LEFT JOIN collection_quotes cq ON c.id = cq.collection_id
+                LEFT JOIN quotes q ON cq.quote_id = q.id
                 WHERE c.user_id = :user_id";
         $rows = $this->db->fetchAll($sql, ['user_id' => $userId]);
 
@@ -121,7 +121,7 @@ class CollectionModel extends BaseModel
      */
     public function deleteQuoteFromCollection(string $collectionId, string $quoteId): bool
     {
-        $sql = "DELETE FROM Collection_Quotes WHERE collection_id = :collection_id AND quote_id = :quote_id";
+        $sql = "DELETE FROM collection_quotes WHERE collection_id = :collection_id AND quote_id = :quote_id";
         return $this->db->execute($sql, [
             'collection_id' => $collectionId,
             'quote_id' => $quoteId,
@@ -134,8 +134,8 @@ class CollectionModel extends BaseModel
     public function getQuotesByCollectionId(string $collectionId): array
     {
         $sql = "SELECT q.title, q.content, q.author 
-                FROM Collection_Quotes cq
-                JOIN Quotes q ON cq.quote_id = q.id
+                FROM collection_quotes cq
+                JOIN quotes q ON cq.quote_id = q.id
                 WHERE cq.collection_id = :collection_id";
         return $this->db->fetchAll($sql, ['collection_id' => $collectionId]);
     }
