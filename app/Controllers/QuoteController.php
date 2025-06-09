@@ -6,14 +6,17 @@ use Core\Flash;
 use Core\Request;
 use Core\Response;
 use App\Models\QuoteModel;
+use App\Models\CollectionModel;
 
 class QuoteController
 {
     private QuoteModel $quoteModel;
+    private CollectionModel $collectionModel; 
 
-    public function __construct(QuoteModel $quoteModel)
+    public function __construct(QuoteModel $quoteModel, CollectionModel $collectionModel)
     {
         $this->quoteModel = $quoteModel;
+        $this->collectionModel = $collectionModel; 
     }
 
     public function likeQuote(Request $req, Response $res): void
@@ -48,8 +51,37 @@ class QuoteController
         }
     }
 
+    public function addToCollection(Request $req, Response $res)
+    {
+        $user = $req->session()->get('user');
+        if (!$user) {
+            $res->json(['success' => false, 'message' => 'You must be logged in to add a quote to a collection.'], 401);
+            return;
+        }
 
-// Similar updates for saveQuote and reportQuote methods
+        $collectionId = $req->body('collection_id');
+        $quoteId = $req->body('quote_id');
+
+        if (empty($collectionId) || empty($quoteId)) {
+            $res->json(['success' => false, 'message' => 'Invalid collection or quote ID.'], 400);
+            return;
+        }
+
+        $quote = $this->quoteModel->getQuoteById($quoteId);
+        if (!$quote) {
+            $res->json(['success' => false, 'message' => 'Quote not found.'], 404);
+            return;
+        }
+
+        $added = $this->collectionModel->addQuoteToCollection($collectionId, $quoteId);
+
+        if ($added) {
+            $res->json(['success' => true, 'message' => 'Quote added to collection successfully.']);
+        } else {
+            $res->json(['success' => false, 'message' => 'Quote already exists in the collection.']);
+        }
+    }
+
     public function saveQuote(Request $req, Response $res): void
     {
         $user = $req->session()->get('user');
@@ -149,6 +181,17 @@ class QuoteController
         }
     }
 
+    public function getQuoteDetails(Request $req, Response $res): void
+    {
+        $quoteId = $req->param('id');
+        $quote = $this->quoteModel->getQuoteById($quoteId);
+
+        if ($quote) {
+            $res->json(['success' => true, 'quote' => $quote]);
+        } else {
+            $res->json(['success' => false, 'message' => 'Quote not found.'], 404);
+        }
+    }
 
     public function createView(Request $req, Response $res): void
     {

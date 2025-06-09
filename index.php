@@ -4,9 +4,11 @@ use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 use App\Controllers\QuoteController;
 use App\Middlewares\AuthMiddleware;
+use App\Controllers\CollectionController;
 use App\Middlewares\AdminMiddleware;
 use App\Models\QuoteModel;
 use App\Models\UserModel;
+use App\Models\CollectionModel;
 use Core\Container;
 use Core\Router;
 use Core\Request;
@@ -37,6 +39,10 @@ $container->set(
     fn() => new QuoteModel($container->get(Database::class))
 );
 $container->set(
+    CollectionModel::class,
+    fn() => new CollectionModel($container->get(Database::class))
+);
+$container->set(
     HomeController::class,
     fn($c) => new HomeController($c->get(QuoteModel::class))
 );
@@ -46,11 +52,18 @@ $container->set(
 );
 $container->set(
     QuoteController::class,
-    fn($c) => new QuoteController($c->get(QuoteModel::class))
+    fn($c) => new QuoteController(
+        $c->get(QuoteModel::class),      
+        $c->get(CollectionModel::class) 
+    )
 );
 $container->set(
     AdminController::class,
     fn($c) => new AdminController($c->get(UserModel::class), $c->get(QuoteModel::class))
+);
+$container->set(
+    CollectionController::class,
+    fn($c) => new CollectionController($c->get(CollectionModel::class))
 );
 
 // Routes
@@ -66,7 +79,17 @@ try {
     $router->post('/quotes/:id/save', [$container->get(QuoteController::class), 'saveQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/like', [$container->get(QuoteController::class), 'likeQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/report', [$container->get(QuoteController::class), 'reportQuote'], [AuthMiddleware::class]);
+    $router->post('/quotes/:id/add-to-collection', [$container->get(QuoteController::class), 'addToCollection'], [AuthMiddleware::class]);
+    $router->get('/quotes/:id', [$container->get(QuoteController::class), 'getQuoteDetails'], [AuthMiddleware::class]);
     $router->delete('/quotes/:id', [$container->get(QuoteController::class), 'deleteQuote'], [AuthMiddleware::class]);
+
+    //Collection Routes
+    $router->get('/collections/create', [$container->get(CollectionController::class), 'createView'], [AuthMiddleware::class]);
+    $router->post('/collections/create', [$container->get(CollectionController::class), 'create'], [AuthMiddleware::class]);
+    $router->get('/collections', [$container->get(CollectionController::class), 'getCollections'], [AuthMiddleware::class]);
+    $router->get('/collections/json', [$container->get(CollectionController::class), 'getCollectionsJson'], [AuthMiddleware::class]);
+    $router->get('/collections/:id/export-pdf', [$container->get(CollectionController::class), 'exportAsPdf'], [AuthMiddleware::class]);
+    $router->delete('/collections/:collectionId/quotes/:quoteId/delete', [$container->get(CollectionController::class), 'deleteQuoteFromCollection'], [AuthMiddleware::class]);
     
     // User Routes
     $router->get('/login', [$container->get(UserController::class), 'loginView']);

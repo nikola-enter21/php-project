@@ -9,6 +9,12 @@
   gap: 1.5rem;
 }
 
+.quotes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
 .quote-card {
   background: #ffffff;
   border-radius: 16px;
@@ -153,4 +159,53 @@
 .quote-likes {
   font-size: 0.9rem;
   color: #ff8c42;
+}
+
+/* Author Info */
+.author-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+
+.author-info {
+  flex: 1;
+}
+
+.author-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.25rem;
+}
+
+.collection-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.collection-dropdown li {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.collection-dropdown li:hover {
+  background-color: #f1f5f9;
+}
+
+.collection-dropdown .no-collections {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.action-icon.add-to-collection {
+  position: relative;
 }

@@ -1,6 +1,5 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
 
-/* Welcome Section */
 .welcome-section {
   text-align: center;
   margin-bottom: 3rem;
@@ -25,12 +24,10 @@
   margin: 0 auto;
 }
 
-/* Login Prompt */
 .login-prompt {
   margin-top: 2rem;
 }
 
-/* Buttons */
 .btn {
   display: inline-block;
   padding: 0.75rem 1.5rem;
@@ -52,13 +49,32 @@
 .btn-highlight {
   background-color: #6366f1;
   color: white;
+  background-color: #f3a873;
+  color: white;
 }
 
 .btn-highlight:hover {
   background-color: #4f46e5;
+  background-color: #e5924f;
 }
 
-/* Responsive Breakpoints */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 1);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
 @media (max-width: 1200px) {
   .quotes-grid {
     gap: 1.5rem;

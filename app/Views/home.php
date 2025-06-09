@@ -56,6 +56,9 @@
                                         <i class="fas fa-heart"></i>
                                         <span class="count"><?= $quote['likes_count'] ?></span>
                                     </button>
+                                    <div class="action-icon add-to-collection" data-quote-id="<?= htmlspecialchars($quote['id']) ?>" title="Add to Collection">
+                                        <i class="fas fa-folder-plus"></i>
+                                    </div>
                                     <button class="action-icon save <?= isset($quote['is_saved']) && $quote['is_saved'] ? 'active' : '' ?>"
                                             data-quote-id="<?= $quote['id'] ?>"
                                             title="Save quote">
@@ -88,6 +91,19 @@
             </section>
         </main>
         <?php include __DIR__ . '/partials/footer.php'; ?>
+    </div>
+
+    <div id="collection-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close-popup">&times;</span>
+            <h3>Select a Collection</h3>
+            <ul class="collection-list"></ul>
+            <p class="no-collections" style="display: none;">No collections available</p>
+        </div>
+    </div>
+
+    <div id="message-container" class="message-container" style="display: none;">
+        <p id="message-text"></p>
     </div>
     <script src="/public/js/quote-actions.js"></script>
 </body>

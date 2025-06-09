@@ -24,6 +24,25 @@ CREATE TABLE IF NOT EXISTS Quotes
     created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Collections table
+CREATE TABLE IF NOT EXISTS Collections 
+(
+    id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name       VARCHAR(255) NOT NULL,
+    description     TEXT         NOT NULL,
+    user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
+    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Collection_Quotes table
+CREATE TABLE IF NOT EXISTS Collection_Quotes
+(
+    id            UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    collection_id UUID NOT NULL REFERENCES Collections (id) ON DELETE CASCADE,
+    quote_id      UUID NOT NULL REFERENCES Quotes (id) ON DELETE CASCADE,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Tags table
 CREATE TABLE IF NOT EXISTS Tags
 (
@@ -66,5 +85,8 @@ CREATE TABLE IF NOT EXISTS Booked
     id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+--ALTER TABLE Collection_Quotes ADD CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id);
+
