@@ -50,11 +50,11 @@ class CollectionModel extends BaseModel
         return $this->db->fetchAll($sql);
     }
 
-    public function getAllCollections(): array
+    public function getAllCollectionsByUserId(string $userId): array
     {
         try {
             $sql = "SELECT * FROM {$this->table} WHERE user_id = :user_id";
-            $collections = $this->db->fetchAll($sql, ['user_id' => $_SESSION['user']['id']]);
+            $collections = $this->db->fetchAll($sql, ['user_id' => $userId]);
             error_log('SQL Result: ' . json_encode($collections)); // Логване на резултата от SQL заявката
             return $collections;
         } catch (\Exception $e) {
@@ -66,13 +66,14 @@ class CollectionModel extends BaseModel
     /**
      * Retrieve all collections with their quotes.
      */
-    public function getAllCollectionsWithQuotes(): array
+    public function getAllCollectionsWithQuotes(string $userId): array
     {
         $sql = "SELECT c.*, q.title AS quote_title, q.content AS quote_content, q.author AS quote_author
                 FROM Collections c
                 LEFT JOIN Collection_Quotes cq ON c.id = cq.collection_id
-                LEFT JOIN Quotes q ON cq.quote_id = q.id";
-        $rows = $this->db->fetchAll($sql);
+                LEFT JOIN Quotes q ON cq.quote_id = q.id
+                WHERE c.user_id = :user_id";
+        $rows = $this->db->fetchAll($sql, ['user_id' => $userId]);
 
         $collections = [];
         foreach ($rows as $row) {

@@ -100,7 +100,8 @@ class CollectionController
 
     public function getCollections(Request $req, Response $res)
     {
-        $collections = $this->collectionModel->getAllCollectionsWithQuotes();
+        $user = $req->session()->get('user');
+        $collections = $this->collectionModel->getAllCollectionsWithQuotes($user['id']);
         require_once __DIR__ . '/../Views/collections/collections.php';
     }
 
@@ -113,7 +114,7 @@ class CollectionController
                 return;
             }
 
-            $collections = $this->collectionModel->getAllCollections();
+            $collections = $this->collectionModel->getAllCollectionsByUserId($user['id']);
             $res->json(['success' => true, 'collections' => $collections]);
         } catch (\Exception $e) {
             error_log('Error fetching collections: ' . $e->getMessage());

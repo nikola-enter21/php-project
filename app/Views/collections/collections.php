@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Quote | QuoteShare</title>
+    <title>Collections | QuoteShare</title>
     <link rel="stylesheet" href="/public/assets/reset.css">
     <link rel="stylesheet" href="/public/assets/styles.css">
     <link rel="stylesheet" href="/public/assets/nav.css">
@@ -30,7 +30,7 @@
             </div>
 
             <section class="collections-section">
-                <h2>📚 Featured Collections</h2>
+                <h2>📚 My Collections</h2>
                 <div class="collections-grid">
                     <?php if (!empty($collections)): ?>
                         <?php foreach ($collections as $collection): ?>
