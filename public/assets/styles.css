@@ -141,17 +141,35 @@ a:visited {
   color: #ffd98f;
 }
 
+/* Search bar container */
+.search-bar-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px; /* Adjust the width of the search bar */
+  margin-right: 10px; /* Space between the search bar and the button */
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px; /* Add padding to make space for the icon */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #888;
+}
+
 .search-form {
   margin-bottom: 1.5rem;
   display: flex;
   gap: 1rem;
-}
-
-.search-form input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 300px;
 }
 
 .search-form button {
