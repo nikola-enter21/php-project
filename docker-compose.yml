@@ -1,15 +1,16 @@
 services:
   fmi_db:
-    image: postgres:latest
+    image: mariadb:latest
     container_name: fmi_db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      MARIADB_USER: root
+      MARIADB_PASSWORD: root
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: app_db
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mariadb_data:/var/lib/mysql
     networks:
       - app_network
 
@@ -26,7 +27,7 @@ services:
       - .:/var/www/html
 
 volumes:
-  postgres_data:
+  mariadb_data:
 
 networks:
   app_network:

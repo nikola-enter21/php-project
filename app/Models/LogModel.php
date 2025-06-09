@@ -6,7 +6,7 @@ use Core\BaseModel;
 
 class LogModel extends BaseModel
 {
-    protected string $table = 'Logs';
+    protected string $table = 'logs';
 
     public function createLog(?string $userId, string $action, string $details): bool
     {

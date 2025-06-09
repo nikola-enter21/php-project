@@ -6,7 +6,7 @@ echo "Стартиране на Docker контейнерите..."
 docker compose up --build -d
 
 echo "Изчакване контейнерите да тръгнат..."
-sleep 5
+sleep 15
 
 echo "Изпълнение на миграциите..."
 ./migrations/setup.sh

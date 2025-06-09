@@ -6,7 +6,7 @@ use Core\BaseModel;
 
 class QuoteModel extends BaseModel
 {
-    protected string $table = 'Quotes';
+    protected string $table = 'quotes';
 
     /**
      * Get counts of likes, saves and reports for a quote

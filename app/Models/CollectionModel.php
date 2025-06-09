@@ -8,7 +8,7 @@ use Core\BaseModel;
 
 class CollectionModel extends BaseModel
 {
-    protected string $table = 'Collections';
+    protected string $table = 'collections';
 
     /**
      * Add a quote to a collection.
