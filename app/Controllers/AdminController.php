@@ -28,7 +28,7 @@ class AdminController
             'totalQuotes' => $this->quoteModel->getTotalCount(),
         ];
 
-        $res->view('dashboard', [
+        $res->view('admin/dashboard', [
             'user' => $user,
             'data' => $data
         ]);
@@ -40,7 +40,7 @@ class AdminController
         $user = $req->session()->get('user');
         $users = $this->userModel->searchUsersExcluding($search, $user['id']);
 
-        $res->view('users', [
+        $res->view('admin/users', [
             'users' => $users,
             'search' => $search,
             'title' => 'Manage Users',
@@ -76,14 +76,14 @@ class AdminController
     {
         $user = $req->session()->get('user');
         $quotes = $this->quoteModel->getMostLikedQuotes(10, $user['id']);
-        $res->view('quotes', ['quotes' => $quotes, 'title' => 'Most Liked Quotes', 'user' => $user]);
+        $res->view('admin/quotes', ['quotes' => $quotes, 'title' => 'Most Liked Quotes', 'user' => $user]);
     }
 
     public function reportedQuotes(Request $req, Response $res)
     {
         $user = $req->session()->get('user');
         $quotes = $this->quoteModel->getReportedQuotes($user['id']);
-        $res->view('quotes', ['quotes' => $quotes, 'title' => 'Reported Quotes', 'user' => $user]);
+        $res->view('admin/quotes', ['quotes' => $quotes, 'title' => 'Reported Quotes', 'user' => $user]);
     }
 
     public function updateUserRole(Request $req, Response $res)

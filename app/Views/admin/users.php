@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="layout-container">
-        <?php include __DIR__ . '/partials/nav.php'; ?>
+        <?php include __DIR__ . '/../partials/nav.php'; ?>
 
         <main class="main-content">
             <section class="manage-users-section">
@@ -68,7 +68,7 @@
                 </div>
             </section>
         </main>
-        <?php include __DIR__ . '/partials/footer.php'; ?>
+        <?php include __DIR__ . '/../partials/footer.php'; ?>
     </div>
     <script src="/public/js/user-actions.js"></script>
 </body>
