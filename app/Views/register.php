@@ -16,7 +16,7 @@
     <main class="main-content">
         <div class="form-container">
             <h2>Create Your Account</h2>
-            <form id="register-form" class="auth-form" method="post" action="/register">
+            <form id="register-form" class="auth-form">
                 <label for="name">Full Name</label>
                 <input type="text" name="name" id="name" required>
 
@@ -40,7 +40,62 @@
     <?php include __DIR__ . '/partials/footer.php'; ?>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('register-form');
+        const errorDiv = document.getElementById('error-message');
+        const successDiv = document.getElementById('success-message');
+        const submitButton = document.getElementById('submit-button');
 
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            errorDiv.textContent = '';
+            successDiv.style.display = 'none';
+            submitButton.disabled = true;
+            submitButton.textContent = 'Registering...';
+
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                confirm_password: document.getElementById('confirm_password').value
+            };
+
+            // Client-side validation
+            if (formData.password !== formData.confirm_password) {
+                errorDiv.textContent = 'Passwords do not match.';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Register';
+                return;
+            }
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(async (response) => {
+                    const data = await response.json();
+                    if (response.ok && data.success) {
+                        successDiv.textContent = 'Registration successful! Redirecting...';
+                        successDiv.style.display = 'block';
+                        setTimeout(() => (window.location.href = '/login'), 2000);
+                    } else {
+                        errorDiv.textContent = data.message || 'Registration failed. Please try again.';
+                    }
+                })
+                .catch(error => {
+                    errorDiv.textContent = `Error: ${error.message || 'Something went wrong.'}`;
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Register';
+                });
+        });
+    });
+</script>
 
 </body>
 </html>
