@@ -27,7 +27,7 @@ class CollectionModel extends BaseModel
                 return false;
             }
 
-            $sqlInsert = "INSERT INTO Collection_Quotes (collection_id, quote_id) VALUES (:collection_id, :quote_id)";
+            $sqlInsert = "INSERT INTO collection_quotes (collection_id, quote_id) VALUES (:collection_id, :quote_id)";
             $result = $this->db->execute($sqlInsert, [
                 'collection_id' => $collectionId,
                 'quote_id' => $quoteId,
@@ -70,7 +70,7 @@ class CollectionModel extends BaseModel
     {
         $sql = "SELECT c.*, q.title AS quote_title, q.content AS quote_content, q.author AS quote_author
                 FROM collections c
-                LEFT JOIN collection_Quotes cq ON c.id = cq.collection_id
+                LEFT JOIN collection_quotes cq ON c.id = cq.collection_id
                 LEFT JOIN quotes q ON cq.quote_id = q.id
                 WHERE c.user_id = :user_id";
         $rows = $this->db->fetchAll($sql, ['user_id' => $userId]);
