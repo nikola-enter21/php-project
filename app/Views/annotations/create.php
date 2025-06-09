@@ -30,7 +30,7 @@
                     >
                     <div class="form-field-info">Add a note to the quote</div>
                 </div>
-                <button type="submit" class="annotation-submit-btn" data-quote-id="<?= htmlspecialchars($quote['id'] ?? '') ?>">
+                <button type="submit" class="annotation-submit-btn" data-quote-id="<?= htmlspecialchars($quoteId ?? '') ?>">
                     Create Annotation
                 </button>
             </form>
