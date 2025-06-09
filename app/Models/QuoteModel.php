@@ -257,7 +257,7 @@ class QuoteModel extends BaseModel
 
     public function addAnnotation(string $quoteId, string $userId, string $note): bool
     {
-        $sql = "INSERT INTO Annotations (quote_id, user_id, note) VALUES (:quote_id, :user_id, :note)";
+        $sql = "INSERT INTO annotations (quote_id, user_id, note) VALUES (:quote_id, :user_id, :note)";
         return $this->db->execute($sql, [
             'quote_id' => $quoteId,
             'user_id' => $userId,
@@ -268,8 +268,8 @@ class QuoteModel extends BaseModel
     public function getAnnotationsByQuoteId(string $quoteId): array
     {
         $sql = "SELECT a.note, u.full_name AS user_name, a.created_at 
-                FROM Annotations a 
-                JOIN Users u ON a.user_id = u.id 
+                FROM annotations a 
+                JOIN users u ON a.user_id = u.id 
                 WHERE a.quote_id = :quote_id 
                 ORDER BY a.created_at DESC";
         return $this->db->query($sql, ['quote_id' => $quoteId]);

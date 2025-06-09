@@ -53,7 +53,6 @@ CREATE TABLE IF NOT EXISTS annotations (
     quote_id   CHAR(36),
     user_id    CHAR(36),
     note       TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
