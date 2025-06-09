@@ -18,6 +18,7 @@
 
 .collection-header {
     margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .collection-title {
@@ -169,7 +170,7 @@
 html, body {
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 20px;
 }
 
 .page-wrapper {

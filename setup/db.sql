@@ -86,5 +86,5 @@ CREATE TABLE IF NOT EXISTS Booked
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE Collection_Quotes ADD CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id);
+--ALTER TABLE Collection_Quotes ADD CONSTRAINT unique_collection_quote UNIQUE (collection_id, quote_id);
 

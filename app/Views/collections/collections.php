@@ -52,7 +52,7 @@
                                                 <?= htmlspecialchars($quote['content'] ?? 'No content available') ?><br>
                                                 <em>Author: <?= htmlspecialchars($quote['author'] ?? 'Anonymous') ?></em>
                                                 <button class="delete-quote-btn" data-quote-id="<?= htmlspecialchars($quote['id'] ?? '') ?>" data-collection-id="<?= htmlspecialchars($collection['id']) ?>">
-                                                    Delete Quote
+                                                    Remove Quote
                                                 </button>
                                             </li>
                                         <?php endforeach; ?>
