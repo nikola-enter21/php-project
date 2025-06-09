@@ -197,4 +197,31 @@ class QuoteController
     {
         $res->view('quotes/create');
     }
+
+    public function deleteQuote(Request $req, Response $res): void
+    {
+        echo "Delete Quote";
+        $user = $req->session()->get('user');
+        $quoteId = $req->param('id');
+        $quote = $this->quoteModel->getQuoteById($quoteId);
+
+        if (!$quoteId || !$quote) {
+            $res->json(['success' => false, 'message' => 'Invalid quote ID.'], 400);
+            return;
+        }
+
+        if ($user['role'] !== 'admin' && $user['id'] !== $quote['user_id']) {
+            $res->json(['success' => false, 'message' => 'You are not authorized to delete this quote.'], 403);
+            return;
+        }
+
+        $deleted = $this->quoteModel->delete($quoteId);
+
+        if ($deleted) {
+            $res->json(['success' => true, 'message' => 'Quote deleted successfully!']);
+        } else {
+            $res->json(['success' => false, 'message' => 'Failed to delete quote. Please try again.'], 500);
+        }
+    }
+
 }

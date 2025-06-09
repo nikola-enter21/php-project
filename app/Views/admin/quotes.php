@@ -3,37 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | QuoteShare</title>
+    <title><?= $title ?></title>
     <link rel="stylesheet" href="/public/assets/reset.css">
     <link rel="stylesheet" href="/public/assets/styles.css">
     <link rel="stylesheet" href="/public/assets/nav.css">
     <link rel="stylesheet" href="/public/assets/home.css">
+    <link rel="stylesheet" href="/public/assets/dashboard.css">
     <link rel="stylesheet" href="/public/assets/quotes.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="layout-container">
-        <?php include __DIR__ . '/partials/nav.php'; ?>
+        <?php include __DIR__ . '/../partials/nav.php'; ?>
 
-        <main class="main-content home-page">
-            <section class="welcome-section">
-                <?php if (isset($user)): ?>
-                    <div class="welcome-banner">
-                        <h1>Welcome back, <?= htmlspecialchars($user['full_name']) ?>!</h1>
-                        <p>Discover new quotes or share your inspiration with the world.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="call-to-action">
-                        <h1>Discover Inspiring Quotes</h1>
-                        <p>Join our community to share and collect your favorite quotes.</p>
-                        <div class="login-prompt">
-                            <a href="/login" class="btn btn-secondary">Log in</a>
-                            <a href="/register" class="btn btn-highlight">Sign up</a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </section>
-
+        <main class="main-content">
             <section class="quotes-section">
                 <div id="custom-prompt-container" class="custom-prompt-container hidden">
                     <div class="custom-prompt">
@@ -44,9 +27,11 @@
                         </div>
                     </div>
                 </div>
-                <h2>💫 Featured Quotes</h2>
-                <div class="quotes-grid">
-                    <?php if (!empty($quotes)): ?>
+                <h1><?= $title ?></h1>
+                <div class="quotes-list">
+                    <?php if (empty($quotes)): ?>
+                        <p class="no-quotes-message">No quotes to be shown.</p>
+                    <?php else: ?>
                         <?php foreach ($quotes as $quote): ?>
                             <div class="quote-card">
                                 <div class="quote-actions-top">
@@ -56,9 +41,6 @@
                                         <i class="fas fa-heart"></i>
                                         <span class="count"><?= $quote['likes_count'] ?></span>
                                     </button>
-                                    <div class="action-icon add-to-collection" data-quote-id="<?= htmlspecialchars($quote['id']) ?>" title="Add to Collection">
-                                        <i class="fas fa-folder-plus"></i>
-                                    </div>
                                     <button class="action-icon save <?= isset($quote['is_saved']) && $quote['is_saved'] ? 'active' : '' ?>"
                                             data-quote-id="<?= $quote['id'] ?>"
                                             title="Save quote">
@@ -71,7 +53,7 @@
                                         <i class="fas fa-flag"></i>
                                         <span class="count"><?= $quote['reports_count'] ?></span>
                                     </button>
-                                    <?php if ($user && ($user['role'] === 'admin' || $user['id'] === $quote['user_id'])): ?>
+                                    <?php if ($user['role'] === 'admin' || $user['id'] === $quote['user_id']): ?>
                                         <button class="action-icon delete"
                                                 data-quote-id="<?= $quote['id'] ?>"
                                                 title="Delete quote">
@@ -84,26 +66,12 @@
                                 <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
                             </div>
                         <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="no-quotes">No quotes found. Be the first to share one!</p>
-                    <?php endif; ?>
+                    <?php endif; ?> 
                 </div>
             </section>
         </main>
-        <?php include __DIR__ . '/partials/footer.php'; ?>
-    </div>
 
-    <div id="collection-popup" class="popup" style="display: none;">
-        <div class="popup-content">
-            <span class="close-popup">&times;</span>
-            <h3>Select a Collection</h3>
-            <ul class="collection-list"></ul>
-            <p class="no-collections" style="display: none;">No collections available</p>
-        </div>
-    </div>
-
-    <div id="message-container" class="message-container" style="display: none;">
-        <p id="message-text"></p>
+        <?php include __DIR__ . '/../partials/footer.php'; ?>
     </div>
     <script src="/public/js/quote-actions.js"></script>
 </body>

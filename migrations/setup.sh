@@ -14,3 +14,9 @@ echo "Running database migrations..."
 docker cp ./migrations/db.sql fmi_db:/db.sql
 docker exec -u postgres fmi_db psql -U postgres -d postgres -f /db.sql
 echo "Migrations applied."
+
+# Step 3: Seeding the database (admin user)
+echo "Seeding the database..."
+docker cp ./seeds/seed.sql fmi_db:/seed.sql
+docker exec -u postgres fmi_db psql -U postgres -d postgres -f /seed.sql
+echo "Database seeded."

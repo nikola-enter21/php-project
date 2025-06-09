@@ -45,7 +45,7 @@ abstract class BaseModel
     /**
      * Update a record by ID.
      */
-    public function update(int $id, array $data): bool
+    public function update(string $id, array $data): bool
     {
         $setClause = implode(', ', array_map(fn($key) => "{$key} = :{$key}", array_keys($data)));
         $data['id'] = $id;
@@ -57,9 +57,16 @@ abstract class BaseModel
     /**
      * Delete a record by ID.
      */
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         return $this->db->execute($sql, ['id' => $id]);
+    }
+
+    public function getTotalCount(): int 
+    {
+        $sql = "SELECT COUNT(*) as count FROM {$this->table}";
+        $result = $this->db->querySingle($sql);
+        return (int) $result['count'];
     }
 }

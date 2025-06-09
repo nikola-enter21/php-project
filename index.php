@@ -5,6 +5,7 @@ use App\Controllers\HomeController;
 use App\Controllers\QuoteController;
 use App\Middlewares\AuthMiddleware;
 use App\Controllers\CollectionController;
+use App\Middlewares\AdminMiddleware;
 use App\Models\QuoteModel;
 use App\Models\UserModel;
 use App\Models\CollectionModel;
@@ -58,7 +59,7 @@ $container->set(
 );
 $container->set(
     AdminController::class,
-    fn($c) => new AdminController($c->get(UserModel::class))
+    fn($c) => new AdminController($c->get(UserModel::class), $c->get(QuoteModel::class))
 );
 $container->set(
     CollectionController::class,
@@ -80,6 +81,7 @@ try {
     $router->post('/quotes/:id/report', [$container->get(QuoteController::class), 'reportQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/add-to-collection', [$container->get(QuoteController::class), 'addToCollection'], [AuthMiddleware::class]);
     $router->get('/quotes/:id', [$container->get(QuoteController::class), 'getQuoteDetails'], [AuthMiddleware::class]);
+    $router->delete('/quotes/:id', [$container->get(QuoteController::class), 'deleteQuote'], [AuthMiddleware::class]);
 
     //Collection Routes
     $router->get('/collections/create', [$container->get(CollectionController::class), 'createView'], [AuthMiddleware::class]);
@@ -88,7 +90,7 @@ try {
     $router->get('/collections/json', [$container->get(CollectionController::class), 'getCollectionsJson'], [AuthMiddleware::class]);
     $router->get('/collections/:id/export-pdf', [$container->get(CollectionController::class), 'exportAsPdf'], [AuthMiddleware::class]);
     $router->delete('/collections/:collectionId/quotes/:quoteId/delete', [$container->get(CollectionController::class), 'deleteQuoteFromCollection'], [AuthMiddleware::class]);
-
+    
     // User Routes
     $router->get('/login', [$container->get(UserController::class), 'loginView']);
     $router->get('/register', [$container->get(UserController::class), 'registerView']);
@@ -97,9 +99,14 @@ try {
     $router->post('/logout', [$container->get(UserController::class), 'logout']);
 
     // Admin Routes
-    $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AuthMiddleware::class]);
-    $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AuthMiddleware::class]);
-    $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AuthMiddleware::class]);
+    $router->delete('/users/:id', [$container->get(UserController::class), 'deleteUser'], [AdminMiddleware::class]);
+    $router->get('/admin/dashboard', [$container->get(AdminController::class), 'dashboard'], [AdminMiddleware::class]);
+    $router->post('/admin/roles', [$container->get(AdminController::class), 'manageRoles'], [AdminMiddleware::class]);
+    $router->get('/admin/users', [$container->get(AdminController::class), 'manageUsers'], [AdminMiddleware::class]);
+    $router->patch('/admin/users/:id/role', [$container->get(AdminController::class), 'updateUserRole'], [AdminMiddleware::class]);
+    $router->get('/admin/logs', [$container->get(AdminController::class), 'viewLogs'], [AdminMiddleware::class]);
+    $router->get('/admin/quotes/most-liked', [$container->get(AdminController::class), 'mostLikedQuotes'], [AdminMiddleware::class]);
+    $router->get('/admin/quotes/reported', [$container->get(AdminController::class), 'reportedQuotes'], [AdminMiddleware::class]);
 
     $router->run();
 } catch (Exception $e) {

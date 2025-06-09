@@ -130,6 +130,27 @@ class UserController
         $res->json(['success' => true, 'message' => 'Registration successful!']);
     }
 
+    public function deleteUser(Request $req, Response $res)
+    {
+        $userId = $req->param('id');
+        $loggedUser = $req->session()->get('user');
+
+        if (!$userId) {
+            return $res->json(['success' => false, 'message' => 'Invalid user ID'], 400);
+        }
+
+        if ($loggedUser['role'] !== 'admin' && $loggedUser['id'] !== $userId) {
+            $res->json(['success' => false, 'message' => 'You are not authorized to delete this quote.'], 403);
+            return;
+        }
+
+        if ($this->userModel->delete($userId)) {
+            return $res->json(['success' => true, 'message' => 'User deleted successfully']);
+        } else {
+            return $res->json(['success' => false, 'message' => 'Failed to delete user'], 500);
+        }
+    }
+
     /**
      * Log out the user.
      */

@@ -2,7 +2,19 @@
     <nav class="navbar">
         <h1 class="logo"><a href="/">QuoteShare</a></h1>
         <ul class="nav-links">
+
             <?php if (isset($_SESSION['user'])): ?>
+                <li>
+                    <p>
+                        <i class="fas fa-user"></i>
+                        <?= $_SESSION['user']['full_name'] ?>
+                    </p>
+                </li>
+                <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+                    <li>
+                        <a class="admin-dashboard-link" href="/admin/dashboard">Admin Dashboard</a>
+                    </li>
+                <?php endif; ?>
                 <li>
                     <a href="/quotes/create" class="create-quote-btn">
                         <i class="fas fa-plus"></i> Create Quote

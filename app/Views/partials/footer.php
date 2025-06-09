@@ -1,7 +1,8 @@
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-info">
-            <p>&copy; <?= date('Y') ?> MyApp. All rights reserved.</p>
+            <p>&copy; <?= date('Y') ?> QuoteShare</p>
+            <small>All rights reserved.</small>
         </div>
         <div class="footer-links">
             <a href="/privacy">Privacy Policy</a>

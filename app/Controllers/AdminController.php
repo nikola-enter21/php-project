@@ -5,39 +5,47 @@ namespace App\Controllers;
 use Core\Request;
 use Core\Response;
 use App\Models\UserModel;
+use App\Models\QuoteModel;
 
 class AdminController
 {
     private UserModel $userModel;
+    private QuoteModel $quoteModel;
 
-    public function __construct(UserModel $userModel)
+    public function __construct(UserModel $userModel, QuoteModel $quoteModel)
     {
-        $this->userModel = $userModel; // Accept the UserModel but don’t use it in mock functions
+        $this->userModel = $userModel;
+        $this->quoteModel = $quoteModel;
     }
 
-    /**
-     * Mock function: Display the admin dashboard.
-     */
     public function dashboard(Request $req, Response $res)
     {
+        $user = $req->session()->get('user');
+
         // Mock response for admin dashboard
-        $mockData = [
-            'totalUsers' => 100,
-            'activeUsers' => 80,
-            'pendingTasks' => 5
+        $data = [
+            'totalUsers' => $this->userModel->getTotalCount(),
+            'totalQuotes' => $this->quoteModel->getTotalCount(),
         ];
 
-        $res->json($mockData);
+        $res->view('admin/dashboard', [
+            'user' => $user,
+            'data' => $data
+        ]);
     }
 
-    /**
-     * Mock function: Manage user roles.
-     */
-    public function manageRoles(Request $req, Response $res)
+    public function manageUsers(Request $req, Response $res)
     {
-        // Mock managing user roles (based on request body)
-        $mockData = $req->body(); // Assume role data is posted
-        $res->json(['success' => true, 'message' => 'Roles updated', 'data' => $mockData]);
+        $search = $req->query('search') ?? '';
+        $user = $req->session()->get('user');
+        $users = $this->userModel->searchUsersExcluding($search, $user['id']);
+
+        $res->view('admin/users', [
+            'users' => $users,
+            'search' => $search,
+            'title' => 'Manage Users',
+            'user' => $user
+        ]);
     }
 
     /**
@@ -63,4 +71,35 @@ class AdminController
         // Mock deleting logs
         $res->json(['success' => true, 'message' => 'Logs cleared']);
     }
+
+    public function mostLikedQuotes(Request $req, Response $res)
+    {
+        $user = $req->session()->get('user');
+        $quotes = $this->quoteModel->getMostLikedQuotes(10, $user['id']);
+        $res->view('admin/quotes', ['quotes' => $quotes, 'title' => 'Most Liked Quotes', 'user' => $user]);
+    }
+
+    public function reportedQuotes(Request $req, Response $res)
+    {
+        $user = $req->session()->get('user');
+        $quotes = $this->quoteModel->getReportedQuotes($user['id']);
+        $res->view('admin/quotes', ['quotes' => $quotes, 'title' => 'Reported Quotes', 'user' => $user]);
+    }
+
+    public function updateUserRole(Request $req, Response $res)
+    {
+        $userId = $req->param('id');
+        $role = $req->body('role');
+
+        if (!$userId || !$role) {
+            return $res->json(['success' => false, 'message' => 'Invalid parameters'], 400);
+        }
+
+        if ($this->userModel->updateUserRole($userId, $role)) {
+            return $res->json(['success' => true, 'message' => 'User role updated successfully']);
+        } else {
+            return $res->json(['success' => false, 'message' => 'Failed to update user role'], 500);
+        }
+    }
+
 }
