@@ -12,7 +12,10 @@
                 </li>
                 <?php if ($_SESSION['user']['role'] === 'admin'): ?>
                     <li>
-                        <a class="admin-dashboard-link" href="/admin/dashboard">Admin Dashboard</a>
+                        <a class="admin-dashboard-link" href="/admin/dashboard">
+                            <i class="fas fa-puzzle-piece"></i>
+                            Admin Dashboard
+                        </a>
                     </li>
                 <?php endif; ?>
                 <li>
