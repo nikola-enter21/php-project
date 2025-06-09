@@ -53,14 +53,14 @@ class UserController
 
         // Basic validation
         if (empty($email) || empty($password)) {
-            $res->json(['success' => false, 'message' => 'Email and password are required'], 400);
             $this->logModel->createLog(null, 'login', "Failed login attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Email and password are required'], 400);
             return;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $res->json(['success' => false, 'message' => 'Invalid email format'], 400);
             $this->logModel->createLog(null, 'login', "Failed login attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Invalid email format'], 400);
             return;
         }
 
@@ -68,8 +68,8 @@ class UserController
         $user = $this->userModel->getUserByEmail($email);
 
         if (!$user || !password_verify($password, $user['password'])) {
-            $res->json(['success' => false, 'message' => 'Invalid email or password'], 401);
             $this->logModel->createLog(null, 'login', "Failed login attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Invalid email or password'], 401);
             return;
         }
 
@@ -94,33 +94,33 @@ class UserController
 
         // Validation
         if (empty($fullName) || empty($email) || empty($password) || empty($confirmPassword)) {
-            $res->json(['success' => false, 'message' => 'All fields are required'], 400);
             $this->logModel->createLog(null, 'register', "Failed registration attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'All fields are required'], 400);
             return;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $res->json(['success' => false, 'message' => 'Invalid email format'], 400);
             $this->logModel->createLog(null, 'register', "Failed registration attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Invalid email format'], 400);
             return;
         }
 
         if ($password !== $confirmPassword) {
-            $res->json(['success' => false, 'message' => 'Passwords do not match'], 400);
             $this->logModel->createLog(null, 'register', "Failed registration attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Passwords do not match'], 400);
             return;
         }
 
         if (strlen($password) < 6) {
-            $res->json(['success' => false, 'message' => 'Password must be at least 6 characters long'], 400);
             $this->logModel->createLog(null, 'register', "Failed registration attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Password must be at least 6 characters long'], 400);
             return;
         }
 
         // Check if email is already in use
         if ($this->userModel->isEmailTaken($email)) {
-            $res->json(['success' => false, 'message' => 'Email is already registered'], 400);
             $this->logModel->createLog(null, 'register', "Failed registration attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Email is already registered'], 400);
             return;
         }
 
@@ -136,8 +136,8 @@ class UserController
 
         // Insert user into the database
         if (!$this->userModel->createUser($userData)) {
-            $res->json(['success' => false, 'message' => 'Failed to register the user'], 500);
             $this->logModel->createLog(null, 'register', "Failed registration attempt with email: $email");
+            $res->json(['success' => false, 'message' => 'Failed to register the user'], 500);
             return;
         }
 
