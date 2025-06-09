@@ -8,9 +8,12 @@ class LogModel extends BaseModel
 {
     protected string $table = 'Logs';
 
-    public function createLog(string $userId, string $action, string $details): bool
+    public function createLog(?string $userId, string $action, string $details): bool
     {
-        return $this->create([
+        $sql = "INSERT INTO {$this->table} (user_id, action, details)
+                VALUES (:user_id, :action, :details)";
+
+        return $this->db->execute($sql, [
             'user_id' => $userId,
             'action' => $action,
             'details' => $details,
