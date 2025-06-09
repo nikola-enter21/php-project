@@ -68,7 +68,7 @@
                                         <i class="fas fa-flag"></i>
                                         <span class="count"><?= $quote['reports_count'] ?></span>
                                     </button>
-                                    <?php if ($user['role'] === 'admin' || $user['id'] === $quote['user_id']): ?>
+                                    <?php if ($user && ($user['role'] === 'admin' || $user['id'] === $quote['user_id'])): ?>
                                         <button class="action-icon delete"
                                                 data-quote-id="<?= $quote['id'] ?>"
                                                 title="Delete quote">
