@@ -82,6 +82,10 @@
                                 <p class="quote-content">"<?= htmlspecialchars($quote['content']) ?>"</p>
                                 <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>
                                 <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
+                                <div class="quote-annotation-actions">
+                                    <a href="/quotes/<?= $quote['id'] ?>/annotations/create" class="btn btn-annotation">➕ Add Annotation</a>
+                                </div>
+                                <a href="/quotes/<?= $quote['id'] ?>/annotations" class="btn btn-annotation-secondary">📖 View Annotations</a>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>

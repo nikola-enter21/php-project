@@ -1,0 +1,152 @@
+.annotation-create-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    border: 1px solid #ffae70;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.annotation-create-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.annotetaion-create-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.annotetaion-create-header h1 {
+    color: #e67e22;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.annotetaion-create-header p {
+    color: #333;
+    font-size: 1.1em;
+}
+
+.annotation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-field {
+    position: relative;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e07a35;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.form-field input,
+.form-field textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    resize: vertical;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+    border-color: #ffae70;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 174, 112, 0.2);
+}
+
+.form-field-info {
+    font-size: 0.9em;
+    color: #888;
+    margin-top: 5px;
+}
+
+.annotation-submit-btn {
+    background: #ff8c42;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    align-self: center;
+}
+
+.annotation-submit-btn:hover {
+    background: #e07a35;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(224, 122, 53, 0.3);
+}
+
+.annotation-submit-btn:active {
+    transform: translateY(0);
+}
+
+.message {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.message.error {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
+
+.message.success {
+    background-color: #dcfce7;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+}
+
+@media (max-width: 768px) {
+    .annotation-create-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .annotetaion-create-header h1 {
+        font-size: 2em;
+    }
+
+    .form-field input,
+    .form-field textarea {
+        padding: 12px;
+    }
+
+    .annotation-submit-btn {
+        padding: 12px 24px;
+    }
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    flex: 1;
+    padding: 40px;
+}

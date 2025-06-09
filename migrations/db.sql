@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS Annotations
     quote_id   UUID REFERENCES Quotes (id) ON DELETE CASCADE,
     user_id    UUID REFERENCES Users (id) ON DELETE CASCADE,
     note       TEXT,
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Likes table

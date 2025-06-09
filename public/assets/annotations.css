@@ -1,0 +1,80 @@
+.annotations-container {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 800px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.annotations-container h1 {
+    font-size: 2em;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.annotations-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.annotations-container li {
+    background-color: #f9fafb;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.annotations-container li:hover {
+    background-color: #f1f5f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.annotations-container li strong {
+    font-size: 1.1em;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.annotations-container li em {
+    font-size: 0.9em;
+    color: #64748b;
+    margin-top: 10px;
+}
+
+.annotations-container p {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 1em;
+    color: #34495e;
+}
+
+.annotations-container p:first-child {
+    margin-bottom: 5px;
+}
+
+.annotations-container > p {
+    text-align: center;
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    flex: 1;
+    padding: 40px;
+}

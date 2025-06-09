@@ -224,4 +224,51 @@ class QuoteController
         }
     }
 
+    public function addAnnotation(Request $req, Response $res): void
+    {
+        $user = $req->session()->get('user'); 
+
+        if (!$user) {
+            $res->redirect('/login'); 
+            return;
+        }
+
+        $quoteId = $req->param('id'); 
+        $data = json_decode($req->raw(), true);
+        $note = trim($data['note'] ?? '');
+
+        if (empty($note)) {
+            $res->json(['success' => false, 'message' => 'Annotation cannot be empty.'], 400);
+            return;
+        }
+
+        $added = $this->quoteModel->addAnnotation($quoteId, $user['id'], $note);
+
+        if ($added) {
+            $res->json(['success' => true, 'message' => 'Annotation added successfully!']);
+        } else {
+            $res->json(['success' => false, 'message' => 'Failed to add annotation. Please try again.'], 500);
+        }
+    }
+
+    public function viewAnnotations(Request $req, Response $res): void
+    {
+        $user = $req->session()->get('user'); 
+
+        if (!$user) {
+            $res->redirect('/login');
+           return;
+        }
+
+        $quoteId = $req->param('id');
+        $annotations = $this->quoteModel->getAnnotationsByQuoteId($quoteId);
+
+        $res->view('annotations/annotations', ['annotations' => $annotations]);
+    }
+
+    public function addAnnotationView(Request $req, Response $res): void
+    {
+        $quoteId = $req->param('id');
+        $res->view('annotations/create', ['quoteId' => $quoteId]);
+    }
 }
