@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controllers;
 use Core\Flash;
 use App\Models\CollectionModel;
@@ -90,7 +89,7 @@ class CollectionController
         }
         $html .= '</ul>';
 
-        $dompdf = new Dompdf();
+        $dompdf = new Dompdf(['defaultFont' => 'DejaVu Sans']);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
