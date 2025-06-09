@@ -87,6 +87,7 @@
                 </div>
             </section>
         </main>
+        <?php include __DIR__ . '/partials/footer.php'; ?>
     </div>
     <script src="/public/js/quote-actions.js"></script>
 </body>
