@@ -3,8 +3,6 @@ services:
     image: mariadb:latest
     container_name: fmi_db
     environment:
-      MARIADB_USER: root
-      MARIADB_PASSWORD: root
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: app_db
     ports:
