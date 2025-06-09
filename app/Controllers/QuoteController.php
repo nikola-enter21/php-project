@@ -231,6 +231,7 @@ class QuoteController
 
         if (!$user) {
             $res->redirect('/login');
+            return;
         }
 
         $quoteId = $req->param('id');

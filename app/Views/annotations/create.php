@@ -69,6 +69,14 @@
                     });
 
                     const data = await response.json();
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${response.ok && data?.success ? 'success' : 'error'}`;
+                    messageDiv.innerHTML = `
+                            <span class="message-icon">${response.ok && data?.success ? '✓' : '⚠️'}</span>
+                            ${data.message}
+                        `;
+
+                    form.insertAdjacentElement('beforebegin', messageDiv);
 
                     if (data?.success) {
                         form.reset();
@@ -77,11 +85,11 @@
                             window.location.href = '/';
                         }, 2500);
                     } else {
-                        alert(data.message); // Показване на съобщение за грешка
+                        alert(data.message); 
                     }
                 } catch (error) {
                     console.error('Error creating annotation:', error);
-                    alert(`An error occurred while creating an annotation: ${JSON.stringify(error)}`);
+                    alert('Error creating annotation:');
                 }
         });
     });

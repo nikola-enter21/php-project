@@ -85,6 +85,7 @@ try {
     $router->post('/quotes/:id/annotations/create', [$container->get(QuoteController::class), 'addAnnotation'], [AuthMiddleware::class]);
     $router->get('/quotes/:id/annotations/create', [$container->get(QuoteController::class), 'addAnnotationView'], [AuthMiddleware::class]);
     $router->get('/quotes/:id/annotations', [$container->get(QuoteController::class), 'viewAnnotations'], [AuthMiddleware::class]);
+    
     //Collection Routes
     $router->get('/collections/create', [$container->get(CollectionController::class), 'createView'], [AuthMiddleware::class]);
     $router->post('/collections/create', [$container->get(CollectionController::class), 'create'], [AuthMiddleware::class]);
