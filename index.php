@@ -16,7 +16,6 @@ if ($basePath === '/' || $basePath === '\\' || $basePath === '.') {
     define('BASE_PATH', $basePath);
 }
 
-error_log("Final BASE_PATH: " . BASE_PATH);
 
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
