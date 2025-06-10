@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/home.css">
-    <link rel="stylesheet" href="/public/assets/quotes.css">
+    <link rel="stylesheet" href="../../public/assets/reset.css">
+    <link rel="stylesheet" href="../../public/assets/styles.css">
+    <link rel="stylesheet" href="../../public/assets/nav.css">
+    <link rel="stylesheet" href="../../public/assets/home.css">
+    <link rel="stylesheet" href="../../public/assets/quotes.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -114,6 +114,6 @@
     <div id="message-container" class="message-container" style="display: none;">
         <p id="message-text"></p>
     </div>
-    <script src="/public/js/quote-actions.js"></script>
+    <script src="../../public/js/quote-actions.js"></script>
 </body>
 </html>

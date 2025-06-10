@@ -5,7 +5,7 @@ use App\Models\CollectionModel;
 use App\Models\LogModel;
 use Core\Request;
 use Core\Response;
-use Dompdf\Dompdf;
+use Mpdf\Mpdf;
 
 class CollectionController
 {
@@ -81,9 +81,8 @@ class CollectionController
         }
 
         $collection = $this->collectionModel->findById($collectionId);
-
         if (!$collection) {
-            $this->logModel->createLog($user['id'], 'export_pdf', "Failed to export PDF: Collection with ID $collectionId not found");
+            $this->logModel->createLog($user['id'], 'export_pdf', "Collection with ID $collectionId not found");
             $res->json(['success' => false, 'message' => 'Collection not found.'], 404);
             return;
         }
@@ -91,23 +90,25 @@ class CollectionController
         $quotes = $this->collectionModel->getQuotesByCollectionId($collectionId);
 
         $html = '<h1>' . htmlspecialchars($collection['name']) . '</h1>';
-        $html .= '<p>' . htmlspecialchars($collection['description']) . '</p>';
+        $html .= '<p>' . nl2br(htmlspecialchars($collection['description'])) . '</p>';
         $html .= '<h2>Quotes:</h2><ul>';
         foreach ($quotes as $quote) {
             $html .= '<li><strong>' . htmlspecialchars($quote['title']) . '</strong><br>' .
-                     htmlspecialchars($quote['content']) . '<br>' .
-                     '<em>Author: ' . htmlspecialchars($quote['author']) . '</em></li>';
+                htmlspecialchars($quote['content']) . '<br>' .
+                '<em>Author: ' . htmlspecialchars($quote['author']) . '</em></li>';
         }
         $html .= '</ul>';
 
-        $dompdf = new Dompdf(['defaultFont' => 'DejaVu Sans']);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
+        $mpdf = new Mpdf(['default_font' => 'dejavusans']); // UTF-8 safe
+        $mpdf->WriteHTML($html);
 
-        $pdfFileName = htmlspecialchars($collection['name']) . '.pdf';
-        $dompdf->stream($pdfFileName, ['Attachment' => true]);
-        $this->logModel->createLog($user['id'], 'export_pdf', "PDF exported successfully for collection ID $collectionId");
+        $pdfFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $collection['name']) . '.pdf';
+
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $pdfFileName . '"');
+        $mpdf->OutputHttpDownload($pdfFileName, 'I'); // 'I' = inline, 'D' = force download
+
+        exit;
     }
 
     public function getCollections(Request $req, Response $res)
