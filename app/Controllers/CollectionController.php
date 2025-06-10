@@ -111,7 +111,7 @@ class CollectionController
 
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $pdfFileName . '"');
-        $mpdf->OutputHttpDownload($pdfFileName); // 'I' = inline, 'D' = force download
+        $mpdf->OutputHttpDownload($pdfFileName);
 
         exit;
     }
