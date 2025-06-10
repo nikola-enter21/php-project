@@ -106,11 +106,12 @@ class CollectionController
         $mpdf = new Mpdf(['default_font' => 'dejavusans']); // UTF-8 safe
         $mpdf->WriteHTML($html);
 
-        $pdfFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $collection['name']) . '.pdf';
+        $cleanName = preg_replace('/[\/:*?"<>|]/', '_', $collection['name']);
+        $pdfFileName = $cleanName . '.pdf';
 
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $pdfFileName . '"');
-        $mpdf->Output($pdfFileName, 'D'); // 'I' = inline, 'D' = force download
+        $mpdf->OutputHttpDownload($pdfFileName); // 'I' = inline, 'D' = force download
 
         exit;
     }
