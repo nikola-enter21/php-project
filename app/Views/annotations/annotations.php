@@ -1,16 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-path" content="<?= BASE_PATH ?>">
     <title>Annotations</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/home.css">
-    <link rel="stylesheet" href="/public/assets/annotations.css">
-    <link rel="stylesheet" href="/public/assets/quotes.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/reset.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/styles.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/nav.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/home.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/annotations.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/quotes.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>

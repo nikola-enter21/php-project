@@ -24,7 +24,24 @@ class Request
 
     public function path(): string
     {
-        return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        
+        if (defined('BASE_PATH') && BASE_PATH !== '') {
+            $basePath = trim(BASE_PATH, '/');
+            $path = trim($path, '/');
+            
+            if ($basePath !== '' && strpos($path, $basePath) === 0) {
+                $path = substr($path, strlen($basePath));
+            }
+            
+            $path = '/' . trim($path, '/');
+            
+            if ($path === '') {
+                $path = '/';
+            }
+        }
+        
+        return $path;
     }
 
     public function query(?string $key = null)

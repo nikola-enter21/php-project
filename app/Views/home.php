@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-path" content="<?= BASE_PATH ?>">
     <title>Home | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/home.css">
-    <link rel="stylesheet" href="/public/assets/quotes.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/reset.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/styles.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/nav.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/home.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/quotes.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -27,8 +28,8 @@
                         <h1>Discover Inspiring Quotes</h1>
                         <p>Join our community to share and collect your favorite quotes.</p>
                         <div class="login-prompt">
-                            <a href="/login" class="btn btn-secondary">Log in</a>
-                            <a href="/register" class="btn btn-highlight">Sign up</a>
+                            <a href="<?= BASE_PATH ?>/login" class="btn btn-secondary">Log in</a>
+                            <a href="<?= BASE_PATH ?>/register" class="btn btn-highlight">Sign up</a>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -84,11 +85,11 @@
                                 <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
                                 <div class="quote-annotation-actions">
                                 <?php if (isset($user)): ?>
-                                        <a href="/quotes/<?= $quote['id'] ?>/annotations/create" class="btn btn-annotation">➕ Add Annotation</a>
-                                        <a href="/quotes/<?= $quote['id'] ?>/annotations" class="btn btn-annotation-secondary">📖 View Annotations</a>
+                                        <a href="<?= BASE_PATH ?>/quotes/<?= $quote['id'] ?>/annotations/create" class="btn btn-annotation">➕ Add Annotation</a>
+                                        <a href="<?= BASE_PATH ?>/quotes/<?= $quote['id'] ?>/annotations" class="btn btn-annotation-secondary">📖 View Annotations</a>
                                     <?php else: ?>
-                                        <a href="/login" class="btn btn-annotation">➕ Add Annotation</a>
-                                        <a href="/login" class="btn btn-annotation-secondary">📖 View Annotations</a>
+                                        <a href="<?= BASE_PATH ?>/login" class="btn btn-annotation">➕ Add Annotation</a>
+                                        <a href="<?= BASE_PATH ?>/login" class="btn btn-annotation-secondary">📖 View Annotations</a>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -114,6 +115,6 @@
     <div id="message-container" class="message-container" style="display: none;">
         <p id="message-text"></p>
     </div>
-    <script src="/public/js/quote-actions.js"></script>
+    <script src="<?= BASE_PATH ?>/public/js/quote-actions.js"></script>
 </body>
 </html>

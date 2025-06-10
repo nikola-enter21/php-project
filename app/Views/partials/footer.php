@@ -5,9 +5,9 @@
             <small>All rights reserved.</small>
         </div>
         <div class="footer-links">
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms of Service</a>
-            <a href="/contact">Contact Us</a>
+            <a href="<?= BASE_PATH ?>/privacy">Privacy Policy</a>
+            <a href="<?= BASE_PATH ?>/terms">Terms of Service</a>
+            <a href="<?= BASE_PATH ?>/contact">Contact Us</a>
         </div>
         <div class="footer-socials">
             <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>

@@ -12,7 +12,11 @@ class AuthMiddleware extends Middleware
     {
         // Check if the user is authenticated
         if (!$req->session()->has('user')) {
-            $res->status(401)->json(['error' => 'Unauthorized']);
+            if ($req->method() === 'POST' || $req->method() === 'DELETE' || $req->method() === 'PATCH') {
+                $res->status(401)->json(['error' => 'Unauthorized']);
+                return;
+            }
+            $res->redirect('/login');
             return;
         }
 

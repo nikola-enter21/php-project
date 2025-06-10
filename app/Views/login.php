@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-path" content="<?= BASE_PATH ?>">
     <title>Login | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/reset.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/styles.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/nav.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +27,7 @@
                 <div id="error-message" style="color: red; margin-top: 10px;"></div>
                 <button type="submit">Login</button>
             </form>
-            <p class="form-footer">Don't have an account? <a href="/register">Register here</a></p>
+            <p class="form-footer">Don't have an account? <a href="<?= BASE_PATH ?>/register">Register here</a></p>
         </div>
     </main>
 
@@ -37,6 +38,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('login-form');
         const errorDiv = document.getElementById('error-message');
+        const basePath = document.querySelector('meta[name="base-path"]').content;
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -47,7 +49,7 @@
                 password: document.getElementById('password').value
             };
 
-            fetch('/login', {
+            fetch(`${basePath}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -57,7 +59,7 @@
                 .then(async (response) => {
                     const data = await response.json();
                     if (response.ok && data.success) {
-                        window.location.href = '/';
+                        window.location.href = `${basePath}/`;
                     } else {
                         errorDiv.textContent = data.message || 'Login failed. Please try again.';
                     }

@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const basePath =
+    document.querySelector('meta[name="base-path"]')?.content || "";
+
   const actionButtons = document.querySelectorAll(".action-icon");
 
   actionButtons.forEach((button) => {
@@ -24,16 +27,19 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        const response = await fetch(`/quotes/${quoteId}/${action}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${basePath}/quotes/${quoteId}/${action}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
         if (response.status === 401 || response.status === 403) {
-          window.location.href = "/login";
+          window.location.href = `${basePath}/login`;
           return;
         }
 
@@ -79,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!currentQuoteId) return;
 
     try {
-      const response = await fetch(`/quotes/${currentQuoteId}`, {
+      const response = await fetch(`${basePath}/quotes/${currentQuoteId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
     currentQuoteId = null;
   });
 
-  const addToCollectionButtons = document.querySelectorAll(".add-to-collection");
+  const addToCollectionButtons =
+    document.querySelectorAll(".add-to-collection");
   const popup = document.getElementById("collection-popup");
   const collectionList = popup.querySelector(".collection-list");
   const closePopup = popup.querySelector(".close-popup");
@@ -122,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
       collectionList.innerHTML = "";
 
       try {
-        const response = await fetch("/collections/json");
+        const response = await fetch(`${basePath}/collections/json`);
         const data = await response.json();
 
         if (data.success && data.collections.length > 0) {
@@ -132,14 +139,17 @@ document.addEventListener("DOMContentLoaded", function () {
             li.dataset.collectionId = collection.id;
             li.addEventListener("click", async () => {
               try {
-                const addResponse = await fetch(`/quotes/${quoteId}/add-to-collection`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    collection_id: collection.id,
-                    quote_id: quoteId,
-                  }),
-                });
+                const addResponse = await fetch(
+                  `${basePath}/quotes/${quoteId}/add-to-collection`,
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      collection_id: collection.id,
+                      quote_id: quoteId,
+                    }),
+                  }
+                );
                 const addData = await addResponse.json();
 
                 if (addData.success) {

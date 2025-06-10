@@ -1,6 +1,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /
+    # Get the directory name dynamically
+    RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+    RewriteRule ^(.*) - [E=BASE:%1]
 
     # Don't rewrite if the request is for a file or directory
     RewriteCond %{REQUEST_FILENAME} -f [OR]

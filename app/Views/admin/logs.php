@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-path" content="<?= BASE_PATH ?>">
     <title>Activity Logs | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/home.css">
-    <link rel="stylesheet" href="/public/assets/dashboard.css">
-    <link rel="stylesheet" href="/public/assets/logs.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/reset.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/styles.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/nav.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/home.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/dashboard.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/logs.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -33,7 +34,7 @@
 
         <main class="main-content">
             <h1>Activity Logs</h1>
-            <form method="GET" action="/admin/logs" class="search-form">
+            <form method="GET" action="<?= BASE_PATH ?>/admin/logs" class="search-form">
                 <div class="search-bar-container">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" name="search" value="<?= htmlspecialchars($search ?? '') ?>" placeholder="Search logs by action, details, or user" class="search-input">
@@ -82,6 +83,6 @@
 
         <?php include __DIR__ . '/../partials/footer.php'; ?>
     </div>
-    <script src="/public/js/log-actions.js"></script>
+    <script src="<?= BASE_PATH ?>/public/js/log-actions.js"></script>
 </body>
 </html>

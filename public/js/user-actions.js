@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const basePath =
+    document.querySelector('meta[name="base-path"]')?.content || "";
+
   const updateRoleButtons = document.querySelectorAll(".btn-secondary");
   const deleteUserButtons = document.querySelectorAll(".delete-user-btn");
   const promptContainer = document.getElementById("custom-prompt-container");
@@ -49,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       if (currentAction === "delete-user") {
-        const response = await fetch(`/users/${currentUserId}`, {
+        const response = await fetch(`${basePath}/users/${currentUserId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -59,7 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (response.ok) {
-          popupText.textContent = result.message || "User deleted successfully!";
+          popupText.textContent =
+            result.message || "User deleted successfully!";
           document
             .querySelector(`[data-user-id="${currentUserId}"]`)
             .closest(".user-card")
@@ -68,20 +72,25 @@ document.addEventListener("DOMContentLoaded", () => {
           popupText.textContent = result.message || "Failed to delete user.";
         }
       } else if (currentAction === "update-role") {
-        const response = await fetch(`/admin/users/${currentUserId}/role`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ role: currentRole }),
-        });
+        const response = await fetch(
+          `${basePath}/admin/users/${currentUserId}/role`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ role: currentRole }),
+          }
+        );
 
         const result = await response.json();
 
         if (response.ok) {
-          popupText.textContent = result.message || "User role updated successfully!";
+          popupText.textContent =
+            result.message || "User role updated successfully!";
         } else {
-          popupText.textContent = result.message || "Failed to update user role.";
+          popupText.textContent =
+            result.message || "Failed to update user role.";
         }
       }
     } catch (error) {

@@ -61,7 +61,6 @@ class Router
     }
 
     // Main method to run the router
-
     /**
      * @throws Exception
      */
@@ -70,7 +69,8 @@ class Router
         $req = $this->request;
         $res = $this->response;
         $method = $_SERVER['REQUEST_METHOD'];
-        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $path = $req->path();
+
 
         // Find a matching route
         foreach ($this->routes[$method] ?? [] as $route => $routeData) {
@@ -92,7 +92,7 @@ class Router
 
         // If no route matches, send 404
         http_response_code(404);
-        echo "404 Not Found";
+        echo "404 Not Found - Path: " . $path; // used this to figure out routing, leaving it as a gift
     }
 
     // Middleware handling

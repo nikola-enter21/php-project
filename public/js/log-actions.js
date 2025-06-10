@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const basePath =
+    document.querySelector('meta[name="base-path"]')?.content || "";
+
   const deleteLogButtons = document.querySelectorAll(".delete-log-btn");
   const clearLogsButton = document.getElementById("clear-logs-btn");
   const promptContainer = document.getElementById("custom-prompt-container");
@@ -35,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       if (currentAction === "delete-log") {
-        const response = await fetch(`/admin/logs/${currentLogId}`, {
+        const response = await fetch(`${basePath}/admin/logs/${currentLogId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -46,12 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.ok) {
           popupText.textContent = result.message || "Log deleted successfully!";
-          document.querySelector(`[data-log-id="${currentLogId}"]`).closest("tr").remove();
+          document
+            .querySelector(`[data-log-id="${currentLogId}"]`)
+            .closest("tr")
+            .remove();
         } else {
           popupText.textContent = result.message || "Failed to delete log.";
         }
       } else if (currentAction === "clear-logs") {
-        const response = await fetch(`/admin/logs`, {
+        const response = await fetch(`${basePath}/admin/logs`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -61,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (response.ok) {
-          popupText.textContent = result.message || "All logs cleared successfully!";
+          popupText.textContent =
+            result.message || "All logs cleared successfully!";
           document.querySelector(".logs-table tbody").innerHTML =
             '<tr><td colspan="5">No logs found.</td></tr>';
         } else {

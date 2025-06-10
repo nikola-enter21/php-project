@@ -1,5 +1,23 @@
 <?php
 
+// Detect the base path
+$scriptName = $_SERVER['SCRIPT_NAME'];
+$requestUri = $_SERVER['REQUEST_URI'];
+$basePath = dirname($scriptName);
+
+
+// kill me with this base path scenarios
+if ($basePath === '/' || $basePath === '\\' || $basePath === '.') {
+    // If the script is in the root directory
+    define('BASE_PATH', '');
+} else {
+    // Ensure the base path starts with a forward slash and doesn't end with one ;()
+    $basePath = '/' . trim($basePath, '/');
+    define('BASE_PATH', $basePath);
+}
+
+error_log("Final BASE_PATH: " . BASE_PATH);
+
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 use App\Controllers\QuoteController;

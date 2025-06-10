@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-path" content="<?= BASE_PATH ?>">
     <title>Create New Quote | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/create-collection.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/reset.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/styles.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/nav.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/create-collection.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +20,7 @@
                 <p>Organize your favorite quotes into a collection</p>
             </div>
 
-            <form id="collection-form" class="collection-form" method="POST" action="/collections/create">
+            <form id="collection-form" class="collection-form" method="POST" action="<?= BASE_PATH ?>/collections/create">
                 <div class="form-field">
                     <label for="name">Collection Name</label>
                     <input type="text"
@@ -49,8 +50,8 @@
     <?php include __DIR__ . '/../partials/footer.php'; ?>
     </div>
 <script>
-    
     document.addEventListener('DOMContentLoaded', function () {
+        const basePath = document.querySelector('meta[name="base-path"]')?.content || '';
         const form = document.getElementById('collection-form');
         const nameInput = document.getElementById('name');
         const submitBtn = form.querySelector('.collection-submit-btn');
@@ -79,7 +80,7 @@
             submitBtn.disabled = true;
 
             try {
-                const response = await fetch('/collections/create', {
+                const response = await fetch(`${basePath}/collections/create`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -107,7 +108,7 @@
                     updateCharCount();
 
                     setTimeout(() => {
-                        window.location.href = '/collections';
+                        window.location.href = `${basePath}/collections`;
                     }, 2500);
                 }
             } catch (error) {

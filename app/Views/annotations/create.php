@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-path" content="<?= BASE_PATH ?>">
     <title>Create New Quote | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/create-annotation.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/reset.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/styles.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/nav.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/create-annotation.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -38,8 +39,8 @@
     <?php include __DIR__ . '/../partials/footer.php'; ?>
     </div>
 <script>
-    
     document.addEventListener('DOMContentLoaded', function () {
+        const basePath = document.querySelector('meta[name="base-path"]')?.content || '';
         const form = document.getElementById('annotation-form');
         const submitBtn = form.querySelector('.annotation-submit-btn');
         const quoteId = submitBtn.dataset.quoteId;
@@ -58,7 +59,7 @@
             submitBtn.disabled = true;
 
             try {
-                    const response = await fetch(`/quotes/${quoteId}/annotations/create`, {
+                    const response = await fetch(`${basePath}/quotes/${quoteId}/annotations/create`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -82,7 +83,7 @@
                         form.reset();
 
                         setTimeout(() => {
-                            window.location.href = '/';
+                            window.location.href = `${basePath}/`;
                         }, 2500);
                     } else {
                         alert(data.message); 

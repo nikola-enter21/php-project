@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-path" content="<?= BASE_PATH ?>">
     <title>Register | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/reset.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/styles.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/assets/nav.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -33,7 +34,7 @@
                 <div id="success-message" style="color: green; margin-top: 10px; display: none;"></div>
                 <button type="submit" id="submit-button">Register</button>
             </form>
-            <p class="form-footer">Already have an account? <a href="/login">Login here</a></p>
+            <p class="form-footer">Already have an account? <a href="<?= BASE_PATH ?>/login">Login here</a></p>
         </div>
     </main>
 
@@ -46,6 +47,7 @@
         const errorDiv = document.getElementById('error-message');
         const successDiv = document.getElementById('success-message');
         const submitButton = document.getElementById('submit-button');
+        const basePath = document.querySelector('meta[name="base-path"]').content;
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -69,7 +71,7 @@
                 return;
             }
 
-            fetch('/register', {
+            fetch(`${basePath}/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -81,7 +83,7 @@
                     if (response.ok && data.success) {
                         successDiv.textContent = 'Registration successful! Redirecting...';
                         successDiv.style.display = 'block';
-                        setTimeout(() => (window.location.href = '/login'), 2000);
+                        setTimeout(() => (window.location.href = `${basePath}/login`), 2000);
                     } else {
                         errorDiv.textContent = data.message || 'Registration failed. Please try again.';
                     }
