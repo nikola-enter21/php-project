@@ -6,6 +6,7 @@ use App\Models\LogModel;
 use Core\Request;
 use Core\Response;
 use Mpdf\Mpdf;
+use Mpdf\MpdfException;
 
 class CollectionController
 {
@@ -69,6 +70,9 @@ class CollectionController
         $res->view('collections/create');
     }
 
+    /**
+     * @throws MpdfException
+     */
     public function exportAsPdf(Request $req, Response $res)
     {
         $collectionId = $req->param('id');
