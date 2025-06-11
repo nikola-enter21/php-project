@@ -316,10 +316,8 @@ class QuoteController
 
     public function importCsv(Request $req, Response $res): void
     {
-        $this->logModel->createLog(null, 'import_csv', 'File details: ');
         $user = $req->session()->get('user');
         if (!$user) {
-            $this->logModel->createLog(null, 'import_csv', 'Failed to import quotes: User not logged in');
             $res->json(['success' => false, 'message' => 'You must be logged in to import quotes.'], 401);
             return;
         }
@@ -327,20 +325,17 @@ class QuoteController
         $file = $_FILES['csv_file'] ?? null;
 
         if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
-            $this->logModel->createLog($user['id'], 'import_csv', 'File upload error: ' . $file['error']);
             $res->json(['success' => false, 'message' => 'Invalid file upload.'], 400);
             return;
         }
 
         $csvData = file_get_contents($file['tmp_name']);
-        $this->logModel->createLog($user['id'], 'import_csv', 'CSV data: ' . $csvData);
 
-        $rows = array_map('str_getcsv', explode("\n", $csvData));
+        $rows = array_map(fn($row) => str_getcsv($row, ",", '"', "\\"), explode("\n", $csvData));
         $header = array_shift($rows);
         $this->logModel->createLog($user['id'], 'import_csv', 'CSV header: ' . json_encode($header));
 
         if ($header !== ['title', 'content', 'author']) {
-            $this->logModel->createLog($user['id'], 'import_csv', 'Invalid CSV format');
             $res->json(['success' => false, 'message' => 'Invalid CSV format. Expected columns: title, content, author.'], 400);
             return;
         }
@@ -352,7 +347,6 @@ class QuoteController
             }
 
             [$title, $content, $author] = $row;
-            $this->logModel->createLog($user['id'], 'import_csv', "Processing row: title=$title, content=$content, author=$author");
 
             if ($this->quoteModel->createQuote([
                 'user_id' => $user['id'],
@@ -370,7 +364,6 @@ class QuoteController
 
     public function importCsvView(Request $req, Response $res): void
     {
-        $this->logModel->createLog(null, 'like_quote', "post");
         $res->view('quotes/import-csv');
     }
 }

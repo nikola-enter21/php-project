@@ -1,0 +1,116 @@
+.csv-import-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    border: 1px solid #ffae70;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.csv-import-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.csv-import-container h1 {
+    text-align: center;
+    color: #e67e22;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.csv-import-container p {
+    text-align: center;
+    color: #333;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.csv-import-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.csv-import-form input[type="file"] {
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.csv-import-form input[type="file"]:focus {
+    border-color: #ffae70;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 174, 112, 0.2);
+}
+
+.csv-import-form .btn-primary {
+    background: #ff8c42;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.csv-import-form .btn-primary:hover {
+    background: #e07a35;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(224, 122, 53, 0.3);
+}
+
+.import-message {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: none;
+    text-align: center;
+}
+
+.import-message.error {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
+
+.import-message.success {
+    background-color: #dcfce7;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+}
+
+@media (max-width: 768px) {
+    .csv-import-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .csv-import-container h1 {
+        font-size: 2em;
+    }
+
+    .csv-import-form input[type="file"] {
+        padding: 8px;
+    }
+
+    .csv-import-form .btn-primary {
+        padding: 12px 24px;
+    }
+}

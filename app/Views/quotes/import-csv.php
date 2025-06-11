@@ -32,6 +32,7 @@
 <script>
     document.getElementById('csv-import-form').addEventListener('submit', async function (e) {
         e.preventDefault();
+        const form = this;
         const formData = new FormData(this);
         const messageDiv = document.getElementById('import-message');
         messageDiv.style.display = 'none';
@@ -42,8 +43,7 @@
                 body: formData
             });
 
-            const text = await response.text();
-            alert(text);
+            const data = await response.json();
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${response.ok && data?.success ? 'success' : 'error'}`;
             messageDiv.innerHTML = `
@@ -63,7 +63,7 @@
                 alert(data.message); 
             }
         } catch (error) {
-            alert('Error creating quotes: ' + error.message);
+            alert('Error importing quotes from csv');
         }
     });
 </script>
