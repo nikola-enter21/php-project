@@ -35,4 +35,23 @@ class LogModel extends BaseModel
         $sql = "DELETE FROM {$this->table}";
         return $this->db->execute($sql);
     }
+
+    public function getFilteredLogsCount(string $search): int
+    {
+        $sql = "SELECT COUNT(*) FROM logs WHERE action LIKE :search OR details LIKE :search";
+        $stmt = $this->db->getPDO()->prepare($sql);
+        $stmt->execute(['search' => "%$search%"]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getFilteredLogsPaginated(string $search, int $limit, int $offset): array
+    {
+        $sql = "SELECT * FROM logs WHERE action LIKE :search OR details LIKE :search ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->getPDO()->prepare($sql);
+        $stmt->bindValue(':search', "%$search%", \PDO::PARAM_STR);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
