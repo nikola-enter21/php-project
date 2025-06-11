@@ -91,6 +91,13 @@
                                         <a href="/login" class="btn btn-annotation-secondary">📖 View Annotations</a>
                                     <?php endif; ?>
                                 </div>
+                                <?php if (!empty($quote['image_path'])): ?>
+                                    <div class="quote-image-view">
+                                        <button class="btn btn-image-view" data-image="<?= htmlspecialchars($quote['image_path']) ?>">
+                                            📷 View Image
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -114,6 +121,46 @@
     <div id="message-container" class="message-container" style="display: none;">
         <p id="message-text"></p>
     </div>
+<<<<<<< Updated upstream
     <script src="/public/js/quote-actions.js"></script>
+=======
+
+    <div id="image-modal" class="image-modal hidden">
+        <div class="image-modal-content">
+            <span class="image-modal-close">&times;</span>
+            <img id="modal-image" src="" alt="Quote Image">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageButtons = document.querySelectorAll('.btn-image-view');
+            const modal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalClose = document.querySelector('.image-modal-close');
+
+            imageButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modalImage.src = button.getAttribute('data-image');
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            modalClose.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                modalImage.src = '';
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    modalImage.src = '';
+                }
+            });
+        });
+    </script>
+
+    <script src="../../public/js/quote-actions.js"></script>
+>>>>>>> Stashed changes
 </body>
 </html>
