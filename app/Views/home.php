@@ -157,7 +157,6 @@
         });
     </script>
 
-
     <script src="../../public/js/quote-actions.js"></script>
 </body>
 </html>
