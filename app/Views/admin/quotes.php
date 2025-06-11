@@ -65,7 +65,9 @@
                             <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>
                             <div style="display: flex; justify-content: space-between">
                                 <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
-                                <p><b>Докладвано от:</b> <?= htmlspecialchars($quote['full_name']) ?></p>
+                                <?php if (!empty($quote['full_name'])): ?>
+                                    <p><b>Докладвано от:</b> <?= htmlspecialchars($quote['full_name']) ?></p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
