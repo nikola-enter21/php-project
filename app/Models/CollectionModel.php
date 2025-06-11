@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\Database;
-use Dompdf\Dompdf;
 use Core\BaseModel;
 
 class CollectionModel extends BaseModel
@@ -68,27 +66,36 @@ class CollectionModel extends BaseModel
      */
     public function getAllCollectionsWithQuotes(string $userId): array
     {
-        $sql = "SELECT c.*, q.title AS quote_title, q.content AS quote_content, q.author AS quote_author
-                FROM collections c
-                LEFT JOIN collection_quotes cq ON c.id = cq.collection_id
-                LEFT JOIN quotes q ON cq.quote_id = q.id
-                WHERE c.user_id = :user_id";
+        $sql = "SELECT 
+                c.id AS collection_id, 
+                c.name, 
+                c.description, 
+                q.id AS quote_id, 
+                q.title AS quote_title, 
+                q.content AS quote_content, 
+                q.author AS quote_author
+            FROM collections c
+            LEFT JOIN collection_quotes cq ON c.id = cq.collection_id
+            LEFT JOIN quotes q ON cq.quote_id = q.id
+            WHERE c.user_id = :user_id";
+
         $rows = $this->db->fetchAll($sql, ['user_id' => $userId]);
 
         $collections = [];
         foreach ($rows as $row) {
-            $id = $row['id'];
+            $id = $row['collection_id'];
             if (!isset($collections[$id])) {
                 $collections[$id] = [
-                    'id' => $row['id'],
+                    'id' => $row['collection_id'],
                     'name' => $row['name'],
                     'description' => $row['description'],
                     'quotes' => []
                 ];
             }
-            if ($row['quote_title'] || $row['quote_content'] || $row['quote_author']) {
+
+            if ($row['quote_id']) {
                 $collections[$id]['quotes'][] = [
-                    'id' => $row['id'],
+                    'id' => $row['quote_id'],
                     'title' => $row['quote_title'],
                     'content' => $row['quote_content'],
                     'author' => $row['quote_author']
@@ -99,7 +106,7 @@ class CollectionModel extends BaseModel
         return array_values($collections);
     }
 
-     /**
+    /**
      * Retrieve a collection by its ID.
      */
     public function findById(string $id): ?array
