@@ -63,7 +63,10 @@
                             </div>
                             <p class="quote-content">"<?= htmlspecialchars($quote['content']) ?>"</p>
                             <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>
-                            <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
+                            <div style="display: flex; justify-content: space-between">
+                                <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
+                                <p><b>Докладвано от:</b> <?= htmlspecialchars($quote['full_name']) ?></p>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>

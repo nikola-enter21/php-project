@@ -211,12 +211,13 @@ class QuoteModel extends BaseModel
 
     public function getReportedQuotes(?string $userId = null): array
     {
-        $sql = "SELECT q.*, COUNT(r.id) as reports_count 
-                FROM quotes q 
-                LEFT JOIN reports r ON q.id = r.quote_id 
-                GROUP BY q.id 
-                HAVING COUNT(r.id) > 0
-                ORDER BY reports_count DESC";
+        $sql = "SELECT q.*, u.full_name AS full_name, u.id AS user_id, COUNT(r.id) as reports_count 
+            FROM quotes q 
+            LEFT JOIN reports r ON q.id = r.quote_id 
+            LEFT JOIN users u ON q.user_id = u.id
+            GROUP BY q.id 
+            HAVING COUNT(r.id) > 0
+            ORDER BY reports_count DESC";
 
         $quotes = $this->db->query($sql);
 
