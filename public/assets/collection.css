@@ -146,7 +146,7 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); 
 }
 
-.export-pdf-btn {
+.export-btn {
     background-color: #f6a26d;
     color: white;
     text-decoration: none;
@@ -160,7 +160,7 @@
     margin-top: 15px;
 }
 
-.export-pdf-btn:hover {
+.export-btn:hover {
     background-color: #e98b27;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
@@ -186,3 +186,21 @@ main {
 .collection-create-container {
     margin-top: 40px;
 }
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 400px;
+    background: rgb(249, 193, 133);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+  

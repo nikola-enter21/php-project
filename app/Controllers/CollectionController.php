@@ -162,5 +162,135 @@ class CollectionController
             $res->json(['success' => false, 'message' => 'Failed to delete the quote.']);
         }
     }
+
+    public function exportAsCsv(Request $req, Response $res): void
+    {
+        $collectionId = $req->param('id');
+        $user = $req->session()->get('user');
+
+        if (!$collectionId) {
+            $this->logModel->createLog($user['id'], 'export_csv', 'Failed to export CSV: Collection ID is missing');
+            $res->json(['success' => false, 'message' => 'Collection ID is missing.'], 400);
+            return;
+        }
+
+        $collection = $this->collectionModel->findById($collectionId);
+        if (!$collection) {
+            $this->logModel->createLog($user['id'], 'export_csv', "Collection with ID $collectionId not found");
+            $res->json(['success' => false, 'message' => 'Collection not found.'], 404);
+            return;
+        }
+
+        $quotes = $this->collectionModel->getQuotesByCollectionId($collectionId);
+
+        $csvData = [];
+        $csvData[] = ['Title', 'Content', 'Author']; // Header row
+        foreach ($quotes as $quote) {
+            $csvData[] = [
+                $quote['title'],
+                $quote['content'],
+                $quote['author']
+            ];
+        }
+
+        $cleanName = preg_replace('/[\/:*?"<>|]/', '_', $collection['name']);
+        $csvFileName = $cleanName . '.csv';
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $csvFileName . '"');
+
+        $output = fopen('php://output', 'w');
+        foreach ($csvData as $row) {
+            fputcsv($output, $row, ',', '"', '\\');
+        }
+        fclose($output);
+
+        exit;
+    }
+
+    public function exportAsHtml(Request $req, Response $res): void
+    {
+        $collectionId = $req->param('id');
+        $user = $req->session()->get('user');
+
+        if (!$collectionId) {
+            $this->logModel->createLog($user['id'], 'export_html', 'Failed to export HTML: Collection ID is missing');
+            $res->json(['success' => false, 'message' => 'Collection ID is missing.'], 400);
+            return;
+        }
+
+        $collection = $this->collectionModel->findById($collectionId);
+        if (!$collection) {
+            $this->logModel->createLog($user['id'], 'export_html', "Collection with ID $collectionId not found");
+            $res->json(['success' => false, 'message' => 'Collection not found.'], 404);
+            return;
+        }
+
+        $quotes = $this->collectionModel->getQuotesByCollectionId($collectionId);
+
+        header('Content-Type: text/html');
+        header('Content-Disposition: attachment; filename="' . preg_replace('/[\/:*?"<>|]/', '_', $collection['name']) . '.html' . '"');
+
+        $output = fopen('php://output', 'w');
+
+        fwrite($output, '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>' . htmlspecialchars($collection['name']) . '</title></head><body>');
+        fwrite($output, '<h1>' . htmlspecialchars($collection['name']) . '</h1>');
+        fwrite($output, '<p>' . nl2br(htmlspecialchars($collection['description'])) . '</p>');
+        fwrite($output, '<h2>Quotes:</h2><ul>');
+
+        foreach ($quotes as $quote) {
+            fwrite($output, '<li><strong>' . htmlspecialchars($quote['title']) . '</strong><br>');
+            fwrite($output, htmlspecialchars($quote['content']) . '<br>');
+            fwrite($output, '<em>Author: ' . htmlspecialchars($quote['author']) . '</em></li>');
+        }
+
+        fwrite($output, '</ul></body></html>');
+
+        fclose($output);
+    }
+
+    public function exportAsBibtex(Request $req, Response $res): void
+    {
+        $collectionId = $req->param('id');
+        $user = $req->session()->get('user');
+    
+        if (!$collectionId) {
+            $this->logModel->createLog($user['id'], 'export_bibtex', 'Failed to export BibTeX: Collection ID is missing');
+            $res->json(['success' => false, 'message' => 'Collection ID is missing.'], 400);
+            return;
+        }
+    
+        $collection = $this->collectionModel->findById($collectionId);
+        if (!$collection) {
+            $this->logModel->createLog($user['id'], 'export_bibtex', "Collection with ID $collectionId not found");
+            $res->json(['success' => false, 'message' => 'Collection not found.'], 404);
+            return;
+        }
+    
+        $quotes = $this->collectionModel->getQuotesByCollectionId($collectionId);
+    
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="' . preg_replace('/[\/:*?"<>|]/', '_', $collection['name']) . '.bib' . '"');
+    
+        $output = fopen('php://output', 'w');
+    
+        fwrite($output, "@Collection{" . htmlspecialchars($collection['name']) . ",\n");
+        fwrite($output, "  description = {" . htmlspecialchars($collection['description']) . "},\n");
+        fwrite($output, "  quotes = {\n");
+    
+        foreach ($quotes as $quote) {
+            fwrite($output, "    @Quote{\n");
+            fwrite($output, "      title = {" . htmlspecialchars($quote['title']) . "},\n");
+            fwrite($output, "      content = {" . htmlspecialchars($quote['content']) . "},\n");
+            fwrite($output, "      author = {" . htmlspecialchars($quote['author']) . "}\n");
+            fwrite($output, "    },\n");
+        }
+    
+        fwrite($output, "  }\n");
+        fwrite($output, "}");
+    
+        fclose($output);
+    }
+
 }
 ?>
