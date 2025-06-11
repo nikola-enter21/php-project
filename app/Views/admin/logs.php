@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity Logs | QuoteShare</title>
-    <link rel="stylesheet" href="/public/assets/reset.css">
-    <link rel="stylesheet" href="/public/assets/styles.css">
-    <link rel="stylesheet" href="/public/assets/nav.css">
-    <link rel="stylesheet" href="/public/assets/home.css">
-    <link rel="stylesheet" href="/public/assets/dashboard.css">
-    <link rel="stylesheet" href="/public/assets/logs.css">
+    <link rel="stylesheet" href="../../../public/assets/reset.css">
+    <link rel="stylesheet" href="../../../public/assets/styles.css">
+    <link rel="stylesheet" href="../../../public/assets/nav.css">
+    <link rel="stylesheet" href="../../../public/assets/home.css">
+    <link rel="stylesheet" href="../../../public/assets/dashboard.css">
+    <link rel="stylesheet" href="../../../public/assets/logs.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -82,6 +82,6 @@
 
         <?php include __DIR__ . '/../partials/footer.php'; ?>
     </div>
-    <script src="/public/js/log-actions.js"></script>
+    <script src="../../../public/js/log-actions.js"></script>
 </body>
 </html>
