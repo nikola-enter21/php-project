@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS quotes (
     title      VARCHAR(255) NOT NULL,
     content    TEXT NOT NULL,
     author     VARCHAR(255),
+    image_path VARCHAR(255),
     user_id    CHAR(36),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

@@ -15,20 +15,18 @@ RUN apt-get update && apt-get install -y \
     docker-php-ext-install pdo pdo_mysql zip gd && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Инсталиране на Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 # Работна директория
 WORKDIR /var/www/html
 
 # Копиране на проектните файлове
 COPY . .
 
-# Нямам идея тва за какво го иска ама без него не тръгва
-RUN git config --global --add safe.directory /var/www/html
-
-# Инсталиране на PHP зависимости
-RUN composer install && composer dump-autoload
+# Инсталиране на TCPDF (вътре в /var/www/html)
+# Разкоментирай ако искаш pdf-а експортването да работи
+#RUN curl -L -o tcpdf.zip https://github.com/tecnickcom/tcpdf/archive/refs/heads/main.zip && \
+#    unzip tcpdf.zip -d tcpdf-temp && \
+#    mv tcpdf-temp/* tcpdf && \
+#    rm -rf tcpdf.zip tcpdf-temp
 
 # Стартиране на вградения PHP сървър
 CMD ["php", "-S", "0.0.0.0:8000"]

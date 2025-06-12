@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Quote | QuoteShare</title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/create-collection.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/create-collection.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="page-wrapper">
-        <?php include __DIR__ . '/../partials/nav.php'; ?>
+        <?php require_once './app/views/partials/nav.php'; ?>
+
         <main>
             <div class="collection-create-header">
                 <h1>Create New Collection</h1>
@@ -45,8 +46,9 @@
                     Create Collection
                 </button>
             </form>
-        </main>     
-    <?php include __DIR__ . '/../partials/footer.php'; ?>
+        </main>
+
+        <?php require_once './app/views/partials/footer.php'; ?>
     </div>
 <script>
     
@@ -79,7 +81,7 @@
             submitBtn.disabled = true;
 
             try {
-                const response = await fetch('/collections/create', {
+                const response = await fetch('?path=/collections/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -107,7 +109,7 @@
                     updateCharCount();
 
                     setTimeout(() => {
-                        window.location.href = '/collections';
+                        window.location.href = '?path=/collections';
                     }, 2500);
                 }
             } catch (error) {

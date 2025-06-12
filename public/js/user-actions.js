@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       if (currentAction === "delete-user") {
-        const response = await fetch(`/users/${currentUserId}`, {
+        const response = await fetch(`?path=/users/${currentUserId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
           popupText.textContent = result.message || "Failed to delete user.";
         }
       } else if (currentAction === "update-role") {
-        const response = await fetch(`/admin/users/${currentUserId}/role`, {
+        const response = await fetch(`?path=/admin/users/${currentUserId}/role`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

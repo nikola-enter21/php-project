@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Quote | QuoteShare</title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/create-quote.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/create-quote.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="layout-container">
-    <?php include __DIR__ . '/../partials/nav.php'; ?>
+    <?php require_once './app/views/partials/nav.php'; ?>
 
     <main class="main-content">
         <div class="quote-create-container">
@@ -21,7 +21,7 @@
                 <p>Share your favorite quote with the world</p>
             </div>
 
-            <form id="quote-form" class="quote-form">
+            <form id="quote-form" class="quote-form" enctype="multipart/form-data">
                 <div class="form-field">
                     <label for="title">Title</label>
                     <input type="text"
@@ -45,14 +45,18 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="author">
-                        Author
-                    </label>
+                    <label for="author">Author</label>
                     <input type="text"
                            id="author"
                            name="author"
                            value="<?= htmlspecialchars($old['author'] ?? '') ?>"
                            placeholder="Who said or wrote this quote?">
+                </div>
+
+                <div class="form-field">
+                    <label for="image">Optional Image</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                    <div class="form-field-info">Attach an image to go with your quote</div>
                 </div>
 
                 <button type="submit" class="quote-submit-btn">
@@ -62,7 +66,7 @@
         </div>
     </main>
 
-    <?php include __DIR__ . '/../partials/footer.php'; ?>
+    <?php require_once './app/views/partials/footer.php'; ?>
 </div>
 
 <script>
@@ -74,66 +78,55 @@
         // Character counter for title
         function updateCharCount() {
             const count = titleInput.value.length;
-            titleInput.parentElement.querySelector('.char-count').textContent =
-                `${count}/255`;
+            titleInput.parentElement.querySelector('.char-count').textContent = `${count}/255`;
         }
 
         titleInput.addEventListener('input', updateCharCount);
-        updateCharCount(); // Initial count
+        updateCharCount();
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             // Clear previous messages
-            const previousMessages = document.querySelectorAll('.message');
-            previousMessages.forEach(msg => msg.remove());
+            document.querySelectorAll('.message').forEach(msg => msg.remove());
 
-            // Validate form
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
 
-            // Show loading state
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
             try {
-                const response = await fetch('/quotes/create', {
+                const formData = new FormData(form); // handles text inputs + file
+
+                const response = await fetch('?path=/quotes/create', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        title: titleInput.value.trim(),
-                        content: document.getElementById('content').value.trim(),
-                        author: document.getElementById('author').value.trim()
-                    })
+                    body: formData
                 });
 
                 const data = await response.json();
-                console.log(data);
 
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${response.ok && data?.success ? 'success' : 'error'}`;
                 messageDiv.innerHTML = `
-                        <span class="message-icon">${response.ok && data?.success ? '✓' : '⚠️'}</span>
-                        ${data.message}
-                    `;
-
+                    <span class="message-icon">${response.ok && data?.success ? '✓' : '⚠️'}</span>
+                    ${data.message}
+                `;
                 form.insertAdjacentElement('beforebegin', messageDiv);
 
                 if (data?.success) {
                     form.reset();
                     updateCharCount();
 
-                    // Redirect after success
                     setTimeout(() => {
-                        window.location.href = '/';
+                        window.location.href = '?path=/';
                     }, 2500);
                 }
+
             } catch (error) {
-                console.log(error);
+                console.error(error);
             } finally {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
@@ -141,5 +134,6 @@
         });
     });
 </script>
+
 </body>
 </html>

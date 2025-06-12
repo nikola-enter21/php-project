@@ -54,10 +54,22 @@ class AdminController
     public function viewLogs(Request $req, Response $res)
     {
         $search = $req->query('search') ?? '';
-        $logs = $this->logModel->getFilteredLogs($search);
+        $currentPage = max(1, (int) ($req->query('page') ?? 1));
+        $perPage = 10;
+        $offset = ($currentPage - 1) * $perPage;
+
+        // Get total count for pagination
+        $totalLogs = $this->logModel->getFilteredLogsCount($search);
+        $totalPages = (int) ceil($totalLogs / $perPage);
+
+        // Get logs for the current page
+        $logs = $this->logModel->getFilteredLogsPaginated($search, $perPage, $offset);
+
         $res->view('admin/logs', [
             'logs' => $logs,
             'search' => $search,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
         ]);
     }
 

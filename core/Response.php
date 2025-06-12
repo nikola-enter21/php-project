@@ -26,7 +26,7 @@ class Response
     public function view(string $file, array $data = []): void
     {
         extract($data);
-        $viewPath = __DIR__ . "/../app/Views/$file.php";
+        $viewPath = "./app/Views/$file.php";
 
         if (!file_exists($viewPath)) {
             http_response_code(500);
@@ -45,7 +45,7 @@ class Response
     #[NoReturn] public function redirect(string $url, int $statusCode = 302): void
     {
         http_response_code($statusCode);
-        header("Location: $url");
+        header("Location: ?path=$url");
         exit();
     }
 }

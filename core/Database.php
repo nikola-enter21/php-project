@@ -71,4 +71,8 @@ class Database
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ?: null;
     }
+
+    public function getPDO(): PDO {
+        return $this->pdo;
+    }
 }

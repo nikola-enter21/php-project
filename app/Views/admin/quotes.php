@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/home.css">
-    <link rel="stylesheet" href="../../../public/assets/dashboard.css">
-    <link rel="stylesheet" href="../../../public/assets/quotes.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/home.css">
+    <link rel="stylesheet" href="./public/assets/dashboard.css">
+    <link rel="stylesheet" href="./public/assets/quotes.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="layout-container">
-    <?php include __DIR__ . '/../partials/nav.php'; ?>
+    <?php require_once './app/views/partials/nav.php'; ?>
 
     <main class="main-content">
         <section class="quotes-section">
@@ -65,7 +65,9 @@
                             <p class="quote-author">- <?= htmlspecialchars($quote['author']) ?></p>
                             <div style="display: flex; justify-content: space-between">
                                 <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
-                                <p><b>Докладвано от:</b> <?= htmlspecialchars($quote['full_name']) ?></p>
+                                <?php if (!empty($quote['full_name'])): ?>
+                                    <p><b>Докладвано от:</b> <?= htmlspecialchars($quote['full_name']) ?></p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -74,8 +76,8 @@
         </section>
     </main>
 
-    <?php include __DIR__ . '/../partials/footer.php'; ?>
+    <?php require_once './app/views/partials/footer.php'; ?>
 </div>
-<script src="../../../public/js/quote-actions.js"></script>
+<script src="./public/js/quote-actions.js"></script>
 </body>
 </html>

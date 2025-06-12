@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use Core\Flash;
 use Core\Request;
 use Core\Response;
 use App\Models\QuoteModel;
@@ -13,13 +12,13 @@ use Exception;
 class QuoteController
 {
     private QuoteModel $quoteModel;
-    private CollectionModel $collectionModel; 
+    private CollectionModel $collectionModel;
     private LogModel $logModel;
 
     public function __construct(QuoteModel $quoteModel, CollectionModel $collectionModel, LogModel $logModel)
     {
         $this->quoteModel = $quoteModel;
-        $this->collectionModel = $collectionModel; 
+        $this->collectionModel = $collectionModel;
         $this->logModel = $logModel;
     }
 
@@ -47,7 +46,7 @@ class QuoteController
             $interactions = $this->quoteModel->getUserInteractions($user['id'], $quoteId);
 
             $this->logModel->createLog($user['id'], 'like_quote', "Quote $quoteId like status updated successfully!");
-            
+
             $res->json([
                 'success' => true,
                 'message' => 'Quote like status updated successfully!',
@@ -117,7 +116,7 @@ class QuoteController
             $isSaved = $this->quoteModel->isQuoteSaved($user['id'], $quoteId);
 
             $this->logModel->createLog($user['id'], 'save_quote', "Quote $quoteId save status updated!");
-            
+
             $message = $isSaved ? 'Quote saved successfully!' : 'Quote unsaved successfully!';
             $res->json([
                 'success' => true,
@@ -175,6 +174,7 @@ class QuoteController
 
     public function create(Request $req, Response $res): void
     {
+        // Basic info here
         $user = $req->session()->get('user');
         $title = trim($req->body('title'));
         $content = trim($req->body('content'));
@@ -186,11 +186,32 @@ class QuoteController
             $res->json(['success' => false, 'message' => 'All fields are required.']);
             return;
         }
-
         if (strlen($title) > 255) {
             $this->logModel->createLog($user['id'], 'create_quote', 'Failed to create quote: Title exceeds 255 characters');
             $res->json(['success' => false, 'message' => 'Title must be less than 255 characters.']);
             return;
+        }
+
+        // Handle image upload
+        $imagePath = null;
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = './public/uploads/quotes/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $originalName = basename($_FILES['image']['name']);
+            $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+            $filename = uniqid('quote_img_') . '.' . $ext;
+            $uploadPath = $uploadDir . $filename;
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
+                $imagePath = './public/uploads/quotes/' . $filename;
+            } else {
+                $this->logModel->createLog($user['id'], 'create_quote', 'Failed to upload image');
+                $res->json(['success' => false, 'message' => 'Failed to upload image.']);
+                return;
+            }
         }
 
         // Create the quote
@@ -198,7 +219,8 @@ class QuoteController
             'user_id' => $user['id'],
             'title' => $title,
             'content' => $content,
-            'author' => $author ?: 'Anonymous'
+            'author' => $author,
+            'image_path' => $imagePath,
         ]);
 
         if ($created) {
@@ -229,7 +251,6 @@ class QuoteController
 
     public function deleteQuote(Request $req, Response $res): void
     {
-        echo "Delete Quote";
         $user = $req->session()->get('user');
         $quoteId = $req->param('id');
         $quote = $this->quoteModel->getQuoteById($quoteId);
@@ -249,6 +270,12 @@ class QuoteController
         $deleted = $this->quoteModel->delete($quoteId);
 
         if ($deleted) {
+            if (!empty($quote['image_path'])) {
+                if (file_exists($quote['image_path'])) {
+                    unlink($quote['image_path']);
+                }
+            }
+
             $this->logModel->createLog($user['id'], 'delete_quote', "Quote with ID $quoteId deleted successfully");
             $res->json(['success' => true, 'message' => 'Quote deleted successfully!']);
         } else {
@@ -312,5 +339,58 @@ class QuoteController
     {
         $quoteId = $req->param('id');
         $res->view('annotations/create', ['quoteId' => $quoteId]);
+    }
+
+    public function importCsv(Request $req, Response $res): void
+    {
+        $user = $req->session()->get('user');
+        if (!$user) {
+            $res->json(['success' => false, 'message' => 'You must be logged in to import quotes.'], 401);
+            return;
+        }
+
+        $file = $_FILES['csv_file'] ?? null;
+
+        if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
+            $res->json(['success' => false, 'message' => 'Invalid file upload.'], 400);
+            return;
+        }
+
+        $csvData = file_get_contents($file['tmp_name']);
+
+        $rows = array_map(fn($row) => str_getcsv($row, ",", '"', "\\"), explode("\n", $csvData));
+        $header = array_shift($rows);
+        $this->logModel->createLog($user['id'], 'import_csv', 'CSV header: ' . json_encode($header));
+
+        if ($header !== ['title', 'content', 'author']) {
+            $res->json(['success' => false, 'message' => 'Invalid CSV format. Expected columns: title, content, author.'], 400);
+            return;
+        }
+
+        $successCount = 0;
+        foreach ($rows as $row) {
+            if (count($row) !== 3) {
+                continue;
+            }
+
+            [$title, $content, $author] = $row;
+
+            if ($this->quoteModel->createQuote([
+                'user_id' => $user['id'],
+                'title' => trim($title),
+                'content' => trim($content),
+                'author' => trim($author) ?: 'Anonymous'
+            ])) {
+                $successCount++;
+            }
+        }
+
+        $this->logModel->createLog($user['id'], 'import_csv', "Successfully imported $successCount quotes");
+        $res->json(['success' => true, 'message' => "$successCount quotes imported successfully!"]);
+    }
+
+    public function importCsvView(Request $req, Response $res): void
+    {
+        $res->view('quotes/import-csv');
     }
 }

@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       if (currentAction === "delete-log") {
-        const response = await fetch(`/admin/logs/${currentLogId}`, {
+        const response = await fetch(`?path=/admin/logs/${currentLogId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
           popupText.textContent = result.message || "Failed to delete log.";
         }
       } else if (currentAction === "clear-logs") {
-        const response = await fetch(`/admin/logs`, {
+        const response = await fetch(`?path=/admin/logs`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
