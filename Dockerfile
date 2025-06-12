@@ -22,10 +22,11 @@ WORKDIR /var/www/html
 COPY . .
 
 # Инсталиране на TCPDF (вътре в /var/www/html)
-RUN curl -L -o tcpdf.zip https://github.com/tecnickcom/tcpdf/archive/refs/heads/main.zip && \
-    unzip tcpdf.zip -d tcpdf-temp && \
-    mv tcpdf-temp/* tcpdf && \
-    rm -rf tcpdf.zip tcpdf-temp
+# Разкоментирай ако искаш pdf-а експортването да работи
+#RUN curl -L -o tcpdf.zip https://github.com/tecnickcom/tcpdf/archive/refs/heads/main.zip && \
+#    unzip tcpdf.zip -d tcpdf-temp && \
+#    mv tcpdf-temp/* tcpdf && \
+#    rm -rf tcpdf.zip tcpdf-temp
 
 # Стартиране на вградения PHP сървър
 CMD ["php", "-S", "0.0.0.0:8000"]
