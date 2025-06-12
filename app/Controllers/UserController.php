@@ -160,4 +160,74 @@ class UserController
         $req->session()->destroy();
         $res->redirect('/login');
     }
+
+    public function showUserProfile(Request $req, Response $res): void
+    {
+        $loggedUser = $req->session()->get('user');
+        $userId = $req->param('id');
+
+        if (!$loggedUser || $loggedUser['id'] !== $userId) {
+            $res->redirect('/login');
+            return;
+        }
+
+        $user = $this->userModel->findById($userId);
+
+        if (!$user) {
+            $res->json(['success' => false, 'message' => 'User not found'], 404);
+            return;
+        }
+
+        $res->view('profile', ['user' => $user]);
+    }
+
+    public function changeUserPassword(Request $req, Response $res): void
+    {
+        $loggedUser = $req->session()->get('user');
+        $userId = $req->param('id');
+
+        if (!$loggedUser || $loggedUser['id'] !== $userId) {
+            $res->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            return;
+        }
+
+        $oldPassword = $req->body('oldPassword');
+        $newPassword = $req->body('newPassword');
+        $confirmPassword = $req->body('confirmPassword');
+
+        $user = $this->userModel->findById($userId);
+
+        if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
+            $res->json(['success' => false, 'message' => 'All fields are required'], 400);
+            return;
+        }
+
+        if (!password_verify($oldPassword, $user['password'])) {
+            $res->json(['success' => false, 'message' => 'Old password is incorrect'], 401);
+            return;
+        }
+
+        if ($newPassword !== $confirmPassword) {
+            $res->json(['success' => false, 'message' => 'New passwords do not match'], 400);
+            return;
+        }
+
+        if (strlen($newPassword) < 6) {
+            $res->json(['success' => false, 'message' => 'New password must be at least 6 characters long'], 400);
+            return;
+        }
+
+        $hashedNewPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+
+        if ($this->userModel->updatePassword($userId, $hashedNewPassword)) {
+            $loggedUser['password'] = $hashedNewPassword;
+            $req->session()->set('user', $loggedUser);
+
+            $this->logModel->createLog($userId, 'change_password', "User with id $userId changed their password successfully");
+            $res->json(['success' => true, 'message' => 'Password changed successfully']);
+        } else {
+            $this->logModel->createLog($userId, 'change_password', "User with id $userId to change user password");
+            $res->json(['success' => false, 'message' => 'Failed to change password'], 500);
+        }
+    }
 }
