@@ -17,7 +17,7 @@ use Core\Response;
 use App\Controllers\UserController;
 use Core\Database;
 
-require './vendor/autoload.php';
+require './autoload.php';
 
 // Dependency Injection Container
 $container = new Container();

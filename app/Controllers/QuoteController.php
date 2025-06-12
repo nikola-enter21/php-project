@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use Core\Flash;
 use Core\Request;
 use Core\Response;
 use App\Models\QuoteModel;
