@@ -59,9 +59,20 @@
                                         <?php endforeach; ?>
                                     </ul>
                                 </div>
-                                <a href="?path=/collections/<?= htmlspecialchars($collection['id']) ?>/export-pdf" class="export-pdf-btn">
-                                    Export as PDF
-                                </a>
+
+                                <button class="export-btn" data-collection-id="<?= htmlspecialchars($collection['id']) ?>">Export</button>
+                                <div id="export-popup-<?= htmlspecialchars($collection['id']) ?>" class="popup export-popup" style="display: none;">
+                                    <div class="popup-content">
+                                        <span class="close-popup">&times;</span>
+                                        <h3>Select Export Format</h3>
+                                        <ul>
+                                            <li><a href="?path=/collections/<?= htmlspecialchars($collection['id']) ?>/export-pdf">Export as PDF</a></li>
+                                            <li><a href="?path=/collections/<?= htmlspecialchars($collection['id']) ?>/export-csv">Export as CSV</a></li>
+                                            <li><a href="?path=/collections/<?= htmlspecialchars($collection['id']) ?>/export-html">Export as HTML</a></li>
+                                            <li><a href="?path=/collections/<?= htmlspecialchars($collection['id']) ?>/export-bibtex">Export as BibTeX</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -144,6 +155,31 @@
                     alert('An error occurred while deleting the quote.');
                 }
             });
+        });
+
+        const exportButtons = document.querySelectorAll('.export-btn');
+        const closeButtons = document.querySelectorAll('.close-popup');
+
+        exportButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const popupId = `export-popup-${this.dataset.collectionId}`;
+                const popup = document.getElementById(popupId);
+                popup.style.display = 'block';
+            });
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                this.closest('.popup').style.display = 'none';
+            });
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.popup-content') && !event.target.classList.contains('export-btn')) {
+                document.querySelectorAll('.popup').forEach(popup => {
+                    popup.style.display = 'none';
+                });
+            }
         });
     });
 </script>
