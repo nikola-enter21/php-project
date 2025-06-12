@@ -275,9 +275,11 @@ class CollectionController
         header('Content-Disposition: attachment; filename="' . preg_replace('/[\/:*?"<>|]/', '_', $collection['name']) . '.bib' . '"');
 
         $output = fopen('php://output', 'w');
+        $counter = 1;
 
         foreach ($quotes as $quote) {
-            fwrite($output, "@misc{\n");
+            $identifier = "quote" . $counter++;
+            fwrite($output, "@misc{" . $identifier . ",\n");
             fwrite($output, "  title = {" . htmlspecialchars($quote['title']) . "},\n");
             fwrite($output, "  note = {" . htmlspecialchars($quote['content']) . "},\n");
             fwrite($output, "  author = {" . htmlspecialchars($quote['author']) . "}\n");
