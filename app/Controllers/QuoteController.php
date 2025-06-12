@@ -195,7 +195,7 @@ class QuoteController
         // Handle image upload
         $imagePath = null;
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/../../public/uploads/quotes/';
+            $uploadDir = './public/uploads/quotes/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
@@ -271,9 +271,8 @@ class QuoteController
 
         if ($deleted) {
             if (!empty($quote['image_path'])) {
-                $imageFilePath = __DIR__ . '/../../' . ltrim($quote['image_path'], './');
-                if (file_exists($imageFilePath)) {
-                    unlink($imageFilePath);
+                if (file_exists($quote['image_path'])) {
+                    unlink($quote['image_path']);
                 }
             }
 

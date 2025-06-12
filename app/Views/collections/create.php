@@ -12,7 +12,8 @@
 </head>
 <body>
     <div class="page-wrapper">
-        <?php include __DIR__ . '/../partials/nav.php'; ?>
+        <?php require_once './app/views/partials/nav.php'; ?>
+
         <main>
             <div class="collection-create-header">
                 <h1>Create New Collection</h1>
@@ -45,8 +46,9 @@
                     Create Collection
                 </button>
             </form>
-        </main>     
-    <?php include __DIR__ . '/../partials/footer.php'; ?>
+        </main>
+
+        <?php require_once './app/views/partials/footer.php'; ?>
     </div>
 <script>
     

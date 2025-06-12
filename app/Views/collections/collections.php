@@ -12,7 +12,8 @@
 </head>
 <body>
     <div class="page-wrapper">
-        <?php include __DIR__ . '/../partials/nav.php'; ?>
+        <?php require_once './app/views/partials/nav.php'; ?>
+
         <main>
             <div class="collection-create-container">
 
@@ -76,7 +77,8 @@
                 </div>
             </div>  
         </main>
-        <?php include __DIR__ . '/../partials/footer.php'; ?>
+
+        <?php require_once './app/views/partials/footer.php'; ?>
     </div>
 
 <script>

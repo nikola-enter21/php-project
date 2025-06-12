@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="layout-container">
-        <?php include __DIR__ . '/../partials/nav.php'; ?>
+        <?php require_once './app/views/partials/nav.php'; ?>
 
         <main class="main-content home-page">
             <section class="welcome-section">
@@ -50,8 +50,8 @@
                     </div>
             </section>
         </main>
-        <?php include __DIR__ . '/../partials/footer.php'; ?>
 
+        <?php require_once './app/views/partials/footer.php'; ?>
     </div>
 </body>
 </html>

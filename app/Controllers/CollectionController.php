@@ -97,7 +97,7 @@ class CollectionController
         }
         $html .= '</ul>';
 
-        require_once __DIR__ . '/../../tcpdf/tcpdf.php';
+        require_once './tcpdf/tcpdf.php';
         $pdf = new \TCPDF();
         $pdf->SetCreator('QuoteShare');
         $pdf->SetAuthor('QuoteShare');
@@ -122,7 +122,7 @@ class CollectionController
     {
         $user = $req->session()->get('user');
         $collections = $this->collectionModel->getAllCollectionsWithQuotes($user['id']);
-        require_once __DIR__ . '/../Views/collections/collections.php';
+        require_once './app/Views/collections/collections.php';
     }
 
     public function getCollectionsJson(Request $req, Response $res): void
