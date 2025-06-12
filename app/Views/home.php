@@ -105,6 +105,16 @@
                     <?php endif; ?>
                 </div>
             </section>
+
+            <section class="import-csv-section">
+                <h2>📂 Import Quotes</h2>
+                <p>Want to add multiple quotes at once? Import them using a CSV file.</p>
+                <?php if (isset($user)): ?>
+                    <a href="/quotes/import-csv" class="btn btn-primary">Go to Import CSV</a>
+                <?php else: ?>
+                    <a href="/login" class="btn btn-primary">Go to Import CSV</a>
+                <?php endif; ?>
+            </section>
         </main>
         <?php include __DIR__ . '/partials/footer.php'; ?>
     </div>

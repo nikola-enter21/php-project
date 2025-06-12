@@ -90,6 +90,8 @@ try {
     $router->post('/quotes/:id/like', [$container->get(QuoteController::class), 'likeQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/report', [$container->get(QuoteController::class), 'reportQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/add-to-collection', [$container->get(QuoteController::class), 'addToCollection'], [AuthMiddleware::class]);
+    $router->post('/quotes/import-csv', [$container->get(QuoteController::class), 'importCsv'], [AuthMiddleware::class]);
+    $router->get('/quotes/import-csv', [$container->get(QuoteController::class), 'importCsvView'], [AuthMiddleware::class]);
     $router->get('/quotes/:id', [$container->get(QuoteController::class), 'getQuoteDetails'], [AuthMiddleware::class]);
     $router->delete('/quotes/:id', [$container->get(QuoteController::class), 'deleteQuote'], [AuthMiddleware::class]);
     $router->post('/quotes/:id/annotations/create', [$container->get(QuoteController::class), 'addAnnotation'], [AuthMiddleware::class]);

@@ -17,7 +17,7 @@ abstract class BaseModel
      */
     public function findAll(): array
     {
-        return $this->db->query("SELECT * FROM {$this->table}");
+        return $this->db->query("SELECT * FROM {$this->table} ORDER BY created_at DESC");
     }
 
     /**

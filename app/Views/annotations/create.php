@@ -58,39 +58,39 @@
             submitBtn.disabled = true;
 
             try {
-                    const response = await fetch(`/quotes/${quoteId}/annotations/create`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            note: document.getElementById('note').value.trim()
-                        })
-                    });
+                const response = await fetch(`/quotes/${quoteId}/annotations/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        note: document.getElementById('note').value.trim()
+                    })
+                });
 
-                    const data = await response.json();
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = `message ${response.ok && data?.success ? 'success' : 'error'}`;
-                    messageDiv.innerHTML = `
-                            <span class="message-icon">${response.ok && data?.success ? '✓' : '⚠️'}</span>
-                            ${data.message}
-                        `;
+                const data = await response.json();
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${response.ok && data?.success ? 'success' : 'error'}`;
+                messageDiv.innerHTML = `
+                        <span class="message-icon">${response.ok && data?.success ? '✓' : '⚠️'}</span>
+                        ${data.message}
+                    `;
 
-                    form.insertAdjacentElement('beforebegin', messageDiv);
+                form.insertAdjacentElement('beforebegin', messageDiv);
 
-                    if (data?.success) {
-                        form.reset();
+                if (data?.success) {
+                    form.reset();
 
-                        setTimeout(() => {
-                            window.location.href = '/';
-                        }, 2500);
-                    } else {
-                        alert(data.message); 
-                    }
-                } catch (error) {
-                    console.error('Error creating annotation:', error);
-                    alert('Error creating annotation:');
+                    setTimeout(() => {
+                       window.location.href = '/';
+                    }, 2500);
+                } else {
+                    alert(data.message); 
                 }
+            } catch (error) {
+                console.error('Error creating annotation:', error);
+                alert('Error creating annotation:');
+            }
         });
     });
 </script>
