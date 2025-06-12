@@ -253,42 +253,35 @@ class CollectionController
     {
         $collectionId = $req->param('id');
         $user = $req->session()->get('user');
-    
+
         if (!$collectionId) {
             $this->logModel->createLog($user['id'], 'export_bibtex', 'Failed to export BibTeX: Collection ID is missing');
             $res->json(['success' => false, 'message' => 'Collection ID is missing.'], 400);
             return;
         }
-    
+
         $collection = $this->collectionModel->findById($collectionId);
         if (!$collection) {
             $this->logModel->createLog($user['id'], 'export_bibtex', "Collection with ID $collectionId not found");
             $res->json(['success' => false, 'message' => 'Collection not found.'], 404);
             return;
         }
-    
+
         $quotes = $this->collectionModel->getQuotesByCollectionId($collectionId);
-    
+
         header('Content-Type: text/plain');
         header('Content-Disposition: attachment; filename="' . preg_replace('/[\/:*?"<>|]/', '_', $collection['name']) . '.bib' . '"');
-    
+
         $output = fopen('php://output', 'w');
-    
-        fwrite($output, "@Collection{" . htmlspecialchars($collection['name']) . ",\n");
-        fwrite($output, "  description = {" . htmlspecialchars($collection['description']) . "},\n");
-        fwrite($output, "  quotes = {\n");
-    
+
         foreach ($quotes as $quote) {
-            fwrite($output, "    @Quote{\n");
-            fwrite($output, "      title = {" . htmlspecialchars($quote['title']) . "},\n");
-            fwrite($output, "      content = {" . htmlspecialchars($quote['content']) . "},\n");
-            fwrite($output, "      author = {" . htmlspecialchars($quote['author']) . "}\n");
-            fwrite($output, "    },\n");
+            fwrite($output, "@misc{\n");
+            fwrite($output, "  title = {" . htmlspecialchars($quote['title']) . "},\n");
+            fwrite($output, "  note = {" . htmlspecialchars($quote['content']) . "},\n");
+            fwrite($output, "  author = {" . htmlspecialchars($quote['author']) . "}\n");
+            fwrite($output, "}\n\n");
         }
-    
-        fwrite($output, "  }\n");
-        fwrite($output, "}");
-    
+
         fclose($output);
     }
 
