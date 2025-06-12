@@ -1,12 +1,9 @@
 <?php
 namespace App\Controllers;
-use Core\Flash;
 use App\Models\CollectionModel;
 use App\Models\LogModel;
 use Core\Request;
 use Core\Response;
-use Mpdf\Mpdf;
-use Mpdf\MpdfException;
 
 class CollectionController
 {
@@ -70,9 +67,6 @@ class CollectionController
         $res->view('collections/create');
     }
 
-    /**
-     * @throws MpdfException
-     */
     public function exportAsPdf(Request $req, Response $res)
     {
         $collectionId = $req->param('id');
@@ -103,15 +97,23 @@ class CollectionController
         }
         $html .= '</ul>';
 
-        $mpdf = new Mpdf(['default_font' => 'dejavusans']); // UTF-8 safe
-        $mpdf->WriteHTML($html);
+        require_once './tcpdf/tcpdf.php';
+        $pdf = new \TCPDF();
+        $pdf->SetCreator('QuoteShare');
+        $pdf->SetAuthor('QuoteShare');
+        $pdf->SetTitle($collection['name']);
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->AddPage();
+
+        $pdf->SetFont('dejavusans', '', 10); // UTF-8 font
+        $pdf->writeHTML($html, true, false, true, false, '');
 
         $cleanName = preg_replace('/[\/:*?"<>|]/', '_', $collection['name']);
         $pdfFileName = $cleanName . '.pdf';
 
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $pdfFileName . '"');
-        $mpdf->OutputHttpDownload($pdfFileName);
+        $pdf->Output($pdfFileName, 'D');
 
         exit;
     }
@@ -120,7 +122,7 @@ class CollectionController
     {
         $user = $req->session()->get('user');
         $collections = $this->collectionModel->getAllCollectionsWithQuotes($user['id']);
-        require_once __DIR__ . '/../Views/collections/collections.php';
+        require_once './app/Views/collections/collections.php';
     }
 
     public function getCollectionsJson(Request $req, Response $res): void

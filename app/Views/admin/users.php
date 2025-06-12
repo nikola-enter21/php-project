@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Users</title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/home.css">
-    <link rel="stylesheet" href="../../../public/assets/dashboard.css">
-    <link rel="stylesheet" href="../../../public/assets/users.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/home.css">
+    <link rel="stylesheet" href="./public/assets/dashboard.css">
+    <link rel="stylesheet" href="./public/assets/users.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="layout-container">
-        <?php include __DIR__ . '/../partials/nav.php'; ?>
+        <?php require_once './app/views/partials/nav.php'; ?>
 
         <main class="main-content">
             <section class="manage-users-section">
@@ -34,7 +34,8 @@
                     </div>
                 </div>
                 <h1>Manage Users</h1>
-                <form method="GET" action="/admin/users" class="search-form">
+                <form method="GET" class="search-form">
+                    <input type="hidden" name="path" value="/admin/users">
                     <div class="search-bar-container">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" name="search" value="<?= htmlspecialchars($search ?? '') ?>" placeholder="Search users by name or email" class="search-input">
@@ -56,7 +57,7 @@
                                 <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
                                 <p><strong>Role:</strong> <?= htmlspecialchars($user['role']) ?></p>
                                 <div class="user-actions">
-                                    <form method="POST" action="/admin/users/<?= $user['id'] ?>/role">
+                                    <form method="POST" action="?path=/admin/users/<?= $user['id'] ?>/role">
                                         <select class="styled-select" name="role">
                                             <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User</option>
                                             <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
@@ -71,8 +72,9 @@
                 </div>
             </section>
         </main>
-        <?php include __DIR__ . '/../partials/footer.php'; ?>
+
+        <?php require_once './app/views/partials/footer.php'; ?>
     </div>
-    <script src="../../../public/js/user-actions.js"></script>
+    <script src="./public/js/user-actions.js"></script>
 </body>
 </html>

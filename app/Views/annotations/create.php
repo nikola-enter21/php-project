@@ -4,41 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Quote | QuoteShare</title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/create-annotation.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/create-annotation.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="page-wrapper">
-        <?php include __DIR__ . '/../partials/nav.php'; ?>
-        <main>
-            <div class="annotation-create-header">
-                <h1>Add new annotation</h1>
-                <p>How do you feel while reading this quote?</p>
-            </div>
+<div class="page-wrapper">
+    <?php require_once './app/views/partials/nav.php'; ?>
 
-            <form id="annotation-form" class="annotation-form">
-                <div class="form-field">
-                    <label for="note">Note</label>
-                    <input type="text"
-                        id="note"
-                        name="note"
-                        value="<?= htmlspecialchars($old['note'] ?? '') ?>"
-                        placeholder="Add a note"
-                    >
-                    <div class="form-field-info">Add a note to the quote</div>
-                </div>
-                <button type="submit" class="annotation-submit-btn" data-quote-id="<?= htmlspecialchars($quoteId ?? '') ?>">
-                    Create Annotation
-                </button>
-            </form>
-        </main>     
-    <?php include __DIR__ . '/../partials/footer.php'; ?>
-    </div>
+    <main>
+        <div class="annotation-create-header">
+            <h1>Add new annotation</h1>
+            <p>How do you feel while reading this quote?</p>
+        </div>
+
+        <form id="annotation-form" class="annotation-form">
+            <div class="form-field">
+                <label for="note">Note</label>
+                <input type="text"
+                       id="note"
+                       name="note"
+                       value="<?= htmlspecialchars($old['note'] ?? '') ?>"
+                       placeholder="Add a note"
+                >
+                <div class="form-field-info">Add a note to the quote</div>
+            </div>
+            <button type="submit" class="annotation-submit-btn" data-quote-id="<?= htmlspecialchars($quoteId ?? '') ?>">
+                Create Annotation
+            </button>
+        </form>
+    </main>
+
+    <?php require_once './app/views/partials/footer.php'; ?>
+</div>
 <script>
-    
+
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('annotation-form');
         const submitBtn = form.querySelector('.annotation-submit-btn');
@@ -58,7 +60,7 @@
             submitBtn.disabled = true;
 
             try {
-                const response = await fetch(`/quotes/${quoteId}/annotations/create`, {
+                const response = await fetch(`?path=/quotes/${quoteId}/annotations/create`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -82,10 +84,10 @@
                     form.reset();
 
                     setTimeout(() => {
-                       window.location.href = '/';
+                        window.location.href = '?path=/';
                     }, 2500);
                 } else {
-                    alert(data.message); 
+                    alert(data.message);
                 }
             } catch (error) {
                 console.error('Error creating annotation:', error);
