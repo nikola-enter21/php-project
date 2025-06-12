@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'host' => 'localhost',
+    'host' => 'fmi_db',
     'database' => 'quoteshare',
     'username' => 'root',
-    'password' => '',
+    'password' => 'root',
     'charset' => 'utf8mb4',
 ];
