@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collections | QuoteShare</title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/collection.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/collection.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -24,7 +24,7 @@
                     <?php $req->session()->remove('flash'); ?>
                 <?php endif; ?>
                 <div class="collection-create-container">
-                    <a href="/collections/create" class="create-collection-btn">
+                    <a href="?path=/collections/create" class="create-collection-btn">
                         <h1>Create New Collection</h1>
                     </a>
                 </div>
@@ -59,7 +59,7 @@
                                         <?php endforeach; ?>
                                     </ul>
                                 </div>
-                                <a href="/collections/<?= htmlspecialchars($collection['id']) ?>/export-pdf" class="export-pdf-btn">
+                                <a href="?path=/collections/<?= htmlspecialchars($collection['id']) ?>/export-pdf" class="export-pdf-btn">
                                     Export as PDF
                                 </a>
                             </div>
@@ -92,7 +92,7 @@
             title.addEventListener('click', async function () {
                 const quoteId = this.dataset.quoteId; 
                 try {
-                    const response = await fetch('/quotes/' + quoteId);
+                    const response = await fetch('?path=/quotes/' + quoteId);
                     const data = await response.json();
                     if (data.success) {
                         modalContent.innerHTML = `
@@ -124,7 +124,7 @@
                 }
 
                 try {
-                    const response = await fetch(`/collections/${collectionId}/quotes/${quoteId}/delete`, {
+                    const response = await fetch(`?path=/collections/${collectionId}/quotes/${quoteId}/delete`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json'

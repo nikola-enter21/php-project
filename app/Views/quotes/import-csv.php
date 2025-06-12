@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Import Quotes from CSV | QuoteShare</title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/import-csv.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/import-csv.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -38,7 +38,7 @@
         messageDiv.style.display = 'none';
 
         try {
-            const response = await fetch('/quotes/import-csv', {
+            const response = await fetch('?path=/quotes/import-csv', {
                 method: 'POST',
                 body: formData
             });
@@ -57,7 +57,7 @@
                 form.reset();
 
                 setTimeout(() => {
-                    window.location.href = '/';
+                    window.location.href = '?path=/';
                 }, 2500);
             } else {
                 alert(data.message); 

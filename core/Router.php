@@ -70,7 +70,7 @@ class Router
         $req = $this->request;
         $res = $this->response;
         $method = $_SERVER['REQUEST_METHOD'];
-        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $path = $_GET['path'] ?? '/';
 
         // Find a matching route
         foreach ($this->routes[$method] ?? [] as $route => $routeData) {

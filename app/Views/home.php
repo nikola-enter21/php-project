@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | QuoteShare</title>
-    <link rel="stylesheet" href="../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../public/assets/home.css">
-    <link rel="stylesheet" href="../../public/assets/quotes.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/home.css">
+    <link rel="stylesheet" href="./public/assets/quotes.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -27,8 +27,8 @@
                         <h1>Discover Inspiring Quotes</h1>
                         <p>Join our community to share and collect your favorite quotes.</p>
                         <div class="login-prompt">
-                            <a href="/login" class="btn btn-secondary">Log in</a>
-                            <a href="/register" class="btn btn-highlight">Sign up</a>
+                            <a href="?path=/login" class="btn btn-secondary">Log in</a>
+                            <a href="?path=/register" class="btn btn-highlight">Sign up</a>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -84,11 +84,11 @@
                                 <p class="quote-likes">Likes: <?= $quote['likes_count'] ?></p>
                                 <div class="quote-annotation-actions">
                                 <?php if (isset($user)): ?>
-                                        <a href="/quotes/<?= $quote['id'] ?>/annotations/create" class="btn btn-annotation">➕ Add Annotation</a>
-                                        <a href="/quotes/<?= $quote['id'] ?>/annotations" class="btn btn-annotation-secondary">📖 View Annotations</a>
+                                        <a href="?path=/quotes/<?= $quote['id'] ?>/annotations/create" class="btn btn-annotation">➕ Add Annotation</a>
+                                        <a href="?path=/quotes/<?= $quote['id'] ?>/annotations" class="btn btn-annotation-secondary">📖 View Annotations</a>
                                     <?php else: ?>
-                                        <a href="/login" class="btn btn-annotation">➕ Add Annotation</a>
-                                        <a href="/login" class="btn btn-annotation-secondary">📖 View Annotations</a>
+                                        <a href="?path=/login" class="btn btn-annotation">➕ Add Annotation</a>
+                                        <a href="?path=/login" class="btn btn-annotation-secondary">📖 View Annotations</a>
                                     <?php endif; ?>
                                 </div>
                                 <?php if (!empty($quote['image_path'])): ?>
@@ -110,9 +110,9 @@
                 <h2>📂 Import Quotes</h2>
                 <p>Want to add multiple quotes at once? Import them using a CSV file.</p>
                 <?php if (isset($user)): ?>
-                    <a href="/quotes/import-csv" class="btn btn-primary">Go to Import CSV</a>
+                    <a href="?path=/quotes/import-csv" class="btn btn-primary">Go to Import CSV</a>
                 <?php else: ?>
-                    <a href="/login" class="btn btn-primary">Go to Import CSV</a>
+                    <a href="?path=/login" class="btn btn-primary">Go to Import CSV</a>
                 <?php endif; ?>
             </section>
         </main>
@@ -167,6 +167,6 @@
         });
     </script>
 
-    <script src="../../public/js/quote-actions.js"></script>
+    <script src="./public/js/quote-actions.js"></script>
 </body>
 </html>

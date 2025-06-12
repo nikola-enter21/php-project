@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity Logs | QuoteShare</title>
-    <link rel="stylesheet" href="../../../public/assets/reset.css">
-    <link rel="stylesheet" href="../../../public/assets/styles.css">
-    <link rel="stylesheet" href="../../../public/assets/nav.css">
-    <link rel="stylesheet" href="../../../public/assets/home.css">
-    <link rel="stylesheet" href="../../../public/assets/dashboard.css">
-    <link rel="stylesheet" href="../../../public/assets/logs.css">
+    <link rel="stylesheet" href="./public/assets/reset.css">
+    <link rel="stylesheet" href="./public/assets/styles.css">
+    <link rel="stylesheet" href="./public/assets/nav.css">
+    <link rel="stylesheet" href="./public/assets/home.css">
+    <link rel="stylesheet" href="./public/assets/dashboard.css">
+    <link rel="stylesheet" href="./public/assets/logs.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -33,7 +33,8 @@
 
     <main class="main-content">
         <h1>Activity Logs</h1>
-        <form method="GET" action="/admin/logs" class="search-form">
+        <form method="GET" class="search-form">
+            <input type="hidden" name="path" value="/admin/logs">
             <div class="search-bar-container">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" name="search" value="<?= htmlspecialchars($search ?? '') ?>"
@@ -84,18 +85,18 @@
         <?php if ($totalPages > 1): ?>
             <div class="pagination">
                 <?php if ($currentPage > 1): ?>
-                    <a href="?search=<?= urlencode($search ?? '') ?>&page=<?= $currentPage - 1 ?>" class="page-link">Previous</a>
+                    <a href="?path=/admin/logs&search=<?= urlencode($search ?? '') ?>&page=<?= $currentPage - 1 ?>" class="page-link">Previous</a>
                 <?php endif; ?>
 
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <a href="?search=<?= urlencode($search ?? '') ?>&page=<?= $i ?>"
+                    <a href="?path=/admin/logs&search=<?= urlencode($search ?? '') ?>&page=<?= $i ?>"
                        class="page-link <?= $i === $currentPage ? 'active' : '' ?>">
                         <?= $i ?>
                     </a>
                 <?php endfor; ?>
 
                 <?php if ($currentPage < $totalPages): ?>
-                    <a href="?search=<?= urlencode($search ?? '') ?>&page=<?= $currentPage + 1 ?>" class="page-link">Next</a>
+                    <a href="?path=/admin/logs&search=<?= urlencode($search ?? '') ?>&page=<?= $currentPage + 1 ?>" class="page-link">Next</a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
@@ -103,6 +104,6 @@
 
     <?php require_once './app/views/partials/footer.php'; ?>
 </div>
-<script src="../../../public/js/log-actions.js"></script>
+<script src="./public/js/log-actions.js"></script>
 </body>
 </html>

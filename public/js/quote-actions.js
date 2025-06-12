@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        const response = await fetch(`/quotes/${quoteId}/${action}`, {
+        const response = await fetch(`?path=/quotes/${quoteId}/${action}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const data = await response.json();
         if (response.status === 401 || response.status === 403) {
-          window.location.href = "/login";
+          window.location.href = "?path=/login";
           return;
         }
 
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!currentQuoteId) return;
 
     try {
-      const response = await fetch(`/quotes/${currentQuoteId}`, {
+      const response = await fetch(`?path=/quotes/${currentQuoteId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
       collectionList.innerHTML = "";
 
       try {
-        const response = await fetch("/collections/json");
+        const response = await fetch("?path=/collections/json");
         const data = await response.json();
 
         if (data.success && data.collections.length > 0) {
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
             li.dataset.collectionId = collection.id;
             li.addEventListener("click", async () => {
               try {
-                const addResponse = await fetch(`/quotes/${quoteId}/add-to-collection`, {
+                const addResponse = await fetch(`?path=/quotes/${quoteId}/add-to-collection`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
