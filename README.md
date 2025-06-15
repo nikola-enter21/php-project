@@ -23,48 +23,69 @@ Admins have access to an advanced dashboard to:
 ## 🔧 Technologies used
 
 - **PHP** for the server-side scripts used to build the core application logic, following the MVC (Model-View-Controller) architectural pattern
-
-- **JavaScript** for interactivity and improved user experience.
-
-- **MariaDB (MySQL-compatible)** for database
-
+- **JavaScript** for interactivity and improved user experience
+- **MariaDB (MySQL-compatible)** for the database
 - **Docker & Docker Compose** for containerization
-
-- **Composer** - PHP dependency manager used to install and manage libraries and autoloading.
 
 ---
 
 ## ⚙️ Quick setup
 
-> 💡 **Prerequisites:** Docker, Docker Compose, Bash
+> 💡 **Prerequisites:**  
+> For Method 1: XAMPP  
+> For Method 2: Docker
 
-1. **Clone the repository**
+### ✅ Method 1: XAMPP
+
+1. **Move the project into your `htdocs` directory**  
+   Example:
    ```
-   git clone https://github.com/nikola-enter21/php-project.git
+   /path/to/htdocs/quoteshare
    ```
-2. **Go into the project directory**
+
+2. **Configure the database connection**  
+   Edit `config/database.php` and update it with your local database credentials.
+
+3. **Create the database tables**  
+   Run the migration script:
    ```
-   cd php-project
+   ./migrations/db.sql
    ```
-3. **Run the setup script for running the Docker containers for the database and the PHP server**
+
+4. **Seed the database with an initial admin user**  
+   Run the seed script:
+   ```
+   ./seeds/seed.sql
+   ```
+
+5. **Open the app in your browser**  
+   Visit: [http://localhost/quoteshare](http://localhost/quoteshare)
+
+---
+
+### 🐳 Method 2: Run using Docker (alternative)
+
+1. **Start the app in Docker by running:**
    ```
    ./start.sh
    ```
-4. **Open [localhost:8000](localhost:8000) in your browser**
+
+2. **Open the app in your browser**
+   Visit: [http://localhost:8000](http://localhost:8000)
 
 ---
 
 ## 📁 Project structure
 
 ```
-├── app/ → Models, views, controllers
-├── core/ → Internal logic (routing, database, utilities)
-├── config/ → App/database config
-├── public/ → CSS and JS files
-├── migrations/ → Database schema changes
-├── seeds/ → Seed database with initial/sample data
+├── app/              → Models, views, controllers
+├── core/             → Internal logic (routing, database, utilities)
+├── config/           → App/database config
+├── public/           → CSS, JS, Images
+├── migrations/       → Database schema changes
+├── seeds/            → Seed database with initial/sample data
 ├── docker-compose.yml
 ├── Dockerfile
-├── index.php → Dependency injection + setting up app routes
-└── start.sh → Script for setting up the application
+├── index.php         → Entrypoint
+└── start.sh          → One-click setup
 ```

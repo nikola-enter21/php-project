@@ -66,4 +66,9 @@ class UserModel extends BaseModel
             'excludeUserId' => $excludeUserId
         ]);
     }
+
+    public function updatePassword(string $userId, string $hashedPassword): bool
+    {
+        return $this->update($userId, ['password' => $hashedPassword]);
+    }
 }

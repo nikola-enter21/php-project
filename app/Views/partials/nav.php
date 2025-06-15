@@ -5,10 +5,9 @@
 
             <?php if (isset($_SESSION['user'])): ?>
                 <li>
-                    <p>
-                        <i class="fas fa-user"></i>
-                        <?= $_SESSION['user']['full_name'] ?>
-                    </p>
+                    <a href="?path=/users/<?= htmlspecialchars($_SESSION['user']['id']) ?>" class="profile-btn">
+                        <i class="fas fa-user-circle"></i> <?= $_SESSION['user']['full_name']?>
+                    </a>
                 </li>
                 <?php if ($_SESSION['user']['role'] === 'admin'): ?>
                     <li>

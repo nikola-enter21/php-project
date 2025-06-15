@@ -115,6 +115,8 @@ try {
     $router->post('/login', [$container->get(UserController::class), 'login']);
     $router->post('/register', [$container->get(UserController::class), 'register']);
     $router->post('/logout', [$container->get(UserController::class), 'logout']);
+    $router->get('/users/:id', [$container->get(UserController::class), 'showUserProfile'], [AuthMiddleware::class]);
+    $router->post('/users/:id/change-password', [$container->get(UserController::class), 'changeUserPassword'], [AuthMiddleware::class]);
 
     // Admin Routes
     $router->delete('/users/:id', [$container->get(UserController::class), 'deleteUser'], [AdminMiddleware::class]);
