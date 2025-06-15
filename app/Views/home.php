@@ -71,6 +71,11 @@
                                         <i class="fas fa-flag"></i>
                                         <span class="count"><?= $quote['reports_count'] ?></span>
                                     </button>
+                                    <button class="action-icon share" 
+                                            data-quote-id="<?= $quote['id'] ?>" 
+                                            title="Share quote">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
                                     <?php if ($user && ($user['role'] === 'admin' || $user['id'] === $quote['user_id'])): ?>
                                         <button class="action-icon delete"
                                                 data-quote-id="<?= $quote['id'] ?>"
@@ -165,8 +170,102 @@
                 }
             });
         });
-    </script>
 
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.action-icon.share').forEach(button => {
+                button.addEventListener('click', () => {
+                    const quoteCard = button.closest('.quote-card');
+                    const content = quoteCard.querySelector('.quote-content').innerText.replace(/["“”]/g, '"').trim();
+                    const author = quoteCard.querySelector('.quote-author').innerText.trim();
+
+                    const shareText = `"${content}"\n${author}`;
+                    const popup = window.open('', '_blank', 'width=500,height=500');
+
+                    popup.document.write(`
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8" />
+                            <title>Share Quote</title>
+                            <style>
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    padding: 2rem;
+                                    background-color: #f9f9f9;
+                                    text-align: center;
+                                }
+                                .quote {
+                                    font-size: 1.5rem;
+                                    font-style: italic;
+                                    margin-bottom: 1rem;
+                                }
+                                .author {
+                                    font-size: 1.2rem;
+                                    color: #555;
+                                    margin-bottom: 2rem;
+                                }
+                                .btn {
+                                    padding: 10px 20px;
+                                    border: none;
+                                    color: white;
+                                    font-size: 1rem;
+                                    border-radius: 5px;
+                                    cursor: pointer;
+                                    margin: 0 5px;
+                                }
+                                .btn-copy { background-color: #007bff; }
+                                .btn-facebook { background-color: #3b5998; }
+                                .btn-twitter { background-color: #1da1f2; }
+                                .btn-email { background-color: #6c757d; }
+                                .buttons {
+                                    display: flex;
+                                    justify-content: center;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="quote">${content}</div>
+                            <div class="author">${author}</div>
+                            <div class="buttons">
+                                <button class="btn btn-copy" onclick="copyToClipboard()">Copy Quote</button>
+                                <button class="btn btn-facebook" onclick="shareFacebook()">Share on Facebook</button>
+                                <button class="btn btn-twitter" onclick="shareTwitter()">Share on Twitter</button>
+                                <button class="btn btn-email" onclick="shareEmail()">Share by Email</button>
+                            </div>
+
+                            <script>
+                                function copyToClipboard() {
+                                    const text = \`${shareText.replace(/`/g, '\\`')}\`;
+                                    navigator.clipboard.writeText(text)
+                                        .then(() => alert('Quote copied to clipboard!'))
+                                        .catch(err => alert('Error copying quote: ' + err));
+                                }
+
+                                function shareFacebook() {
+                                    const url = 'https://www.facebook.com/sharer/sharer.php?quote=' + encodeURIComponent(\`${shareText}\`);
+                                    window.open(url, '_blank', 'width=600,height=400');
+                                }
+
+                                function shareTwitter() {
+                                    const text = encodeURIComponent(\`${shareText}\`);
+                                    const url = 'https://twitter.com/intent/tweet?text=' + text;
+                                    window.open(url, '_blank', 'width=600,height=400');
+                                }
+
+                                function shareEmail() {
+                                    const subject = encodeURIComponent('Inspirational Quote');
+                                    const body = encodeURIComponent(\`${shareText}\`);
+                                    const mailtoLink = 'mailto:?subject=' + subject + '&body=' + body;
+                                    window.location.href = mailtoLink;
+                                }
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+                });
+            });
+        });
+    </script>
     <script src="./public/js/quote-actions.js"></script>
 </body>
 </html>

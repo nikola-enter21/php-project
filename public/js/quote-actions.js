@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
         action = "save";
       } else if (this.classList.contains("report")) {
         action = "report";
-      } else if (this.classList.contains("add-to-collection")) {
-        // Skip processing here for "Add to Collection" button
+      } else if (this.classList.contains("add-to-collection") || this.classList.contains("share")) {
+        // Skip processing here for "Add to Collection" and "Share" buttons
         return;
       }
 
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
           } else if (action === "report") {
             countSpan.textContent = data.reports_count;
             this.classList.toggle("active", data.is_reported);
-          } else if (this.classList.contains("add-to-collection")) {
+          } else if (this.classList.contains("add-to-collection") || this.classList.contains("share")) {
             // Skip processing here for "Add to Collection" button
             return;
           }
