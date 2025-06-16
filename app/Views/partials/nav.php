@@ -22,11 +22,13 @@
                         <i class="fas fa-plus"></i> Create Quote
                     </a>
                 </li>
-                <li>
-                    <a href="?path=/collections" class="collections-btn">
-                        <i class="fas fa-folder"></i> Collections
-                    </a>
-                </li>
+                <?php if (isset($_SESSION['user'])): ?>
+                    <li>
+                        <a href="?path=/collections" class="collections-btn">
+                            <i class="fas fa-folder"></i> Collections
+                        </a>
+                    </li>
+                <?php endif; ?>
                 <li>
                     <form action="?path=/logout" method="POST" class="logout-form">
                         <button type="submit" class="logout-button">Logout</button>

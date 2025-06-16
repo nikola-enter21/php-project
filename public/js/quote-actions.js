@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
   const actionButtons = document.querySelectorAll(".action-icon");
 
@@ -116,6 +117,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   addToCollectionButtons.forEach((button) => {
     button.addEventListener("click", async function () {
+      if (!isLoggedIn) {
+        window.location.href = "?path=/login";
+        return;
+      }
       const quoteId = this.dataset.quoteId;
 
       popup.style.display = "block";
