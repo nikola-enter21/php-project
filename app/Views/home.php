@@ -145,6 +145,7 @@
     </div>
 
     <script>
+        const isLoggedIn = <?= isset($user) ? 'true' : 'false' ?>;
         document.addEventListener('DOMContentLoaded', () => {
             const imageButtons = document.querySelectorAll('.btn-image-view');
             const modal = document.getElementById('image-modal');
